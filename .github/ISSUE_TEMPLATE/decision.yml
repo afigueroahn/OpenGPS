@@ -1,0 +1,32 @@
+name: Decisión
+description: Decisión pendiente de aprobación. Al aprobarse se registra como ADR.
+labels: ["decision"]
+body:
+  - type: textarea
+    id: contexto
+    attributes:
+      label: Contexto
+      description: Qué hay que decidir y por qué ahora.
+    validations:
+      required: true
+  - type: textarea
+    id: opciones
+    attributes:
+      label: Opciones
+      description: Dos o tres opciones concretas.
+    validations:
+      required: true
+  - type: textarea
+    id: trade-offs
+    attributes:
+      label: Trade-offs
+      description: Qué se gana y qué se pierde con cada opción.
+    validations:
+      required: true
+  - type: textarea
+    id: recomendacion
+    attributes:
+      label: Recomendación
+      description: La opción recomendada y por qué.
+    validations:
+      required: true

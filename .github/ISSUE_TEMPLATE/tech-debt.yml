@@ -1,0 +1,35 @@
+name: Deuda técnica
+description: Duplicación, código muerto o consolidación pendiente.
+labels: ["tech-debt"]
+body:
+  - type: textarea
+    id: deuda
+    attributes:
+      label: Deuda detectada
+      description: Qué es y dónde está. Indica archivos o módulos.
+    validations:
+      required: true
+  - type: textarea
+    id: impacto
+    attributes:
+      label: Impacto
+      description: Qué cuesta o qué riesgo trae dejarla como está.
+    validations:
+      required: true
+  - type: textarea
+    id: propuesta
+    attributes:
+      label: Propuesta
+      description: Cómo se consolidaría.
+    validations:
+      required: true
+  - type: textarea
+    id: criterios
+    attributes:
+      label: Criterios de aceptación
+      description: Lista verificable de cuándo se considera saldada.
+      placeholder: |
+        - [ ]
+        - [ ]
+    validations:
+      required: true
