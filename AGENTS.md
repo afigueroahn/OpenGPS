@@ -89,7 +89,7 @@ Checks requeridos para mergear desde el primer PR, aunque haya un solo contribut
 
 ## 7. Dependencias
 Ninguna dependencia nueva sin issue aprobado que justifique: necesidad, alternativas
-consideradas, estado de mantenimiento y licencia compatible con `[PENDIENTE: licencia]`.
+consideradas, estado de mantenimiento y licencia compatible con Apache-2.0 (ADR-0001).
 
 ## 8. Deuda técnica
 - ~20% de cada milestone reservado a consolidación y refactor.
