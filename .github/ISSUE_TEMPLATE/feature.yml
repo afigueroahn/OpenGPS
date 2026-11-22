@@ -1,0 +1,28 @@
+name: Feature
+description: Unidad de valor nueva con criterios de aceptación.
+labels: ["feature"]
+body:
+  - type: textarea
+    id: problema
+    attributes:
+      label: Problema
+      description: Qué problema resuelve y para quién. Describe el problema, no la solución.
+    validations:
+      required: true
+  - type: textarea
+    id: criterios
+    attributes:
+      label: Criterios de aceptación
+      description: Lista verificable. Los tests se derivan de estos criterios.
+      placeholder: |
+        - [ ]
+        - [ ]
+    validations:
+      required: true
+  - type: textarea
+    id: fuera-de-alcance
+    attributes:
+      label: Fuera de alcance
+      description: Lo que este issue no incluye.
+    validations:
+      required: true
