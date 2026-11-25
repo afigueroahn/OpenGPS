@@ -21,7 +21,7 @@ La forma exacta de cada dato vive en [packages/shared/src/index.ts](../packages/
 | Identificadores | Texto. Los de vehículos, grupos, geocercas, alertas y enlaces son UUID |
 | Tamaño | El cuerpo de una petición admite hasta 256 KB; una evidencia de incidente, hasta 8 MB |
 | Módulos | `GET /api/me` trae en `account.modules` los módulos habilitados en la cuenta. Las rutas de un módulo que la cuenta no tiene responden 404 |
-| Origen | Las peticiones que cambian datos desde un navegador solo se aceptan desde la propia web |
+| Origen | Las peticiones que cambian datos desde un navegador solo se aceptan desde la propia web, en cualquiera de las direcciones por las que se abre |
 | Idioma | Los textos que trae una respuesta (errores, etiquetas, reportes, archivos exportados, la descripción OpenAPI) vienen en el idioma que pide la cabecera `X-Language` (`es` o `en`). Sin ella, el idioma que la persona eligió, el primero de `Accept-Language` que la plataforma habla y, si no, el idioma por defecto de la plataforma. Los correos y avisos llegan en el idioma de quien los recibe |
 
 ### Errores

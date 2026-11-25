@@ -103,7 +103,7 @@ describe("device simulator", () => {
     expect(meta.brands.find((b) => b.modelId === "h02")).toMatchObject({ port: 5013, idFormat: { kind: "digits", length: 10 } });
     // A new simulated device starts with the address real devices are given.
     expect(meta.host).toBe(h.config.gatewayHost);
-    expect(meta).toMatchObject({ maxDevices: h.config.simulator.maxDevices, running: 0 });
+    expect(meta).toMatchObject({ running: 0 });
 
     // The example circuits it starts with, each one closed on itself.
     expect(routes.map((r) => r.name).sort()).toEqual([...EXAMPLES].sort());
@@ -240,26 +240,16 @@ describe("device simulator", () => {
     expect(log.rows.map((r) => r.action)).toEqual(["admin.simulator.start", "admin.simulator.stop"]);
   });
 
-  it("all of them start and stop at once, up to what fits", async () => {
+  it("all of them start and stop at once, however many they are", async () => {
     const gw = await gateway();
     const one = await create({ modelId: "h02", identifiers: [h02Id()], host: "127.0.0.1", port: gw.port });
-    const two = await create({ modelId: "h02", identifiers: [h02Id()], host: "127.0.0.1", port: gw.port });
-    const max = h.config.simulator.maxDevices;
-    h.config.simulator.maxDevices = 1;
-    try {
-      const all = (await admin("POST", `${BASE}/run`, { run: true })).json.simulations as SimulationSummary[];
-      expect(all.map((s) => s.running)).toEqual([true, false]);
-      // The one left out says why when it is started by itself.
-      const refused = await admin("POST", `${BASE}/simulations/${two.id}/run`, { run: true });
-      expect(refused.status).toBe(400);
-      expect(refused.json.error.message).toBe("No caben más equipos simulados a la vez: el máximo es 1. Detén alguno primero");
-    } finally {
-      h.config.simulator.maxDevices = max;
-    }
+    // One simulation with many devices: nothing caps how many run at once.
+    await create({ modelId: "h02", identifiers: Array.from({ length: 60 }, () => h02Id()), host: "127.0.0.1", port: gw.port });
     expect(((await admin("POST", `${BASE}/run`, { run: true })).json.simulations as SimulationSummary[]).map((s) => s.running)).toEqual([true, true]);
+    expect((await admin("GET", `${BASE}/meta`)).json.meta).toMatchObject({ running: 61 });
     // Deleting one that runs stops it first.
     expect((await admin("DELETE", `${BASE}/simulations/${one.id}`)).status).toBe(204);
-    expect((await admin("GET", `${BASE}/meta`)).json.meta).toMatchObject({ running: 1 });
+    expect((await admin("GET", `${BASE}/meta`)).json.meta).toMatchObject({ running: 60 });
     expect(((await admin("POST", `${BASE}/run`, { run: false })).json.simulations as SimulationSummary[]).map((s) => s.running)).toEqual([false]);
   });
 

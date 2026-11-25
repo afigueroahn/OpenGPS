@@ -37,7 +37,7 @@ import {
 import { fromNodeHeaders } from "better-auth/node";
 import Fastify, { type FastifyInstance, type FastifyRequest } from "fastify";
 import { z } from "zod";
-import { type Auth, CLIENT_IP_HEADER, type SessionContext } from "../auth";
+import { type Auth, CLIENT_IP_HEADER, OWN_ORIGIN_HEADER, type SessionContext } from "../auth";
 import type { Bus } from "../bus";
 import type { Config } from "../config";
 import { listAccounts, listRoles, requirePermission, requireUnrestricted } from "../core/access";
@@ -45,6 +45,7 @@ import { createAlert, deleteAlert, listAlerts, updateAlert } from "../core/alert
 import { audit, listAudit, listPlatformAudit } from "../core/audit";
 import { deviceCatalog } from "../core/catalog";
 import { listEvents } from "../core/events";
+import { type HostLookup, createGatewayAddress } from "../core/gateway";
 import { exportHistory } from "../core/export";
 import { createGeofence, deleteGeofence, listGeofences, updateGeofence } from "../core/geofences";
 import { type Geocoder, createGeocoder } from "../core/geocode";
@@ -135,6 +136,8 @@ export interface AppDeps {
   simulator?: Simulator;
   /** Looks for a newer version of the platform. */
   updates?: Updates;
+  /** Where a name points in the DNS, to know the IP of the device gateway. */
+  gatewayLookup?: HostLookup;
 }
 
 export interface App {
@@ -222,6 +225,8 @@ export async function buildApp(deps: AppDeps): Promise<App> {
   const backups = deps.backups ?? createBackups({ db, bus, config, settings, system, tickEveryMs: null });
   const notifyDeps = { db, bus, config, outbox };
   const simulator = deps.simulator ?? createSimulator({ db, bus, config });
+  const gateway = createGatewayAddress(config, deps.gatewayLookup);
+  void gateway.refresh();
 
   const app = Fastify({
     logger: config.env === "test" ? false : { level: config.isProduction ? "warn" : "info" },
@@ -285,13 +290,25 @@ export async function buildApp(deps: AppDeps): Promise<App> {
     reply.status(404).send({ error: { code: "not_found", message: tr(languageOf(request), "api.errors.notFound") } } satisfies ApiError),
   );
 
+  /**
+   * Whether a page is the web app itself: the platform's address, or the very address this request was sent to,
+   * whichever the platform was opened by (an IP, another domain). Any other website is not.
+   */
+  const fromItself = (request: FastifyRequest, origin: string): boolean => {
+    if (origin === config.publicUrl) return true;
+    try {
+      return new URL(origin).host === request.host;
+    } catch {
+      return false;
+    }
+  };
   // A request that changes data is only accepted from the web app itself.
   app.addHook("onRequest", async (request) => {
     if (request.method === "GET" || request.method === "HEAD" || request.method === "OPTIONS") return;
     const origin = request.headers.origin;
     // Apple sends the person back by posting from its own page: the session library turns it into a visit to the platform.
     if (origin === APPLE_ORIGIN && request.url.startsWith("/api/auth/callback/apple")) return;
-    if (origin && !config.trustedOrigins.includes(origin)) throw forbidden(say("api.errors.origin"));
+    if (origin && !fromItself(request, origin)) throw forbidden(say("api.errors.origin"));
   });
 
   const clientIp = (request: FastifyRequest): string => {
@@ -374,7 +391,11 @@ export async function buildApp(deps: AppDeps): Promise<App> {
     return { ok: true, version: config.appVersion, ingest: deps.ingest?.status() ?? null, live: live.connections() };
   });
 
-  app.get("/api/config", async (): Promise<PublicConfig> => ({
+  app.get("/api/config", async (): Promise<PublicConfig> => {
+    gateway.touch();
+    return publicConfig();
+  });
+  const publicConfig = (): PublicConfig => ({
     apiVersion: API_VERSION,
     version: config.appVersion,
     appName: config.appName,
@@ -389,7 +410,7 @@ export async function buildApp(deps: AppDeps): Promise<App> {
     signIn: signInButtons(config),
     passwordPolicy: config.passwordPolicy,
     maxUploadMb: config.maxUploadMb,
-  }));
+  });
 
   // ─── Session: sign-up, login, verification and password ────────────────────
 
@@ -414,10 +435,16 @@ export async function buildApp(deps: AppDeps): Promise<App> {
         }
         if (path === "/reset-password" || path === "/change-password") checkPassword(body.newPassword);
       }
+      const headers = fromNodeHeaders(request.headers);
+      // The session library is told here which page asks, when it is the web app at another of its addresses:
+      // only here is it known which address the request was sent to. Whatever the visitor writes in it is replaced.
+      const origin = request.headers.origin;
+      headers.delete(OWN_ORIGIN_HEADER);
+      if (origin && fromItself(request, origin)) headers.set(OWN_ORIGIN_HEADER, origin);
       const response = await auth.auth.handler(
         new Request(url, {
           method: request.method,
-          headers: fromNodeHeaders(request.headers),
+          headers,
           ...(hasBody ? { body: raw ? (request.body as string) : JSON.stringify(request.body) } : {}),
         }),
       );
@@ -988,7 +1015,7 @@ export async function buildApp(deps: AppDeps): Promise<App> {
       // The session is checked before accepting the connection.
       preValidation: async (request) => {
         const origin = request.headers.origin;
-        if (origin && !config.trustedOrigins.includes(origin)) throw forbidden(say("api.errors.origin"));
+        if (origin && !fromItself(request, origin)) throw forbidden(say("api.errors.origin"));
         liveSessions.set(request, await session(request));
       },
     },
