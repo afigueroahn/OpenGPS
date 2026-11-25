@@ -1,6 +1,6 @@
 {
   "name": "opengps",
-  "version": "0.5.1",
+  "version": "0.5.2",
   "private": true,
   "description": "OpenGPS: open vehicle GPS tracking platform",
   "packageManager": "pnpm@12.21.0",
