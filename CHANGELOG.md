@@ -9,8 +9,8 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/).
 ### Cambiado
 
 - La pestaña del navegador tiene su propio icono, `favicon.svg`: cuadrado y con el
-  marcador más grande, para que se vea en su tamaño pequeño. El logo de las pantallas no
-  cambia (#72).
+  marcador más grande, para que se vea en su tamaño pequeño. El logo de las pantallas
+  conserva su dibujo y pasa al mismo verde, más vivo (#72).
 
 ## [0.5.1] - 2026-11-25
 
