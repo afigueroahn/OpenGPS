@@ -16,6 +16,7 @@ import { OverviewSection } from "../app/admin/OverviewSection";
 import { ProfileSection } from "../app/admin/ProfileSection";
 import { GeneralTab, StorageTab } from "../app/admin/SettingsTabs";
 import { SystemNotificationsSection } from "../app/admin/SystemNotificationsSection";
+import { UpdatesSection } from "../app/admin/UpdatesSection";
 import { UsersSection } from "../app/admin/UsersSection";
 import { DeliveryLog } from "../app/admin/notify";
 import { SECTIONS, viewerOf } from "../app/admin/sections";
@@ -87,6 +88,7 @@ export function AdminPanel() {
         {current.id === "storage" && <StorageTab />}
         {current.id === "backups" && <BackupsTab onStorage={() => void navigate("/admin/system/storage")} />}
       </div>
+      {current.id === "updates" && <UpdatesSection />}
       {current.id === "simulator" && <SimulatorSection />}
       {current.id === "logs" && (
         <div className="space-y-6">

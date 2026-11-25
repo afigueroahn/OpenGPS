@@ -55,7 +55,8 @@
       "logs": "Registros y métricas",
       "notifications": "Notificaciones",
       "channels": "Canales de aviso",
-      "systemNotifications": "Avisos del sistema"
+      "systemNotifications": "Avisos del sistema",
+      "updates": "Actualizaciones"
     },
     "lead": {
       "overview": "Mira de un vistazo cómo está tu cuenta y entra a su configuración.",
@@ -78,7 +79,8 @@
       "logs": "Las cifras de la plataforma ahora mismo y lo hecho desde su administración.",
       "notifications": "A quién se avisa de cada alerta y por qué canal.",
       "channels": "Los canales por los que la plataforma avisa. Se conectan una vez, aquí, y los usan todas las cuentas.",
-      "systemNotifications": "A quién avisa la plataforma de lo que le pasa a ella: copias de seguridad, disco, canales y cuentas nuevas."
+      "systemNotifications": "A quién avisa la plataforma de lo que le pasa a ella: copias de seguridad, disco, canales y cuentas nuevas.",
+      "updates": "La versión que corre esta instalación frente a la última publicada, y lo que trae."
     },
     "menu": {
       "open": "Abrir el menú",
@@ -974,6 +976,28 @@
           "data": "Datos"
         }
       }
+    },
+    "updates": {
+      "title": "Versión de la plataforma",
+      "from": "Comparada con las versiones publicadas en {{repository}} · consultado {{when}}",
+      "never": "nunca",
+      "checkNow": "Buscar ahora",
+      "installed": "Instalada",
+      "latest": "Última publicada",
+      "available": "Hay una versión nueva: {{version}}.",
+      "howTo": "Cómo instalarla",
+      "upToDate": "Esta instalación tiene la última versión.",
+      "none": "Todavía no hay versiones publicadas.",
+      "notYet": "Todavía no se ha consultado.",
+      "off": "La búsqueda de versiones nuevas está apagada: la variable UPDATE_REPOSITORY está vacía.",
+      "error": {
+        "unreachable": "No se pudo consultar GitHub. Se vuelve a intentar sola; lo que se muestra es lo último que se supo.",
+        "rate_limited": "GitHub pidió esperar antes de volver a consultar. Se vuelve a intentar sola en un rato.",
+        "unexpected": "GitHub respondió algo inesperado. Se vuelve a intentar sola en un rato."
+      },
+      "notes": "Cambios de {{name}}",
+      "onGitHub": "Ver en GitHub",
+      "noNotes": "Esta versión no trae notas."
     }
   },
   "gps": {
@@ -1024,6 +1048,7 @@
     "group": "Grupo",
     "groups": "Grupos",
     "myVehicles": "Mis vehículos",
-    "error": "Algo falló. Inténtalo de nuevo."
+    "error": "Algo falló. Inténtalo de nuevo.",
+    "newVersion": "Versión nueva: {{version}}"
   }
 }

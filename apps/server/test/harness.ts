@@ -12,6 +12,7 @@ import { syncCatalog } from "../src/core/catalog";
 import { createBackups } from "../src/core/backups";
 import { createEventEngine } from "../src/core/events";
 import { createSettings } from "../src/core/settings";
+import { createUpdates } from "../src/core/updates";
 import { createNotifier } from "../src/core/notifications";
 import { createOutbox } from "../src/core/outbox";
 import { createSystemNotifier } from "../src/core/system";
@@ -150,7 +151,25 @@ export async function createHarness() {
     },
   };
   const simulator = createSimulator({ db, bus, config, tickMs: null, routing });
-  const { fastify, routes } = await buildApp({ config, db, auth, bus, traccar: traccar.api, mailer, geocoder, gate, settings, backups, outbox, system, simulator });
+  // Simulated GitHub, for the look for a new version: it answers what a test
+  // sets ("down" when it cannot be reached), records each look, and has a
+  // clock of its own that a test moves forward.
+  const github = {
+    reply: { status: 404 } as { status: number; body?: unknown; etag?: string } | "down",
+    looks: [] as Record<string, string>[],
+    clock: Date.now(),
+  };
+  const updates = createUpdates({
+    config,
+    now: () => github.clock,
+    async fetch(_url, init) {
+      github.looks.push(init.headers);
+      const reply = github.reply;
+      if (reply === "down") throw new Error("GitHub is not reachable");
+      return { status: reply.status, headers: { get: (name: string) => (name.toLowerCase() === "etag" ? (reply.etag ?? null) : null) }, json: async () => reply.body };
+    },
+  });
+  const { fastify, routes } = await buildApp({ config, db, auth, bus, traccar: traccar.api, mailer, geocoder, gate, settings, backups, outbox, system, simulator, updates });
   // The event engine listens to new positions, as in production, but
   // without its clock: the tests call the periodic check when they need it.
   const events = createEventEngine({ db, bus, config, sweepEveryMs: null });
@@ -331,7 +350,7 @@ export async function createHarness() {
     await db.close();
   }
 
-  return { config, db, bus, auth, fastify, port, mails, traccar, geocoded, routed, events, notifier, outbox, system, emailNotification, antitheft, fuel, maintenance, integrations, reports, settings, backups, simulator, enableModules, settle, routes, request, signUp, makeOwner, ingestFrom, close, uniqueId: () => `9${Date.now() % 1e8}${rand(3)}`.slice(0, 15) };
+  return { config, db, bus, auth, fastify, port, mails, traccar, geocoded, routed, github, events, notifier, outbox, system, emailNotification, antitheft, fuel, maintenance, integrations, reports, settings, backups, simulator, enableModules, settle, routes, request, signUp, makeOwner, ingestFrom, close, uniqueId: () => `9${Date.now() % 1e8}${rand(3)}`.slice(0, 15) };
 }
 
 export type Harness = Awaited<ReturnType<typeof createHarness>>;

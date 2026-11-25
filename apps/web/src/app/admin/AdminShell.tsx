@@ -14,6 +14,7 @@ import { auth, saveSettings } from "../../lib/api";
 import { adoptLanguage } from "../../lib/i18n";
 import { useConfig } from "../../lib/session";
 import { adoptMode, setMode, useTheme } from "../../lib/theme";
+import { useNewVersion } from "../../lib/updates";
 import { GROUPS, type Section, pathOf } from "./sections";
 
 const COLLAPSED_KEY = "admin-menu-collapsed";
@@ -111,12 +112,20 @@ export function AdminShell({ me, sections, current, children }: { me: Me; sectio
 
   const appVersion = useConfig().data?.version;
   const version = appVersion ? t("common.version", { version: appVersion }) : "";
+  const newVersion = useNewVersion(me.user.platformAdmin);
+  const newText = newVersion ? t("common.newVersion", { version: newVersion }) : "";
   // Only the version goes at the foot; with the menu folded, just its number.
+  // The platform's owner also sees there when a newer one exists.
   const versionFoot = (compact: boolean) =>
     appVersion && (
-      <p className="num shrink-0 border-t border-line px-2 py-3 text-center text-[12px] text-faint" title={compact ? version : undefined}>
-        {compact ? appVersion : version}
-      </p>
+      <div className="shrink-0 border-t border-line px-2 py-3 text-center text-[12px]" title={compact ? [version, newText].filter(Boolean).join(" · ") : undefined}>
+        <p className="num text-faint">{compact ? appVersion : version}</p>
+        {newVersion && (
+          <Link to="/admin/system/updates" className="num mt-1 inline-flex items-center gap-1 font-semibold text-moving hover:underline">
+            {compact ? <span aria-label={newText} className="h-2 w-2 rounded-full bg-moving" /> : newText}
+          </Link>
+        )}
+      </div>
     );
 
   const iconButton = "flex h-9 w-9 items-center justify-center rounded-[10px] text-ink-3 hover:bg-ink/[0.06] hover:text-ink";

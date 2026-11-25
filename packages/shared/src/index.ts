@@ -2652,6 +2652,48 @@ export const groupSchema = z.object({
  */
 export const API_VERSION = 3;
 
+/**
+ * Compares two versions X.Y.Z, with an optional leading "v" and an optional
+ * "-suffix" (0.1.0-dev, 1.0.0-beta.2), which goes before the same version
+ * without it. Returns -1, 0 or 1, or null when either is not a version.
+ */
+export function compareVersions(a: string, b: string): -1 | 0 | 1 | null {
+  const parse = (v: string) => {
+    const m = /^v?(\d+)\.(\d+)\.(\d+)(?:-([0-9A-Za-z.-]+))?$/.exec(v.trim());
+    return m ? { core: [Number(m[1]), Number(m[2]), Number(m[3])], pre: m[4] ?? null } : null;
+  };
+  const x = parse(a);
+  const y = parse(b);
+  if (!x || !y) return null;
+  for (let i = 0; i < 3; i++) {
+    const d = (x.core[i] as number) - (y.core[i] as number);
+    if (d !== 0) return d < 0 ? -1 : 1;
+  }
+  if (x.pre === y.pre) return 0;
+  if (x.pre === null) return 1;
+  if (y.pre === null) return -1;
+  return x.pre < y.pre ? -1 : 1;
+}
+
+/** Why the last look for a new version failed. */
+export type UpdateCheckError = "unreachable" | "rate_limited" | "unexpected";
+
+/** The platform's version against the latest release, for the owner of the platform. */
+export interface UpdateStatus {
+  /** The version running. */
+  current: string;
+  /** Where releases are looked for ("owner/name"); null when looking is turned off. */
+  repository: string | null;
+  /** The latest release; null while none is known (none published, or not looked yet). */
+  latest: { version: string; name: string; notes: string; url: string; publishedAt: string } | null;
+  /** The latest release is newer than the version running. */
+  available: boolean;
+  /** When it was last looked for, successfully or not. */
+  checkedAt: string | null;
+  /** Why the last look failed; what was known before is kept. */
+  error: UpdateCheckError | null;
+}
+
 export interface PublicConfig {
   /** API contract version this server serves. */
   apiVersion: number;

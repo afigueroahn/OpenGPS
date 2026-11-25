@@ -13,6 +13,7 @@ import {
   CarFront,
   ChartColumn,
   ChartLine,
+  CircleArrowUp,
   DatabaseBackup,
   FolderTree,
   HardDrive,
@@ -50,6 +51,7 @@ export type SectionId =
   | "systemNotifications"
   | "storage"
   | "backups"
+  | "updates"
   | "simulator"
   | "logs";
 
@@ -105,6 +107,7 @@ export const SECTIONS: Section[] = [
   { id: "systemNotifications", path: "system/notifications", group: "system", icon: BellRing, show: owner },
   { id: "storage", path: "system/storage", group: "system", icon: HardDrive, show: owner },
   { id: "backups", path: "system/backups", group: "system", icon: DatabaseBackup, show: owner },
+  { id: "updates", path: "system/updates", group: "system", icon: CircleArrowUp, show: owner },
   { id: "simulator", path: "system/simulator", group: "system", icon: Radar, show: owner },
   { id: "logs", path: "system/logs", group: "system", icon: ChartLine, show: owner },
 ];
