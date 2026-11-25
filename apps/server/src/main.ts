@@ -15,6 +15,7 @@ import { createSystemNotifier } from "./core/system";
 import { deleteOwnedAccounts } from "./core/privacy";
 import { createSettings } from "./core/settings";
 import { createTasks, syncRetention } from "./core/tasks";
+import { createUpdates } from "./core/updates";
 import { createDb } from "./db";
 import { createIngest } from "./ingest/poller";
 import { say } from "./i18n";
@@ -86,7 +87,8 @@ async function main(): Promise<void> {
   const moduleEngines = [createAntitheftEngine(moduleDeps), createDriversEngine(moduleDeps), createFuelEngine(moduleDeps), createDiagnosticsEngine(moduleDeps), createFleetEngine(moduleDeps), createMaintenanceEngine(moduleDeps), createRoutesEngine(moduleDeps), createIntegrationsEngine(moduleDeps), createReportsEngine(moduleDeps)];
   const backups = createBackups({ db, bus, config, settings, system });
   const simulator = createSimulator({ db, bus, config });
-  const { fastify } = await buildApp({ config, db, auth, bus, traccar, mailer, ingest, gate, settings, backups, outbox, system, simulator });
+  const updates = createUpdates({ config });
+  const { fastify } = await buildApp({ config, db, auth, bus, traccar, mailer, ingest, gate, settings, backups, outbox, system, simulator, updates });
 
   // Before serving anyone: if the database was restored by hand, the backup list goes back to being the folder's.
   await backups.reconcile().catch((err: Error) => console.error("[backups] could not check the list of backups at startup:", err.message));
@@ -104,6 +106,7 @@ async function main(): Promise<void> {
     ingest.start();
     tasks.start();
     backups.start();
+    updates.start();
     console.log("[ingest] reading positions from Traccar");
     // The simulated devices that were running pick up where they were.
     await simulator.start().catch((err: Error) => console.error("[simulator] could not resume:", err.message));
@@ -122,6 +125,7 @@ async function main(): Promise<void> {
     simulator.stop();
     await simulator.idle();
     backups.stop();
+    updates.stop();
     await backups.idle();
     await ingest.stop();
     events.stop();

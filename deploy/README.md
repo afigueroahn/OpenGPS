@@ -157,6 +157,7 @@ Las opcionales:
 | `DEVICE_GATEWAY_HOST` | `gw.` + el dominio | A qué nombre se configuran los equipos |
 | `DEVICE_GATEWAY_IP` | | La IP del servidor, para los equipos que solo aceptan números |
 | `APP_NAME` | `OpenGPS` | El nombre de la plataforma en la web, los correos y los avisos |
+| `UPDATE_REPOSITORY` | `afigueroahn/OpenGPS` | El repositorio de GitHub cuyas releases son las versiones nuevas: el dueño las ve en Administración → Actualizaciones. Vacío, la plataforma no consulta |
 | `COMPOSE_PROJECT_NAME` | `opengps` | Solo con Docker Compose: el nombre del grupo de contenedores |
 | `COMPOSE_PROFILES`, `CLOUDFLARE_TUNNEL_TOKEN` | | Solo con Docker Compose: `tunnel` y el token del túnel de Cloudflare (ver «Con un túnel de Cloudflare») |
 | `POSTGRES_TUNE_MEMORY`, `TRACCAR_JAVA_OPTS` | | Para servidores de 2 GB o menos: `768MB` y `-Xmx320m` |

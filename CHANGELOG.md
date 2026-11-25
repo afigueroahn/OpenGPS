@@ -26,6 +26,11 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/).
 - Flujo `Release`: cuando `main` trae una versión nueva con su sección en este archivo,
   publica las imágenes para amd64 y arm64 en `ghcr.io/afigueroahn/` y después crea el
   tag y la release de GitHub (#14).
+- Aviso de versión nueva para el dueño de la plataforma: el servidor compara la
+  versión instalada con la última release de `UPDATE_REPOSITORY`, como mucho una vez
+  por hora, y el dueño ve «Versión nueva» en el menú de su cuenta y al pie de
+  Administración. La sección Sistema → Actualizaciones muestra las dos versiones, las
+  notas de la nueva y cómo instalarla (#20).
 
 ### Cambiado
 

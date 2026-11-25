@@ -2,7 +2,7 @@
 import type { Me } from "@opengps/shared";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import clsx from "clsx";
-import { ArrowLeftRight, LogOut, Settings2 } from "lucide-react";
+import { ArrowLeftRight, CircleArrowUp, LogOut, Settings2 } from "lucide-react";
 import { type ReactNode, useEffect, useRef, useState } from "react";
 import { Trans, useTranslation } from "react-i18next";
 import { Link } from "react-router";
@@ -14,6 +14,7 @@ import i18n, { adoptLanguage } from "../lib/i18n";
 import type { LiveStatus } from "../lib/live";
 import { useConfig } from "../lib/session";
 import { adoptMode } from "../lib/theme";
+import { useNewVersion } from "../lib/updates";
 
 export const errorText = (err: unknown) => (err instanceof ApiRequestError ? err.message : i18n.t("map.errors.action"));
 
@@ -70,6 +71,8 @@ export function AccountMenu({ me }: { me: Me }) {
   const root = useRef<HTMLDivElement>(null);
   const { name, email } = me.user;
   const version = useConfig().data?.version;
+  // Only the platform's owner is told of a newer version.
+  const newVersion = useNewVersion(me.user.platformAdmin);
   useEffect(() => {
     if (!open) return;
     const close = (e: MouseEvent | KeyboardEvent) => {
@@ -112,6 +115,7 @@ export function AccountMenu({ me }: { me: Me }) {
       >
         <Avatar name={name} photoUrl={me.user.photoUrl} className="h-full w-full" />
       </button>
+      {newVersion && <span aria-hidden className="pointer-events-none absolute -right-0.5 -top-0.5 h-2.5 w-2.5 rounded-full bg-moving" />}
       {open && (
         <div role="menu" className="themed absolute right-0 top-10 z-20 w-72 rounded-[14px] bg-surface p-1.5 text-ink shadow-2xl ring-1 ring-ink/10">
           <div className="px-3 py-2.5">
@@ -129,6 +133,11 @@ export function AccountMenu({ me }: { me: Me }) {
               <ArrowLeftRight size={16} /> <span className="truncate">{t("map.account.switchTo", { name: a.name })}</span>
             </button>
           ))}
+          {newVersion && (
+            <Link role="menuitem" to="/admin/system/updates" className={clsx(item, "text-moving")}>
+              <CircleArrowUp size={16} /> {t("common.newVersion", { version: newVersion })}
+            </Link>
+          )}
           <Link role="menuitem" to="/admin" className={item}>
             <Settings2 size={16} /> {t("admin.title")}
           </Link>

@@ -58,6 +58,8 @@ const schema = z.object({
   APP_NAME: z.string().min(1).default("OpenGPS"),
   // The release this image is, set when the image is built. Empty: built from the code.
   APP_VERSION: z.string().default(""),
+  // GitHub repository whose releases are new versions of this one ("owner/name"). Empty: no looking.
+  UPDATE_REPOSITORY: z.string().default("afigueroahn/OpenGPS"),
   PUBLIC_URL: z.url(),
   /** Additional origins authorized to use the API, comma-separated. */
   TRUSTED_ORIGINS: z.string().default(""),
@@ -158,6 +160,7 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env) {
     host: e.HOST,
     appName: e.APP_NAME,
     appVersion: e.APP_VERSION || SOURCE_VERSION,
+    updateRepository: e.UPDATE_REPOSITORY.trim(),
     publicUrl,
     trustedOrigins: [
       publicUrl,

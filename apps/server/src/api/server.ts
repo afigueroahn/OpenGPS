@@ -102,6 +102,7 @@ import type { Traccar } from "../traccar";
 import { type Backups, createBackups } from "../core/backups";
 import { signInButtons } from "../core/oauth";
 import { type Settings, createSettings } from "../core/settings";
+import { type Updates, createUpdates } from "../core/updates";
 import { type LiveHub, createLiveHub } from "./live";
 import { deleteNotification, listNotifications, notificationLog, notificationOptions, saveNotification, testNotification } from "../core/notifications";
 import { type Outbox, createOutbox } from "../core/outbox";
@@ -110,6 +111,7 @@ import { headerLanguage, isServerKey, knownLanguage, render, say, shared, tr } f
 import { type Simulator, createSimulator } from "../simulator/manager";
 import { registerPlatformSettings } from "./platform";
 import { registerSimulator } from "./simulator";
+import { registerUpdates } from "./updates";
 import { registerWeb } from "./web";
 
 export interface AppDeps {
@@ -131,6 +133,8 @@ export interface AppDeps {
   system?: SystemNotifier;
   /** The device simulator of the admin console. */
   simulator?: Simulator;
+  /** Looks for a newer version of the platform. */
+  updates?: Updates;
 }
 
 export interface App {
@@ -912,6 +916,7 @@ export async function buildApp(deps: AppDeps): Promise<App> {
 
   registerPlatformSettings({ app, db, bus, config, traccar: deps.traccar, mailer: deps.mailer, settings, backups, outbox, system, platformAdmin, clientIp, language: languageOf, parse });
   registerSimulator({ app, simulator, geocoder, db, platformAdmin, clientIp, language: languageOf, parse });
+  registerUpdates({ app, updates: deps.updates ?? createUpdates({ config }), platformAdmin });
 
   // ─── Live ──────────────────────────────────────────────────────────────────
 

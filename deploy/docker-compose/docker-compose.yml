@@ -131,6 +131,8 @@ services:
       PUBLIC_URL: ${PUBLIC_URL:?Set PUBLIC_URL, the address of the web app (https://example.com)}
       AUTH_SECRET: ${AUTH_SECRET:?Set AUTH_SECRET (openssl rand -hex 32)}
       APP_NAME: ${APP_NAME:-OpenGPS}
+      # Whose releases are newer versions of this one. Empty turns the look off.
+      UPDATE_REPOSITORY: ${UPDATE_REPOSITORY-afigueroahn/OpenGPS}
       DEVICE_GATEWAY_HOST: ${DEVICE_GATEWAY_HOST:-}
       DEVICE_GATEWAY_IP: ${DEVICE_GATEWAY_IP:-}
       # Everything with the database's only user: the platform, the gateway's positions and the backups.

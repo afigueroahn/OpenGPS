@@ -84,6 +84,7 @@ import {
   type StorageSettingsInput,
   type ThemeMode,
   type TrackPoint,
+  type UpdateStatus,
   type UpdateVehicleInput,
   type Vehicle,
   type VehicleDriver,
@@ -461,6 +462,10 @@ export const getAudit = (before?: number) =>
 // ─── Platform admin console ──────────────────────────────────────────────────
 
 export const getAdminStats = () => api<{ stats: PlatformStats }>("/api/admin/stats").then((r) => r.stats);
+/** The platform's version against the latest release. Only for whoever administers the platform. */
+export const getUpdates = () => api<{ updates: UpdateStatus }>("/api/admin/updates").then((r) => r.updates);
+/** Looks for a new version now, unless it was looked for less than a minute ago. */
+export const checkUpdates = () => api<{ updates: UpdateStatus }>("/api/admin/updates/check", { method: "POST", body: {} }).then((r) => r.updates);
 export const getAdminAudit = (before?: number) =>
   api<{ entries: AuditEntry[] }>(`/api/admin/audit?limit=50${before ? `&before=${before}` : ""}`).then((r) => r.entries);
 export const getAccountSummary = () => api<{ summary: AccountSummary }>("/api/account/summary").then((r) => r.summary);

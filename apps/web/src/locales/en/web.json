@@ -55,7 +55,8 @@
       "logs": "Logs and metrics",
       "notifications": "Notifications",
       "channels": "Notification channels",
-      "systemNotifications": "System notifications"
+      "systemNotifications": "System notifications",
+      "updates": "Updates"
     },
     "lead": {
       "overview": "See how your account is doing at a glance and get to its settings.",
@@ -78,7 +79,8 @@
       "logs": "The platform's numbers right now and what its administration did.",
       "notifications": "Who is told about each alert, and through which channel.",
       "channels": "The channels the platform notifies through. They are connected once, here, and every account uses them.",
-      "systemNotifications": "Who the platform tells about what happens to it: backups, disk, channels and new accounts."
+      "systemNotifications": "Who the platform tells about what happens to it: backups, disk, channels and new accounts.",
+      "updates": "The version this installation runs against the latest one published, and what it brings."
     },
     "menu": {
       "open": "Open the menu",
@@ -974,6 +976,28 @@
           "data": "Data"
         }
       }
+    },
+    "updates": {
+      "title": "Platform version",
+      "from": "Compared with the versions published in {{repository}} · checked {{when}}",
+      "never": "never",
+      "checkNow": "Check now",
+      "installed": "Installed",
+      "latest": "Latest published",
+      "available": "A new version is available: {{version}}.",
+      "howTo": "How to install it",
+      "upToDate": "This installation has the latest version.",
+      "none": "No version has been published yet.",
+      "notYet": "Not checked yet.",
+      "off": "Looking for new versions is off: the UPDATE_REPOSITORY variable is empty.",
+      "error": {
+        "unreachable": "GitHub could not be reached. It tries again by itself; what is shown is the last thing known.",
+        "rate_limited": "GitHub asked to wait before checking again. It tries again by itself in a while.",
+        "unexpected": "GitHub answered something unexpected. It tries again by itself in a while."
+      },
+      "notes": "Changes in {{name}}",
+      "onGitHub": "View on GitHub",
+      "noNotes": "This version has no notes."
     }
   },
   "gps": {
@@ -1024,6 +1048,7 @@
     "group": "Group",
     "groups": "Groups",
     "myVehicles": "My vehicles",
-    "error": "Something went wrong. Try again."
+    "error": "Something went wrong. Try again.",
+    "newVersion": "New version: {{version}}"
   }
 }
