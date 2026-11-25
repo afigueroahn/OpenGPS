@@ -153,28 +153,6 @@ services:
     security_opt:
       - no-new-privileges:true
 
-  # Restores a backup when the console asks for it: restores the databases
-  # and the files aside, stops the platform and the gateway, swaps them and
-  # brings them back, going back to what there was if the platform does not
-  # start (deploy/helper.sh). It is the only service with access to Docker,
-  # through its socket, and it opens no port.
-  helper:
-    image: ghcr.io/afigueroahn/opengps-helper:0.4.0
-    restart: unless-stopped
-    logging: *logging
-    depends_on:
-      postgres:
-        condition: service_healthy
-    environment:
-      POSTGRES_USER: ${POSTGRES_USER:-postgres}
-      POSTGRES_DB: ${POSTGRES_DB:-opengps}
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-      - backups-data:/data/backups
-      - files-data:/data/files
-    security_opt:
-      - no-new-privileges:true
-
 volumes:
   postgres-data:
   files-data:
