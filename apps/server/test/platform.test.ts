@@ -51,7 +51,7 @@ describe("registration and session", () => {
   it("signing up again with an email that has an account answers the same, and the email says how to come in", async () => {
     const mailsTo = (email: string) => h.mails.filter((m) => m.to === email).map((m) => m.subject);
     const before = mailsTo(ana.email).length;
-    const again = await h.request("POST", "/api/auth/sign-up/email", { body: { name: "Ana otra vez", email: ana.email, password: "otra-clave-123", legalVersion: LEGAL_VERSION } });
+    const again = await h.request("POST", "/api/auth/sign-up/email", { body: { name: "Ana otra vez", email: ana.email, password: "otra-clave-123", legalVersion: LEGAL_VERSION } }); // gitleaks:allow (a test password)
     expect(again.status).toBe(200);
     // Asking for the confirmation link of a confirmed email sends the same notice, and answers the same as any other.
     const resent = await h.request("POST", "/api/auth/send-verification-email", { body: { email: ana.email, callbackURL: "/" } });
