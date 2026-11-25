@@ -1,17 +1,34 @@
 #!/bin/sh
-# Writes the variables of a new OpenGPS installation, from deploy/.env.example,
-# with its address filled in and its secrets generated here (openssl rand).
+# Writes the variables of a new OpenGPS installation, from .env.example (or
+# env.example, as a release attaches it) next to this script, with its address
+# filled in and its secrets generated here (openssl rand).
 #
-#   sh deploy/generate-env.sh https://example.com deploy/docker-compose/.env   writes the file
-#   sh deploy/generate-env.sh https://example.com                              prints them, to paste in Dokploy
+#   sh generate-env.sh https://example.com .env   writes the file
+#   sh generate-env.sh https://example.com        prints them, to paste in Dokploy
 #
 # The address can also be given as the domain alone (example.com): it is
-# taken as https. It never overwrites a file that exists.
+# taken as https. It never overwrites a file that exists. OPENGPS_VERSION is
+# the release's when the example comes from one; from the repository, the
+# version in its package.json. OPENGPS_VERSION=X.Y.Z in the environment picks
+# another.
 set -eu
 
 HERE="$(cd "$(dirname "$0")" && pwd)"
-ADDRESS="${1:?Usage: sh deploy/generate-env.sh <https://domain> [file]}"
+ADDRESS="${1:?Usage: sh generate-env.sh <https://domain> [file]}"
 OUT="${2:-}"
+
+TEMPLATE="$HERE/.env.example"
+[ -f "$TEMPLATE" ] || TEMPLATE="$HERE/env.example"
+[ -f "$TEMPLATE" ] || { echo "Neither .env.example nor env.example is next to generate-env.sh" >&2; exit 1; }
+
+VERSION="${OPENGPS_VERSION:-}"
+if [ -z "$VERSION" ]; then
+  VERSION="$(sed -n 's/^OPENGPS_VERSION=//p' "$TEMPLATE")"
+fi
+if [ -z "$VERSION" ] && [ -f "$HERE/../package.json" ]; then
+  VERSION="$(sed -n 's/^  "version": "\(.*\)",$/\1/p' "$HERE/../package.json" | head -1)"
+fi
+[ -n "$VERSION" ] || { echo "Which version? Run it again with OPENGPS_VERSION=X.Y.Z in front" >&2; exit 1; }
 
 case "$ADDRESS" in
   http://* | https://*) ;;
@@ -29,7 +46,8 @@ fill() {
     -e "s|^PUBLIC_URL=.*|PUBLIC_URL=$ADDRESS|" \
     -e "s|^AUTH_SECRET=.*|AUTH_SECRET=$(openssl rand -hex 32)|" \
     -e "s|^POSTGRES_PASSWORD=.*|POSTGRES_PASSWORD=$(openssl rand -hex 32)|" \
-    "$HERE/.env.example"
+    -e "s|^OPENGPS_VERSION=.*|OPENGPS_VERSION=$VERSION|" \
+    "$TEMPLATE"
 }
 
 if [ -n "$OUT" ]; then

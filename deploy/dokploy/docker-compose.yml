@@ -4,8 +4,8 @@
 # Compose Path:
 #   ./deploy/dokploy/docker-compose.yml
 #
-# Variables: paste them in the Environment tab. Only three are required
-# (PUBLIC_URL, AUTH_SECRET and POSTGRES_PASSWORD); `sh deploy/generate-env.sh
+# Variables: paste them in the Environment tab. Four are required
+# (PUBLIC_URL, AUTH_SECRET, POSTGRES_PASSWORD and OPENGPS_VERSION); `sh deploy/generate-env.sh
 # https://<domain>` prints them with the secrets already generated. Without
 # them the deploy stops with a message. The rest of the platform is set up
 # from its console. Every variable is in deploy/.env.example.
@@ -19,9 +19,10 @@
 # published to the host, so gw.<domain> is a DNS record straight to the server
 # ("DNS only" in Cloudflare) and the server's firewall opens them, TCP and UDP.
 #
-# Nothing is mounted from the repository: Dokploy clones the code again on
-# every deploy. The images are built here from it, the database's with its
-# first-start script inside. The guide is deploy/README.md.
+# Nothing is mounted from the repository. The images come built from
+# ghcr.io, for Intel/AMD and ARM, in the version OPENGPS_VERSION says: to
+# install a new one, change it in the Environment tab and Deploy. The guide is
+# deploy/README.md.
 
 x-logging: &logging
   driver: json-file
@@ -31,9 +32,7 @@ x-logging: &logging
 
 services:
   postgres:
-    build:
-      context: ../..
-      dockerfile: deploy/postgres.Dockerfile
+    image: ghcr.io/afigueroahn/opengps-postgres:${OPENGPS_VERSION:?Set OPENGPS_VERSION, the OpenGPS version to run (0.1.0)}
     restart: unless-stopped
     logging: *logging
     shm_size: 256m
@@ -117,10 +116,8 @@ services:
       - no-new-privileges:true
 
   opengps:
-    build:
-      context: ../..
-      # The backend with the web app inside, on the same port.
-      dockerfile: deploy/opengps.Dockerfile
+    # The backend with the web app inside, on the same port.
+    image: ghcr.io/afigueroahn/opengps:${OPENGPS_VERSION:?Set OPENGPS_VERSION, the OpenGPS version to run (0.1.0)}
     restart: unless-stopped
     logging: *logging
     depends_on:
@@ -159,9 +156,7 @@ services:
   # start (deploy/helper.sh). It is the only service with access to Docker,
   # through its socket, and it opens no port.
   helper:
-    build:
-      context: ../..
-      dockerfile: deploy/helper.Dockerfile
+    image: ghcr.io/afigueroahn/opengps-helper:${OPENGPS_VERSION:?Set OPENGPS_VERSION, the OpenGPS version to run (0.1.0)}
     restart: unless-stopped
     logging: *logging
     depends_on:

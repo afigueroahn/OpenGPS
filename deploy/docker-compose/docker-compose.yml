@@ -1,12 +1,14 @@
-# OpenGPS with Docker Compose, on any server with Docker.
+# OpenGPS with Docker Compose, on any server with Docker. Each release
+# attaches this file, generate-env.sh and env.example:
 #
-#   sh deploy/generate-env.sh https://example.com deploy/docker-compose/.env
-#   docker compose -f deploy/docker-compose/docker-compose.yml up -d --build
+#   sh generate-env.sh https://example.com .env
+#   docker compose up -d
 #
-# Its variables are in deploy/.env.example: PUBLIC_URL, AUTH_SECRET and
-# POSTGRES_PASSWORD; the rest of the platform is set up from its console.
-# The images are built here from the repository, for the server's
-# architecture (Intel/AMD or ARM). The guide is deploy/README.md.
+# Its variables are in deploy/.env.example: PUBLIC_URL, AUTH_SECRET,
+# POSTGRES_PASSWORD and OPENGPS_VERSION; the rest of the platform is set up
+# from its console. The images come built, for Intel/AMD and ARM, from
+# ghcr.io; deploy/docker-compose/build.yml builds them from the code instead.
+# The guide is deploy/README.md.
 #
 # Published to the host: only the ports the GPS devices connect to. The web app
 # and the API answer together on port 3000 of the `opengps` service, inside the
@@ -25,9 +27,7 @@ x-logging: &logging
 
 services:
   postgres:
-    build:
-      context: ../..
-      dockerfile: deploy/postgres.Dockerfile
+    image: ghcr.io/afigueroahn/opengps-postgres:${OPENGPS_VERSION:?Set OPENGPS_VERSION, the OpenGPS version to run (0.1.0)}
     restart: unless-stopped
     logging: *logging
     shm_size: 256m
@@ -115,10 +115,8 @@ services:
       - no-new-privileges:true
 
   opengps:
-    build:
-      context: ../..
-      # The backend with the web app inside, on the same port.
-      dockerfile: deploy/opengps.Dockerfile
+    # The backend with the web app inside, on the same port.
+    image: ghcr.io/afigueroahn/opengps:${OPENGPS_VERSION:?Set OPENGPS_VERSION, the OpenGPS version to run (0.1.0)}
     restart: unless-stopped
     logging: *logging
     depends_on:
@@ -161,9 +159,7 @@ services:
   # start (deploy/helper.sh). It is the only service with access to Docker,
   # through its socket, and it opens no port.
   helper:
-    build:
-      context: ../..
-      dockerfile: deploy/helper.Dockerfile
+    image: ghcr.io/afigueroahn/opengps-helper:${OPENGPS_VERSION:?Set OPENGPS_VERSION, the OpenGPS version to run (0.1.0)}
     restart: unless-stopped
     logging: *logging
     depends_on:

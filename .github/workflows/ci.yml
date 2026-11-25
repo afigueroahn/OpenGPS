@@ -40,6 +40,16 @@ jobs:
         run: pnpm build
       - name: Dependency audit
         run: pnpm audit
+      - name: Install files
+        run: |
+          # The env generator fills the secrets and the version, and the
+          # compose files are valid with it, with images and built from code.
+          sh deploy/generate-env.sh https://example.com "$RUNNER_TEMP/.env"
+          grep -qx "OPENGPS_VERSION=$(node -p 'require("./package.json").version')" "$RUNNER_TEMP/.env"
+          for compose in deploy/docker-compose/docker-compose.yml deploy/dokploy/docker-compose.yml; do
+            docker compose --env-file "$RUNNER_TEMP/.env" -f "$compose" config --quiet
+          done
+          docker compose --env-file "$RUNNER_TEMP/.env" -f deploy/docker-compose/docker-compose.yml -f deploy/docker-compose/build.yml config --quiet
 
   test:
     name: Unit and integration tests
