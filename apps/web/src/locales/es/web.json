@@ -789,7 +789,7 @@
       "list": {
         "title": "Copias",
         "noteRestore": "Cada copia se puede descargar o restaurar: restaurar devuelve la plataforma a como estaba en ese momento.",
-        "noteDownload": "Desde aquí se descargan sus archivos. Para restaurar una, el ayudante de restauración (el servicio helper) tiene que estar en marcha en el servidor.",
+        "noteDownload": "Desde aquí se descargan sus archivos. Este servidor no tiene acceso a las bases para restaurarlas.",
         "copying": "Copiando…",
         "now": "Hacer una copia ahora",
         "empty": "Todavía no hay ninguna copia en la lista.",

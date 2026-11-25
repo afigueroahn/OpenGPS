@@ -789,7 +789,7 @@
       "list": {
         "title": "Backups",
         "noteRestore": "Each backup can be downloaded or restored: restoring takes the platform back to how it was at that moment.",
-        "noteDownload": "From here you can download their files. To restore one, the restore helper (the helper service) has to be running on the server.",
+        "noteDownload": "From here you can download their files. This server has no access to the databases to restore them.",
         "copying": "Backing up…",
         "now": "Back up now",
         "empty": "There are no backups in the list yet.",

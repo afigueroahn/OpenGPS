@@ -23,6 +23,15 @@ export interface Traccar {
    * would arrive later, without knowing the vehicle's situation.
    */
   sendCommand(id: number, type: string, attributes?: Record<string, unknown>): Promise<void>;
+  /**
+   * Opens an administration session, which still holds after Traccar's
+   * database changes (ADR-0009). Null if Traccar does not answer.
+   */
+  signIn(): Promise<string | null>;
+  /** Restarts Traccar with a session from `signIn`: it stops, and Docker brings it back. */
+  reboot(session: string): Promise<void>;
+  /** Whether Traccar answers. */
+  ready(): Promise<boolean>;
 }
 
 export class TraccarError extends Error {
@@ -118,6 +127,27 @@ export function createTraccar(config: Config): Traccar {
       // command instead of saving it to deliver when the device comes back.
       const res = await call("POST", "/api/commands/send", { deviceId: id, type, attributes: { ...attributes, noQueue: true } });
       if (res.status !== 200) throw new TraccarError(tr(config.defaultLanguage, "api.traccar.offline"), res.status); // i18n: stored text
+    },
+
+    async signIn() {
+      const res = await fetch(`${apiUrl}/api/session`, { method: "POST", body: new URLSearchParams({ email: adminEmail, password: adminPassword }), signal: AbortSignal.timeout(10_000) }).catch(() => null);
+      if (!res) return null;
+      const session = res.headers.get("set-cookie")?.match(/JSESSIONID=[^;]+/)?.[0];
+      if (!res.ok || !session) throw new TraccarError("Traccar did not open a session for the platform", res.status);
+      return session;
+    },
+
+    async reboot(session) {
+      // Traccar stops while it answers: a connection that closes without an answer is that.
+      const res = await fetch(`${apiUrl}/api/server/reboot`, { method: "POST", headers: { Cookie: session }, signal: AbortSignal.timeout(10_000) }).catch(() => null);
+      if (res && !res.ok) throw new TraccarError("Traccar did not restart", res.status);
+    },
+
+    async ready() {
+      return fetch(`${apiUrl}/api/server`, { signal: AbortSignal.timeout(5000) }).then(
+        (res) => res.ok,
+        () => false,
+      );
     },
   };
 }
