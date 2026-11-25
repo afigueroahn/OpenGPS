@@ -80,7 +80,7 @@
       "notifications": "A quién se avisa de cada alerta y por qué canal.",
       "channels": "Los canales por los que la plataforma avisa. Se conectan una vez, aquí, y los usan todas las cuentas.",
       "systemNotifications": "A quién avisa la plataforma de lo que le pasa a ella: copias de seguridad, disco, canales y cuentas nuevas.",
-      "updates": "La versión que corre esta instalación frente a la última publicada, y lo que trae."
+      "updates": "Versión actual, última disponible y novedades."
     },
     "menu": {
       "open": "Abrir el menú",
@@ -980,8 +980,6 @@
     },
     "updates": {
       "title": "Versión de la plataforma",
-      "from": "Comparada con las versiones publicadas en {{repository}} · consultado {{when}}",
-      "never": "nunca",
       "checkNow": "Buscar ahora",
       "installed": "Instalada",
       "latest": "Última publicada",

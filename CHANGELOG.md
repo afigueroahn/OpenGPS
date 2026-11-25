@@ -6,6 +6,12 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Sin publicar]
 
+### Cambiado
+
+- La sección de versión de la consola dice menos: la frase bajo su título queda en
+  «Versión actual, última disponible y novedades.» y la tarjeta ya no muestra con qué
+  repositorio se compara ni cuándo se consultó (#48).
+
 ## [0.2.0] - 2026-11-25
 
 ### Añadido
