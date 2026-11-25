@@ -6,6 +6,15 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Sin publicar]
 
+### Cambiado
+
+- La confirmación de «Actualizar a X.Y.Z» dice solo que la plataforma podría estar
+  fuera de servicio unos segundos y que se restablecerá sola (#32).
+- Después de actualizar desde la consola, Actualizaciones muestra un solo mensaje, «La
+  plataforma se actualizó a la versión X.Y.Z», durante una hora, en lugar de ese más
+  «Esta instalación tiene la última versión» para siempre. Un fallo se muestra mientras
+  esa versión siga siendo la que se ofrece (#32).
+
 ## [0.1.1] - 2026-11-25
 
 ### Cambiado

@@ -1003,11 +1003,11 @@
         "button": "Actualizar a {{version}}",
         "confirmTitle": "Actualizar a la versión {{version}}",
         "confirm": "Actualizar",
-        "confirmBody": "Primero se hace una copia de seguridad de todo. Después la plataforma pasa de la {{current}} a la {{version}} y se reinicia: queda sin servicio unos segundos, y los equipos que reporten en ese momento vuelven a conectarse solos. Si la versión nueva no arranca, se vuelve sola a la {{current}}.",
+        "confirmBody": "Durante la actualización, la plataforma podría estar fuera de servicio unos segundos y se restablecerá automáticamente.",
         "preparing": "Haciendo la copia de seguridad antes de instalar la {{version}}…",
         "requested": "Copia lista. Esperando al ayudante para instalar la {{version}}…",
         "running": "Instalando la {{version}}. La plataforma se reinicia y esta página se recarga sola.",
-        "ok": "Se instaló la versión {{version}} ({{when}}).",
+        "ok": "La plataforma se actualizó a la versión {{version}} ({{when}}).",
         "manual": "Esta instalación se actualiza a mano: con Docker Compose, sigue «Instalar una versión nueva» de la guía; con Dokploy, cambia OPENGPS_VERSION a {{version}} en Environment y pulsa Deploy.",
         "source": "Esta plataforma se construyó desde el código: se actualiza con git pull y volviendo a construir.",
         "reasons": {
