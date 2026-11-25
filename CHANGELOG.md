@@ -6,6 +6,8 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Sin publicar]
 
+## [0.5.0] - 2026-11-25
+
 ### Cambiado
 
 - Si una versión nueva no arranca y la anterior tampoco, el ayudante pide restaurar la
