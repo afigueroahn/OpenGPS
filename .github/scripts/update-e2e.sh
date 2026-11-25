@@ -2,7 +2,7 @@
 # Installing a version from the console, end to end, with Docker (ADR-0004),
 # for one way of installing (ADR-0005).
 #
-#   .github/scripts/update-e2e.sh [WAY] [WORK_DIR]
+#   .github/scripts/update-e2e.sh [WAY] [INSTALL_DIR]
 #
 # WAY is a folder of deploy/ that the helper can update (docker-compose by
 # default, caddy, cloudflare), or "legacy":
@@ -16,14 +16,18 @@
 #   its Cloudflare Tunnel profile, and asks its helper for 0.0.2: the
 #   installation must end as deploy/cloudflare, with its tunnel.
 #
+# INSTALL_DIR is the installation's folder, /opt/opengps by default: the one
+# deploy/README.md uses, which is also where the helper image carries its
+# compose files, and the helper must not mix them up. It must be writable; with
+# Docker Desktop, pass a folder it shares.
+#
 # Run from the repository. KEEP=1 leaves the installation and the images.
 set -euo pipefail
 
 REG=ghcr.io/afigueroahn
 WAY="${1:-docker-compose}"
 PROJECT="opengps-e2e-$WAY"
-WORK="${2:-$(mktemp -d)}"
-INSTALL="$WORK/install"
+INSTALL="${2:-/opt/opengps}"
 LEGACY=0.1.2
 
 say() { echo "== $*"; }

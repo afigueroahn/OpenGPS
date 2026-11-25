@@ -6,6 +6,14 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Sin publicar]
 
+### Corregido
+
+- El botón «Actualizar» de la consola vuelve a funcionar en una instalación en
+  `/opt/opengps`, la carpeta de la guía. Las versiones 0.2.0 a 0.4.0 no se podían
+  instalar ahí: el ayudante respondía «No se pudieron preparar los archivos» y no
+  cambiaba nada. La versión con el arreglo se instala con el botón desde cualquier
+  versión anterior (#58).
+
 ## [0.4.0] - 2026-11-25
 
 ### Cambiado
