@@ -161,7 +161,7 @@ describe("platform settings", () => {
     expect((await save("inventada", {})).status).toBe(404);
   });
 
-  it("start from what the server variables provide", async () => {
+  it("start from their factory values", async () => {
     const s = await view();
     expect(s.general).toMatchObject({ registrationOpen: true, newAccountMaxVehicles: null, newAccountModules: [], mapStyleUrl: h.config.mapStyleUrl, claimWindowMinutes: h.config.claimWindowMinutes, alertEmailsPerHour: 40, maxUploadMb: 8 });
     expect(s.passwords).toEqual({ minLength: 8, number: false, symbol: false, lowercase: false, uppercase: false });
@@ -203,10 +203,9 @@ describe("platform settings", () => {
   });
 
   it("the address service starts with OpenStreetMap's public one, and its identification is shown filled in", async () => {
-    // A new installation, with nothing about the service in its variables.
-    const { GEOCODER_URL: _unset, ...bare } = process.env;
-    expect(loadConfig(bare).geocoder.url).toBe("https://nominatim.openstreetmap.org/reverse");
-    expect(loadConfig({ ...bare, GEOCODER_URL: "" }).geocoder.url).toBe("");
+    // A new installation. A variable does not change it: the service is set up in the console (ADR-0010).
+    expect(loadConfig().geocoder.url).toBe("https://nominatim.openstreetmap.org/reverse");
+    expect(loadConfig({ ...process.env, GEOCODER_URL: "" }).geocoder.url).toBe("https://nominatim.openstreetmap.org/reverse");
 
     const automatic = `${h.config.appName} (${h.config.publicUrl})`;
     const general = (await view()).general;
@@ -238,9 +237,8 @@ describe("platform settings", () => {
   });
 
   it("the routing service starts with the public one over OpenStreetMap data, and empty turns it off", async () => {
-    const { ROUTING_URL: _unset, ...bare } = process.env;
-    expect(loadConfig(bare).routing.url).toBe("https://router.project-osrm.org");
-    expect(loadConfig({ ...bare, ROUTING_URL: "" }).routing.url).toBe("");
+    expect(loadConfig().routing.url).toBe("https://router.project-osrm.org");
+    expect(loadConfig({ ...process.env, ROUTING_URL: "" }).routing.url).toBe("https://router.project-osrm.org");
 
     const general = (await view()).general;
     // Whoever saved the settings before this one existed keeps what the server brings.

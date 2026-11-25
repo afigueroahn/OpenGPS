@@ -418,15 +418,7 @@ export function MailForm({ current, meEmail }: { current: PlatformSettings["mail
       <Card title={t("admin.settings.mail.title")} note={t("admin.settings.mail.note")}>
         <Row
           title={t("admin.settings.mail.custom")}
-          note={
-            form.custom
-              ? t("admin.settings.mail.customOn")
-              : current.custom
-                ? t("admin.settings.mail.customOff")
-                : current.host
-                  ? t("admin.settings.mail.customOffHost", { host: current.host })
-                  : t("admin.settings.mail.customOffNone")
-          }
+          note={form.custom ? t("admin.settings.mail.customOn") : t("admin.settings.mail.customOff")}
         >
           <Switch label={t("admin.settings.mail.custom")} checked={form.custom} onChange={(on) => set("custom", on)} />
         </Row>

@@ -6,6 +6,16 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Sin publicar]
 
+### Cambiado
+
+- Lo que se ajusta en la consola de administración ya no se puede dar con variables de
+  entorno: el correo saliente, el mapa, los servicios de direcciones y de rutas, los
+  plazos y la retención de equipos e historial, los avisos al dueño y los datos de los
+  textos legales. Ninguna forma de instalar pasaba esas variables, así que una
+  instalación hecha con la guía no cambia; quien las pasara por su cuenta escribe esos
+  valores en la consola. En el servidor de correo, «apagado» dice ahora lo que pasa: la
+  plataforma no envía correos (ADR-0010, #79).
+
 ## [0.5.2] - 2026-11-25
 
 ### Cambiado

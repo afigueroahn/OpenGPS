@@ -1,8 +1,8 @@
 // Routes along streets, for the simulator: a path through the points the
 // person marked, with the driving time of each stretch.
 //
-// The external service speaks OSRM's API and is configured with ROUTING_URL;
-// without it, routes are straight lines. The public one admits one query per
+// The external service speaks OSRM's API and is configured in the console;
+// without its address, routes are straight lines. The public one admits one query per
 // second and promises nothing, so queries go one at a time, spaced out, and
 // what it already answered is remembered.
 import { type LonLat, SIM_LIMITS, type SimTrace, distanceToSegmentM, metersBetween } from "@opengps/shared";
