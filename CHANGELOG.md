@@ -6,6 +6,8 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Sin publicar]
 
+## [0.4.0] - 2026-11-25
+
 ### Cambiado
 
 - Una instalación nueva queda en la última versión sin escribir su número: cada compose
