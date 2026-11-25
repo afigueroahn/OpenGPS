@@ -1,10 +1,10 @@
 # API de OpenGPS — contrato para las apps
 
-**Versión del contrato:** 3 · **Tipos y esquemas:** [packages/shared/src/index.ts](../packages/shared/src/index.ts)
+**Versión del contrato:** 3 · **Tipos y esquemas:** [packages/shared/src](../packages/shared/src)
 
 La web y las apps móviles hablan con la plataforma por esta API. Este documento fija qué rutas existen, quién puede usarlas y qué envían y devuelven. Una prueba automática ([contract.test.ts](../apps/server/test/contract.test.ts)) compara la lista de rutas de este documento con las que el servidor atiende de verdad: si se agrega, quita o renombra una ruta sin actualizar aquí, la prueba falla.
 
-La forma exacta de cada dato vive en [packages/shared/src/index.ts](../packages/shared/src/index.ts). Las apps importan esos mismos tipos y esquemas, así que no hay una segunda definición que mantener.
+La forma exacta de cada dato vive en [packages/shared/src](../packages/shared/src), con un archivo por tema. Las apps importan esos mismos tipos y esquemas desde `@opengps/shared`, así que no hay una segunda definición que mantener.
 
 ## Reglas generales
 
