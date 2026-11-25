@@ -71,6 +71,8 @@ function Install({ updates }: { updates: UpdateStatus }) {
             open={confirming}
             title={t("admin.updates.install.confirmTitle", { version: latest.version })}
             confirm={t("admin.updates.install.confirm")}
+            // Installing deletes nothing, and goes back by itself if it fails.
+            tone="primary"
             onClose={() => setConfirming(false)}
             action={async () => queryClient.setQueryData(UPDATES_KEY, await installUpdate(latest.version))}
           >
