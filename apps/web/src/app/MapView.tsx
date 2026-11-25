@@ -1,7 +1,7 @@
 // Map: live it shows vehicles clustered when zoomed out, with a heading arrow
 // and the recent trip of the selected one; in history, the trips of a
 // period with their markers and the player point.
-import { type Geofence, type HistoryPoint, type LonLat, type TrackPoint, VEHICLE_STATUS_COLOR, type Vehicle, labelPoint, outlineOf, vehicleStatus } from "@opengps/shared";
+import { type Geofence, type HistoryPoint, type LonLat, type TrackPoint, VEHICLE_STATUS_COLOR, type Vehicle, labelPoint, metersBetween, outlineOf, vehicleStatus } from "@opengps/shared";
 import type { FeatureCollection, LineString, MultiLineString, Point, Polygon } from "geojson";
 import {
   type FilterSpecification,
@@ -16,7 +16,7 @@ import "../lib/mapSetup";
 import { type Ref, useEffect, useImperativeHandle, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { type GeofenceDraft, type Handle, colorOfGeofence, draftFeatures, handlesOf, polygonOf, withDrag, withTap } from "./geofences/draft";
-import { GAP_S, distanceM } from "./history/geo";
+import { GAP_S } from "./history/geo";
 
 const FONT_BOLD = ["Noto Sans Bold"];
 const FONT_REGULAR = ["Noto Sans Regular"];
@@ -121,7 +121,7 @@ function routeLines(points: HistoryPoint[]): [number, number][][] {
   let current: [number, number][] = [];
   points.forEach((p, i) => {
     const prev = points[i - 1];
-    if (prev && p.t - prev.t > GAP_S && distanceM(prev.lat, prev.lon, p.lat, p.lon) > 300) {
+    if (prev && p.t - prev.t > GAP_S && metersBetween([prev.lon, prev.lat], [p.lon, p.lat]) > 300) {
       if (current.length > 1) lines.push(current);
       current = [];
     }
