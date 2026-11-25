@@ -1003,7 +1003,7 @@
         "button": "Update to {{version}}",
         "confirmTitle": "Update to version {{version}}",
         "confirm": "Update",
-        "confirmBody": "First a backup of everything is made. Then the platform goes from {{current}} to {{version}} and restarts: it is out of service for a few seconds, and devices that report meanwhile reconnect by themselves. If the new version does not start, it goes back to {{current}} by itself.",
+        "confirmBody": "During the update, the platform may be out of service for a few seconds and will come back by itself.",
         "preparing": "Making the backup before installing {{version}}…",
         "requested": "Backup ready. Waiting for the helper to install {{version}}…",
         "running": "Installing {{version}}. The platform restarts and this page reloads by itself.",

@@ -76,7 +76,7 @@ function Install({ updates }: { updates: UpdateStatus }) {
             onClose={() => setConfirming(false)}
             action={async () => queryClient.setQueryData(UPDATES_KEY, await installUpdate(latest.version))}
           >
-            {t("admin.updates.install.confirmBody", { version: latest.version, current: updates.current })}
+            {t("admin.updates.install.confirmBody")}
           </ConfirmDialog>
         </>
       )}

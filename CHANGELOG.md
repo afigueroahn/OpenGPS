@@ -6,6 +6,11 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Sin publicar]
 
+### Cambiado
+
+- La confirmación de «Actualizar a X.Y.Z» dice solo que la plataforma podría estar
+  fuera de servicio unos segundos y que se restablecerá sola (#32).
+
 ## [0.1.1] - 2026-11-25
 
 ### Cambiado
