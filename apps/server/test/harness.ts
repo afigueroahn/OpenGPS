@@ -36,6 +36,8 @@ import { findMigrationsDir, migrate } from "../src/migrate";
 import type { Traccar } from "../src/traccar";
 
 export const ORIGIN = "http://localhost:5173";
+/** The IP the DNS of the tests answers for the gateway's name. */
+export const GATEWAY_IP = "203.0.113.10";
 /** The owner the platform has in every test: nobody signs in as them. */
 export const TEST_OWNER_ID = "test-platform-owner";
 const rand = (bytes = 4) => randomBytes(bytes).toString("hex");
@@ -77,6 +79,9 @@ export function fakeTraccar() {
 
 export async function createHarness() {
   const config = loadConfig();
+  // The platform's own gateway goes by names of its own, so a local test gateway on 127.0.0.1 is "another server".
+  config.gatewayHost = "gw.plataforma.prueba";
+  config.gatewayIp = GATEWAY_IP;
   const db = createDb(config);
   await migrate(db.core, findMigrationsDir(config.migrationsDir));
   await syncCatalog(db.core);
@@ -169,7 +174,7 @@ export async function createHarness() {
       return { status: reply.status, headers: { get: (name: string) => (name.toLowerCase() === "etag" ? (reply.etag ?? null) : null) }, json: async () => reply.body };
     },
   });
-  const { fastify, routes } = await buildApp({ config, db, auth, bus, traccar: traccar.api, mailer, geocoder, gate, settings, backups, outbox, system, simulator, updates });
+  const { fastify, routes } = await buildApp({ config, db, auth, bus, traccar: traccar.api, mailer, geocoder, gate, settings, backups, outbox, system, simulator, updates, gatewayLookup: async () => GATEWAY_IP });
   // The event engine listens to new positions, as in production, but
   // without its clock: the tests call the periodic check when they need it.
   const events = createEventEngine({ db, bus, config, sweepEveryMs: null });
@@ -228,9 +233,11 @@ export async function createHarness() {
   const users: TestUser[] = [];
   const sources: string[] = [];
 
-  async function request(method: string, url: string, opts: { cookie?: string; body?: unknown; origin?: string | null } = {}) {
+  async function request(method: string, url: string, opts: { cookie?: string; body?: unknown; origin?: string | null; host?: string } = {}) {
     const headers: Record<string, string> = {};
     if (opts.cookie) headers.cookie = opts.cookie;
+    // The address the request is sent to, when it is not the platform's own.
+    if (opts.host) headers.host = opts.host;
     if (opts.origin !== null) headers.origin = opts.origin ?? ORIGIN;
     if (opts.body !== undefined) headers["content-type"] = "application/json";
     const res = await fastify.inject({

@@ -121,7 +121,7 @@ export function SimulatorSection() {
       <Notice>{t("simulator.intro")}</Notice>
       <Card
         title={t("simulator.list.title")}
-        note={t("simulator.list.capacity", { running, max: meta.data.maxDevices })}
+        note={t("simulator.list.running", { running })}
         action={
           <div className="flex flex-wrap gap-2">
             {list.length > 1 && (

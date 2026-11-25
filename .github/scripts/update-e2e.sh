@@ -80,11 +80,16 @@ update() { # version
 }
 # The way of installing the installation has now.
 way_installed() { sed -n 's/^x-opengps-deploy:[[:space:]]*//p' "$INSTALL/docker-compose.yml"; }
-# With deploy/caddy, the web app answers through the proxy, on the server's port 80.
+# With deploy/caddy, the web app answers through the proxy, on the server's
+# port 80, by the name of PUBLIC_URL and by api. under it.
 through_proxy() { # version
-  if [ "$WAY" = caddy ] && ! curl -fsS --retry 10 --retry-delay 3 --retry-all-errors http://localhost/api/health | grep -q "\"version\":\"$1\""; then
-    fail "the web app does not answer $1 through Caddy"
-  fi
+  local name
+  if [ "$WAY" != caddy ]; then return 0; fi
+  for name in localhost api.localhost; do
+    if ! curl -fsS --retry 10 --retry-delay 3 --retry-all-errors -H "Host: $name" http://localhost/api/health | grep -q "\"version\":\"$1\""; then
+      fail "the web app does not answer $1 through Caddy as $name"
+    fi
+  done
 }
 
 mkdir -p "$INSTALL"

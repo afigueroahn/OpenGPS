@@ -1,5 +1,6 @@
 // Backend configuration, read once from the environment variables.
 import { createHmac } from "node:crypto";
+import { isIP } from "node:net";
 import { CHANNELS_DEFAULT, type ChannelSettings, type CustomHeader, type Language, OAUTH_DEFAULT, type MailTemplates, type ModuleKey, PASSWORD_POLICY_DEFAULT, type PasswordPolicy } from "@opengps/shared";
 import { z } from "zod";
 import { SOURCE_VERSION } from "./version";
@@ -61,11 +62,6 @@ const schema = z.object({
   // GitHub repository whose releases are new versions of this one ("owner/name"). Empty: no looking.
   UPDATE_REPOSITORY: z.string().default("afigueroahn/OpenGPS"),
   PUBLIC_URL: z.url(),
-  /** Additional origins authorized to use the API, comma-separated. */
-  TRUSTED_ORIGINS: z.string().default(""),
-  /** Name the GPS devices point to. Empty = gw.<host of PUBLIC_URL>. */
-  DEVICE_GATEWAY_HOST: z.string().default(""),
-  DEVICE_GATEWAY_IP: z.string().default(""),
   MAP_STYLE_URL: z.url().default("https://tiles.openfreemap.org/styles/liberty"),
 
   AUTH_SECRET: z.string().min(32, "AUTH_SECRET must be at least 32 characters long"),
@@ -111,9 +107,6 @@ const schema = z.object({
    */
   ROUTING_URL: z.string().default("https://router.project-osrm.org"),
 
-  /** Simulated devices the admin console's simulator can run at once. */
-  SIMULATOR_MAX_DEVICES: z.coerce.number().int().min(1).max(5000).default(50),
-
   /** Where Twilio, the SMS service, is reached. It only changes for tests. */
   TWILIO_API_URL: z.url().default("https://api.twilio.com"),
 
@@ -145,6 +138,17 @@ const schema = z.object({
 
 export type Config = ReturnType<typeof loadConfig>;
 
+/**
+ * Where the GPS devices are pointed: gw.<domain of the platform>. A platform
+ * that is opened by an IP, or on this same machine, has no domain to put a
+ * name under: its devices go to that same place.
+ */
+export function gatewayOf(publicUrl: string): { host: string; ip: string | null } {
+  const host = new URL(publicUrl).hostname.replace(/^\[(.*)\]$/, "$1");
+  if (isIP(host)) return { host, ip: host };
+  return { host: host === "localhost" ? host : `gw.${host}`, ip: null };
+}
+
 export function loadConfig(env: NodeJS.ProcessEnv = process.env) {
   const parsed = schema.safeParse(env);
   if (!parsed.success) {
@@ -153,6 +157,7 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env) {
   }
   const e = parsed.data;
   const publicUrl = e.PUBLIC_URL.replace(/\/+$/, "");
+  const gateway = gatewayOf(publicUrl);
   return {
     env: e.NODE_ENV,
     isProduction: e.NODE_ENV === "production",
@@ -162,12 +167,9 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env) {
     appVersion: e.APP_VERSION || SOURCE_VERSION,
     updateRepository: e.UPDATE_REPOSITORY.trim(),
     publicUrl,
-    trustedOrigins: [
-      publicUrl,
-      ...e.TRUSTED_ORIGINS.split(",").map((s) => s.trim()).filter(Boolean),
-    ],
-    gatewayHost: e.DEVICE_GATEWAY_HOST || `gw.${new URL(publicUrl).hostname}`,
-    gatewayIp: e.DEVICE_GATEWAY_IP || null,
+    gatewayHost: gateway.host,
+    /** The IP that name points to, looked up while the backend runs (core/gateway.ts). Null: not known. */
+    gatewayIp: gateway.ip,
     mapStyleUrl: e.MAP_STYLE_URL,
     authSecret: e.AUTH_SECRET,
     databaseUrl: e.DATABASE_URL,
@@ -195,7 +197,6 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env) {
       minIntervalMs: e.GEOCODER_MIN_INTERVAL_MS,
     },
     routing: { url: e.ROUTING_URL.replace(/\/+$/, "") },
-    simulator: { maxDevices: e.SIMULATOR_MAX_DEVICES },
     legal: { entity: e.LEGAL_ENTITY, country: e.LEGAL_COUNTRY, contactEmail: e.LEGAL_CONTACT_EMAIL },
     alertEmail: e.ALERT_EMAIL,
     diskAlertPercent: e.DISK_ALERT_PERCENT,

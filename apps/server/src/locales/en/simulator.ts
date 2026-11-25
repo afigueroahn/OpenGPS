@@ -8,7 +8,6 @@ const en: SameShape<typeof es> = {
     routeNotFound: "That route no longer exists: choose another one",
     brandNotYet: "The simulator does not speak that brand yet",
     identifierInUse: "The identifier {{identifier}} is already in another simulation",
-    tooManyDevices: "No more simulated devices fit at once: the maximum is {{max}}. Stop one first",
     notRunning: "That simulated device is stopped: start it first",
     notConnected: "The device is not connected to the gateway yet: wait for it to connect",
     noTank: "That device does not report fuel: turn on “It reports the fuel level” in its options",

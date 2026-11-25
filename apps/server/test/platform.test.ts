@@ -105,6 +105,32 @@ describe("registration and session", () => {
     expect(res.status).toBe(403);
   });
 
+  it("accepts the web app at whichever address it is opened by, and no other website", async () => {
+    // The same platform opened by an IP of the network: the page and the request share that address.
+    const lan = { origin: "http://192.168.1.10:3000", host: "192.168.1.10:3000" };
+    const login = await h.request("POST", "/api/auth/sign-in/email", { ...lan, body: { email: ana.email, password: ana.password } });
+    expect(login.status).toBe(200);
+    const body = () => ({ name: "Por la IP", uniqueId: h.uniqueId(), modelId: "h02" });
+    expect((await h.request("POST", "/api/vehicles", { ...lan, cookie: ana.cookie, body: body() })).status).toBe(201);
+    // A page at another address is another website, wherever it sends its request.
+    const other = { origin: "http://192.168.1.99:3000", host: "192.168.1.10:3000" };
+    expect((await h.request("POST", "/api/vehicles", { ...other, cookie: ana.cookie, body: body() })).status).toBe(403);
+    expect((await h.request("POST", "/api/auth/sign-in/email", { ...other, body: { email: ana.email, password: ana.password } })).status).toBe(403);
+    // The live channel goes by the same rule.
+    const live = (origin: string) =>
+      new Promise<string>((resolve) => {
+        const socket = new WebSocket(`ws://127.0.0.1:${h.port}/api/live`, { headers: { cookie: ana.cookie, origin } });
+        socket.on("open", () => {
+          socket.close();
+          resolve("open");
+        });
+        socket.on("unexpected-response", (_req, res) => resolve(`refused ${res.statusCode}`));
+        socket.on("error", () => resolve("error"));
+      });
+    expect(await live(`http://127.0.0.1:${h.port}`)).toBe("open");
+    expect(await live("https://otro-sitio.example")).toBe("refused 403");
+  });
+
   it("the session tables match what the library expects", async () => {
     const plan = await getMigrations(h.auth.auth.options, { throwOnUnsafe: false });
     expect(plan.toBeCreated.map((t) => t.table)).toEqual([]);
