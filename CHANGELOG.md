@@ -19,6 +19,9 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/).
 - `deploy/docker-compose/` publica la web siempre hacia toda la red. Una instalación
   0.1.x sin túnel que se actualiza pasa a publicar el puerto 3000 (#44).
 - El simulador de la consola ya no tiene tope de equipos a la vez (#44).
+- `AGENTS.md` y `CONTRIBUTING.md` describen la plataforma como es: se instala con
+  `deploy/`, se trabaja con los scripts de pnpm y la CI corre los checks que se piden.
+  Se quitan las reglas que no hacían falta (ADR-0007, #50).
 
 ### Eliminado
 
