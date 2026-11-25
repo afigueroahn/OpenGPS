@@ -2,6 +2,7 @@
 # Decides whether this commit publishes a release (ADR-0003) and writes its
 # notes. A release is due when the root package.json has a version X.Y.Z
 # that has no tag vX.Y.Z yet and CHANGELOG.md has its section, "## [X.Y.Z]".
+# Then the compose files of deploy/ must run that version, or it fails.
 #
 #   release-plan.sh NOTES_FILE
 #
@@ -36,6 +37,8 @@ awk -v heading="## [$version]" '
   found { print }
 ' CHANGELOG.md | sed -e '/./,$!d' | sed -e ':a' -e '/^\n*$/{$d;N;ba' -e '}' > "$notes"
 [ -s "$notes" ] || skip "CHANGELOG.md has no section for $version"
+# What a release publishes installs its own version (ADR-0008).
+.github/scripts/version-check.sh >&2
 
 echo "release=true"
 echo "Release v$version, with these notes:" >&2

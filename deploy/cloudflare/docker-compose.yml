@@ -6,10 +6,10 @@
 #   docker compose up -d
 #
 # Its variables are in deploy/.env.example: PUBLIC_URL, AUTH_SECRET,
-# POSTGRES_PASSWORD, OPENGPS_VERSION and CLOUDFLARE_TUNNEL_TOKEN; the rest of
-# the platform is set up from its console. The images come built, for
-# Intel/AMD and ARM, from ghcr.io; deploy/build.yml builds them from the code
-# instead. The guide is deploy/README.md.
+# POSTGRES_PASSWORD and CLOUDFLARE_TUNNEL_TOKEN; the rest of the platform is
+# set up from its console. The images come built, for Intel/AMD and ARM, from
+# ghcr.io, in the version written in them (ADR-0008); deploy/build.yml builds
+# them from the code instead. The guide is deploy/README.md.
 #
 # Published to the host: only the ports the GPS devices connect to. The web app
 # and the API answer together on port 3000 of the `opengps` service, inside the
@@ -30,7 +30,7 @@ x-logging: &logging
 
 services:
   postgres:
-    image: ghcr.io/afigueroahn/opengps-postgres:${OPENGPS_VERSION:?Set OPENGPS_VERSION, the OpenGPS version to run (0.1.0)}
+    image: ghcr.io/afigueroahn/opengps-postgres:0.3.0
     restart: unless-stopped
     logging: *logging
     shm_size: 256m
@@ -119,7 +119,7 @@ services:
 
   opengps:
     # The backend with the web app inside, on the same port.
-    image: ghcr.io/afigueroahn/opengps:${OPENGPS_VERSION:?Set OPENGPS_VERSION, the OpenGPS version to run (0.1.0)}
+    image: ghcr.io/afigueroahn/opengps:0.3.0
     restart: unless-stopped
     logging: *logging
     depends_on:
@@ -164,7 +164,7 @@ services:
   # access to Docker, through its socket, and it opens no port. It sees this
   # folder, with docker-compose.yml and .env, to install versions.
   helper:
-    image: ghcr.io/afigueroahn/opengps-helper:${OPENGPS_VERSION:?Set OPENGPS_VERSION, the OpenGPS version to run (0.1.0)}
+    image: ghcr.io/afigueroahn/opengps-helper:0.3.0
     restart: unless-stopped
     logging: *logging
     depends_on:

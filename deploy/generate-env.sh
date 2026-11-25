@@ -7,10 +7,8 @@
 #   sh generate-env.sh https://example.com        prints them, to paste in Dokploy
 #
 # The address can also be given as the domain alone (example.com): it is
-# taken as https. It never overwrites a file that exists. OPENGPS_VERSION is
-# the release's when the example comes from one; from the repository, the
-# version in its package.json. OPENGPS_VERSION=X.Y.Z in the environment picks
-# another.
+# taken as https. It never overwrites a file that exists. The version is not
+# among the variables: the compose file says it (ADR-0008).
 set -eu
 
 HERE="$(cd "$(dirname "$0")" && pwd)"
@@ -20,15 +18,6 @@ OUT="${2:-}"
 TEMPLATE="$HERE/.env.example"
 [ -f "$TEMPLATE" ] || TEMPLATE="$HERE/env.example"
 [ -f "$TEMPLATE" ] || { echo "Neither .env.example nor env.example is next to generate-env.sh" >&2; exit 1; }
-
-VERSION="${OPENGPS_VERSION:-}"
-if [ -z "$VERSION" ]; then
-  VERSION="$(sed -n 's/^OPENGPS_VERSION=//p' "$TEMPLATE")"
-fi
-if [ -z "$VERSION" ] && [ -f "$HERE/../package.json" ]; then
-  VERSION="$(sed -n 's/^  "version": "\(.*\)",$/\1/p' "$HERE/../package.json" | head -1)"
-fi
-[ -n "$VERSION" ] || { echo "Which version? Run it again with OPENGPS_VERSION=X.Y.Z in front" >&2; exit 1; }
 
 case "$ADDRESS" in
   http://* | https://*) ;;
@@ -46,7 +35,6 @@ fill() {
     -e "s|^PUBLIC_URL=.*|PUBLIC_URL=$ADDRESS|" \
     -e "s|^AUTH_SECRET=.*|AUTH_SECRET=$(openssl rand -hex 32)|" \
     -e "s|^POSTGRES_PASSWORD=.*|POSTGRES_PASSWORD=$(openssl rand -hex 32)|" \
-    -e "s|^OPENGPS_VERSION=.*|OPENGPS_VERSION=$VERSION|" \
     "$TEMPLATE"
 }
 

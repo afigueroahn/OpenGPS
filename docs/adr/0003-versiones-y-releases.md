@@ -1,6 +1,6 @@
 # ADR-0003: Versiones, releases e imágenes
 
-- **Estado:** Aceptada
+- **Estado:** Aceptada. Superseded by ADR-0008 en un punto: el PR de una versión sube también las imágenes de los compose
 - **Fecha:** 2026-11-24
 - **Decide:** Angel Figueroa (@afigueroahn)
 

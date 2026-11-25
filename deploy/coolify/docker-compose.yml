@@ -4,9 +4,8 @@
 # Docker Compose build pack, Base Directory / and Docker Compose Location:
 #   /deploy/coolify/docker-compose.yml
 #
-# Variables: only OPENGPS_VERSION has to be written, the version to run
-# (0.1.0). Coolify generates the secrets by itself and gives the platform the
-# domain set for the `opengps` service. The rest of the platform is set up
+# Variables: none has to be written. Coolify generates the secrets by itself
+# and gives the platform the domain set for the `opengps` service. The rest of the platform is set up
 # from its console. The optional variables are in deploy/.env.example.
 #
 # Domain: in the `opengps` service, with HTTPS. Coolify's proxy holds the
@@ -18,8 +17,8 @@
 # ("DNS only" in Cloudflare) and the server's firewall opens them, TCP and UDP.
 #
 # The images come built from ghcr.io, for Intel/AMD and ARM, in the version
-# OPENGPS_VERSION says: to install a new one, change it and Redeploy. The
-# guide is deploy/README.md.
+# written in them, the last one released on main (ADR-0008): to install a new
+# one, Redeploy. The guide is deploy/README.md.
 
 # Which way of installing this file is (deploy/<this>).
 x-opengps-deploy: coolify
@@ -32,7 +31,7 @@ x-logging: &logging
 
 services:
   postgres:
-    image: ghcr.io/afigueroahn/opengps-postgres:${OPENGPS_VERSION:?Set OPENGPS_VERSION, the OpenGPS version to run (0.1.0)}
+    image: ghcr.io/afigueroahn/opengps-postgres:0.3.0
     restart: unless-stopped
     logging: *logging
     shm_size: 256m
@@ -118,7 +117,7 @@ services:
 
   opengps:
     # The backend with the web app inside, on the same port.
-    image: ghcr.io/afigueroahn/opengps:${OPENGPS_VERSION:?Set OPENGPS_VERSION, the OpenGPS version to run (0.1.0)}
+    image: ghcr.io/afigueroahn/opengps:0.3.0
     restart: unless-stopped
     logging: *logging
     depends_on:
@@ -160,7 +159,7 @@ services:
   # start (deploy/helper.sh). It is the only service with access to Docker,
   # through its socket, and it opens no port.
   helper:
-    image: ghcr.io/afigueroahn/opengps-helper:${OPENGPS_VERSION:?Set OPENGPS_VERSION, the OpenGPS version to run (0.1.0)}
+    image: ghcr.io/afigueroahn/opengps-helper:0.3.0
     restart: unless-stopped
     logging: *logging
     depends_on:

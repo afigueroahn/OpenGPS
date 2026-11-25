@@ -1,6 +1,6 @@
 # ADR-0004: Actualizar desde la consola
 
-- **Estado:** Aceptada
+- **Estado:** Aceptada. Superseded by ADR-0008 en un punto: la versión va en el compose, ya no en `.env`
 - **Fecha:** 2026-11-24
 - **Decide:** Angel Figueroa (@afigueroahn)
 

@@ -48,7 +48,7 @@ La web y la API van en el mismo puerto a propósito: si fueran en puertos distin
 
 En todas, el servidor publica los puertos de los equipos, y la base no se publica. La web sale en HTTP por el puerto 3000 del contenedor `opengps`. Lo que cambia de una forma a otra es quién la lleva hasta el navegador: un puerto del servidor, Caddy, el túnel de Cloudflare, o el proxy de Dokploy o de Coolify.
 
-Las imágenes vienen ya armadas, para procesadores Intel/AMD y ARM: cada versión las publica en `ghcr.io/afigueroahn/` y el servidor solo las descarga. Cada instalación dice en `OPENGPS_VERSION` qué versión corre.
+Las imágenes vienen ya armadas, para procesadores Intel/AMD y ARM: cada versión las publica en `ghcr.io/afigueroahn/` y el servidor solo las descarga. Cada compose trae escrita la versión que instala: el de la última versión instala la última, sin escribir su número en ninguna parte.
 
 ## Lo que necesitas
 
@@ -156,16 +156,15 @@ A quien configura un equipo, la plataforma le muestra el nombre `gw.tu-dominio.c
 
 ## Las variables
 
-Solo hay cuatro obligatorias. Si falta una, el despliegue se detiene y dice cuál.
+Solo hay tres obligatorias. Si falta una, el despliegue se detiene y dice cuál.
 
 | Variable | Qué es |
 |---|---|
 | `PUBLIC_URL` | La dirección de la web, como la abren las personas: `https://tu-dominio.com` |
 | `AUTH_SECRET` | Firma las sesiones y cifra las claves que se guardan en la consola |
 | `POSTGRES_PASSWORD` | La contraseña del único usuario de la base. Solo letras y números: va dentro de una dirección |
-| `OPENGPS_VERSION` | La versión que corre la instalación: el tag de sus imágenes (`0.1.0`). La escribe `generate-env.sh` |
 
-`generate-env.sh` genera los dos secretos y pone la versión. El usuario, la contraseña y el nombre de la base solo se aplican la primera vez que arranca: cambiarlos después exige cambiarlos también dentro de la base. `AUTH_SECRET` no se cambia una vez en uso: cierra todas las sesiones y obliga a escribir otra vez las claves guardadas en la consola.
+`generate-env.sh` genera los dos secretos. El usuario, la contraseña y el nombre de la base solo se aplican la primera vez que arranca: cambiarlos después exige cambiarlos también dentro de la base. `AUTH_SECRET` no se cambia una vez en uso: cierra todas las sesiones y obliga a escribir otra vez las claves guardadas en la consola.
 
 Las opcionales:
 
@@ -273,22 +272,22 @@ El túnel lleva el dominio con HTTPS hasta la plataforma sin abrir los puertos 8
 ## Con Dokploy
 
 1. **Proyecto:** en Dokploy, *Projects → Create Service → Compose*. Como origen, el repositorio `https://github.com/afigueroahn/OpenGPS`, rama `main`. En *Compose Path*: `./deploy/dokploy/docker-compose.yml`.
-2. **Variables:** en tu computadora, con `generate-env.sh` y `env.example` de la última versión (ver «Preparar un servidor Ubuntu nuevo», paso 9), `sh generate-env.sh https://tu-dominio.com` imprime las variables con los secretos ya generados y la versión. Pégalas en la pestaña *Environment*. Los secretos se quedan en Dokploy: no los mandes por correo ni por chat.
+2. **Variables:** en tu computadora, con `generate-env.sh` y `env.example` de la última versión (ver «Preparar un servidor Ubuntu nuevo», paso 9), `sh generate-env.sh https://tu-dominio.com` imprime las variables con los secretos ya generados. Pégalas en la pestaña *Environment*. Los secretos se quedan en Dokploy: no los mandes por correo ni por chat.
 3. **Dominio:** en la pestaña *Domains*, agrega `tu-dominio.com` al servicio **`opengps`**, puerto **3000**, con HTTPS y el certificado de Let's Encrypt. El registro DNS del dominio apunta al servidor de Dokploy.
 4. **Equipos GPS:** el registro `gw` apunta directo al servidor (en Cloudflare, «solo DNS») y sus puertos se abren en el cortafuegos. No pasan por el proxy de Dokploy: Dokploy los publica tal cual.
 5. **Deploy.** La primera vez tarda unos minutos, lo que se demora en descargar las imágenes. Cuando abra `https://tu-dominio.com`, crea tu cuenta enseguida.
 
-Para instalar una versión nueva: en *Environment*, cambia `OPENGPS_VERSION` por su número y pulsa *Deploy*.
+Para instalar una versión nueva, pulsa *Deploy*: el compose de `main` dice siempre la última versión publicada.
 
 ## Con Coolify
 
 1. **Proyecto:** en Coolify, *Projects → New → Public Repository*, con `https://github.com/afigueroahn/OpenGPS` y la rama `main`. En *Build Pack*, **Docker Compose**; en *Base Directory*, `/`; en *Docker Compose Location*, `/deploy/coolify/docker-compose.yml`.
-2. **Variables:** solo hay que escribir `OPENGPS_VERSION`, con el número de la última versión. Los secretos los genera Coolify, y la dirección de la web es el dominio del paso siguiente.
+2. **Variables:** no hay que escribir ninguna. Los secretos los genera Coolify, y la dirección de la web es el dominio del paso siguiente.
 3. **Dominio:** en el servicio **`opengps`**, en *Domains*, escribe `https://tu-dominio.com:3000`. El `:3000` es el puerto del contenedor al que Coolify dirige el dominio; la web abre en `https://tu-dominio.com`, con su certificado. El registro DNS del dominio apunta al servidor de Coolify.
 4. **Equipos GPS:** el registro `gw` apunta directo al servidor (en Cloudflare, «solo DNS») y sus puertos se abren en el cortafuegos. No pasan por el proxy de Coolify: Coolify los publica tal cual.
 5. **Deploy.** La primera vez tarda unos minutos, lo que se demora en descargar las imágenes. Cuando abra `https://tu-dominio.com`, crea tu cuenta enseguida.
 
-Para instalar una versión nueva: cambia `OPENGPS_VERSION` por su número y pulsa *Redeploy*.
+Para instalar una versión nueva, pulsa *Redeploy*: el compose de `main` dice siempre la última versión publicada.
 
 ## Instalar una versión nueva
 
@@ -302,7 +301,7 @@ Cada versión está en [las releases del repositorio](https://github.com/afiguer
 
 La instalación conserva su forma: el ayudante toma el compose de la misma carpeta (`docker-compose/`, `caddy/` o `cloudflare/`) en la versión nueva. Una instalación 0.1.x, de antes de que hubiera varias formas, queda sola en la suya: `cloudflare/` si usaba el túnel, y si no `docker-compose/`, que publica la web en el puerto 3000 del servidor.
 
-Con Dokploy y con Coolify el botón no aparece, porque ellos desharían el cambio: allí se cambia `OPENGPS_VERSION` y se vuelve a desplegar.
+Con Dokploy y con Coolify el botón no aparece, porque ellos desharían el cambio: allí basta con volver a desplegar. Justo después de publicarse una versión, sus imágenes tardan unos minutos en estar: si el despliegue no las encuentra, vuelve a desplegar cuando la versión aparezca en las releases.
 
 **A mano**, cambia `X.Y.Z` por su número:
 
@@ -311,13 +310,12 @@ cd /opt/opengps
 V=X.Y.Z
 F=docker-compose.yml
 curl -fsSL -o docker-compose.yml "https://github.com/afigueroahn/OpenGPS/releases/download/v$V/$F"
-sed -i "s/^OPENGPS_VERSION=.*/OPENGPS_VERSION=$V/" .env
 docker compose up -d --remove-orphans
 ```
 
 Con Caddy, `F=docker-compose.caddy.yml`. Con el túnel de Cloudflare, `F=docker-compose.cloudflare.yml`.
 
-Las migraciones de la base se aplican solas al arrancar la plataforma. `--remove-orphans` quita los servicios que la versión nueva ya no tiene, para que no queden contenedores viejos en marcha.
+El compose trae escrita su versión. Las migraciones de la base se aplican solas al arrancar la plataforma. `--remove-orphans` quita los servicios que la versión nueva ya no tiene, para que no queden contenedores viejos en marcha. Si `.env` todavía tiene una línea `OPENGPS_VERSION`, de cuando la versión iba ahí, se puede borrar: ya no se lee.
 
 ## Construir desde el código
 
@@ -340,11 +338,8 @@ cd /opt
 mv opengps opengps-git
 mkdir opengps && cd opengps
 B=https://github.com/afigueroahn/OpenGPS/releases/latest/download
-curl -fsSLO "$B/generate-env.sh"
-curl -fsSLO "$B/env.example"
 curl -fsSL -o docker-compose.yml "$B/docker-compose.yml"
 cp /opt/opengps-git/deploy/docker-compose/.env .env
-grep "^OPENGPS_VERSION=" env.example >> .env
 docker compose up -d --remove-orphans
 ```
 
