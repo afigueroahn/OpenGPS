@@ -52,7 +52,7 @@ jobs:
           # What one way asks for besides, and what Coolify gives its own: here, any value.
           sed -i 's/^CLOUDFLARE_TUNNEL_TOKEN=.*/CLOUDFLARE_TUNNEL_TOKEN=any/' "$RUNNER_TEMP/.env"
           printf '%s\n' SERVICE_URL_OPENGPS_3000=https://example.com SERVICE_URL_OPENGPS=https://example.com \
-            SERVICE_PASSWORD_64_AUTHSECRET=0123456789abcdef0123456789abcdef SERVICE_PASSWORD_POSTGRES=any >> "$RUNNER_TEMP/.env"
+            SERVICE_PASSWORD_64_AUTHSECRET=any SERVICE_PASSWORD_POSTGRES=any >> "$RUNNER_TEMP/.env"
           for compose in deploy/*/docker-compose.yml; do
             way="$(basename "$(dirname "$compose")")"
             docker compose --env-file "$RUNNER_TEMP/.env" -f "$compose" config --quiet
