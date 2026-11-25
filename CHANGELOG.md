@@ -58,3 +58,8 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/).
 - El §7 de `AGENTS.md` exige que las dependencias nuevas tengan licencia compatible con
   Apache-2.0 (#3).
 - El §10 de `AGENTS.md` lista `NOTICE` en la estructura del repositorio (#5).
+
+### Corregido
+
+- El flujo `Release` unía bajo el tag de `opengps` también los digests de
+  `opengps-postgres` y `opengps-helper`, y fallaba al publicar (#28).
