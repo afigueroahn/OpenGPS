@@ -6,6 +6,8 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Sin publicar]
 
+## [0.3.0] - 2026-11-25
+
 ### Cambiado
 
 - La plataforma acepta entrar y guardar cambios desde cualquier dirección por la que se
