@@ -97,19 +97,19 @@ import { registerMaintenance } from "../modules/maintenance";
 import { registerRoutes } from "../modules/routes";
 import { registerReports } from "../modules/reports";
 import type { ModuleContext } from "../modules/context";
-import { type ModuleGate, createModuleGate } from "../modules/gate";
+import type { ModuleGate } from "../modules/gate";
 import type { Mailer } from "../mail";
 import type { Traccar } from "../traccar";
-import { type Backups, createBackups } from "../core/backups";
+import type { Backups } from "../core/backups";
 import { signInButtons } from "../core/oauth";
-import { type Settings, createSettings } from "../core/settings";
-import { type Updates, createUpdates } from "../core/updates";
+import type { Settings } from "../core/settings";
+import type { Updates } from "../core/updates";
 import { type LiveHub, createLiveHub } from "./live";
 import { deleteNotification, listNotifications, notificationLog, notificationOptions, saveNotification, testNotification } from "../core/notifications";
-import { type Outbox, createOutbox } from "../core/outbox";
-import { type SystemNotifier, createSystemNotifier } from "../core/system";
+import type { Outbox } from "../core/outbox";
+import type { SystemNotifier } from "../core/system";
 import { headerLanguage, isServerKey, knownLanguage, render, say, shared, tr } from "../i18n";
-import { type Simulator, createSimulator } from "../simulator/manager";
+import type { Simulator } from "../simulator/manager";
 import { registerPlatformSettings } from "./platform";
 import { registerSimulator } from "./simulator";
 import { registerUpdates } from "./updates";
@@ -125,17 +125,17 @@ export interface AppDeps {
   ingest?: Ingest;
   geocoder?: Geocoder;
   /** Modules enabled per account. Shared by the API and each module's engines. */
-  gate?: ModuleGate;
+  gate: ModuleGate;
   /** Platform settings, already loaded, and backups. */
-  settings?: Settings;
-  backups?: Backups;
+  settings: Settings;
+  backups: Backups;
   /** Where every message that leaves the platform waits, and the platform's own notifications. */
-  outbox?: Outbox;
-  system?: SystemNotifier;
+  outbox: Outbox;
+  system: SystemNotifier;
   /** The device simulator of the admin console. */
-  simulator?: Simulator;
+  simulator: Simulator;
   /** Looks for a newer version of the platform. */
-  updates?: Updates;
+  updates: Updates;
   /** Where a name points in the DNS, to know the IP of the device gateway. */
   gatewayLookup?: HostLookup;
 }
@@ -207,24 +207,14 @@ type IdParams = { Params: { id: string } };
 export const SHARE_VIEWS_PER_MINUTE = 120;
 
 export async function buildApp(deps: AppDeps): Promise<App> {
-  const { config, db, auth, bus } = deps;
+  const { config, db, auth, bus, gate, settings, outbox, system, backups, simulator } = deps;
   const vehicleDeps: VehicleDeps = { db, bus, traccar: deps.traccar, config };
   const memberDeps: MemberDeps = { db, bus, mailer: deps.mailer, config };
   const platformDeps: PlatformDeps = { db, bus, config };
   const privacyDeps: PrivacyDeps = { db, bus, traccar: deps.traccar };
   const live = createLiveHub(bus);
   const geocoder = deps.geocoder ?? createGeocoder(config, db.core);
-  const gate = deps.gate ?? createModuleGate(db.core, bus);
-  let settings = deps.settings;
-  if (!settings) {
-    settings = createSettings({ db, bus, config });
-    await settings.load();
-  }
-  const outbox = deps.outbox ?? createOutbox({ db, config, mailer: deps.mailer });
-  const system = deps.system ?? createSystemNotifier({ db, config, outbox });
-  const backups = deps.backups ?? createBackups({ db, bus, config, settings, system, tickEveryMs: null });
   const notifyDeps = { db, bus, config, outbox };
-  const simulator = deps.simulator ?? createSimulator({ db, bus, config });
   const gateway = createGatewayAddress(config, deps.gatewayLookup);
   void gateway.refresh();
 
@@ -943,7 +933,7 @@ export async function buildApp(deps: AppDeps): Promise<App> {
 
   registerPlatformSettings({ app, db, bus, config, traccar: deps.traccar, mailer: deps.mailer, settings, backups, outbox, system, platformAdmin, clientIp, language: languageOf, parse });
   registerSimulator({ app, simulator, geocoder, db, platformAdmin, clientIp, language: languageOf, parse });
-  registerUpdates({ app, updates: deps.updates ?? createUpdates({ config }), backups, platformAdmin, clientIp, parse });
+  registerUpdates({ app, updates: deps.updates, backups, platformAdmin, clientIp, parse });
 
   // ─── Live ──────────────────────────────────────────────────────────────────
 
