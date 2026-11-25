@@ -319,11 +319,29 @@ compose_in() { # folder, arguments...
   docker compose --project-name "$PROJECT" --project-directory "$folder" -f "$folder/docker-compose.yml" --env-file "$folder/.env" "$@"
 }
 have_image() { docker image inspect "$1" > /dev/null 2>&1; }
-# The image of this helper in another version: same name, other tag.
+# The image of this helper, and the same one in another version: same name, other tag.
+own_image() { docker inspect -f '{{.Config.Image}}' "$HOSTNAME"; }
 helper_image() { # version
   local image
-  image="$(docker inspect -f '{{.Config.Image}}' "$HOSTNAME")"
+  image="$(own_image)"
   echo "${image%:*}:$1"
+}
+# The compose files a helper image carries, in /opt/opengps, copied to a new
+# folder whose path it prints. Copied out of the image, never read from this
+# container's /opt/opengps: the container that applies a version has the
+# installation's folder mounted at its path on the host, and that folder may
+# be /opt/opengps, which covers the image's.
+version_files() { # image
+  local dir cid=""
+  dir="$(mktemp -d)" || return 1
+  if cid="$(docker create "$1")" && docker cp "$cid:/opt/opengps/." "$dir" > /dev/null; then
+    docker rm "$cid" > /dev/null
+    echo "$dir"
+    return 0
+  fi
+  if [ -n "$cid" ]; then docker rm "$cid" > /dev/null; fi
+  rm -rf "$dir"
+  return 1
 }
 updater() { docker ps -q --filter "name=^$PROJECT-updater$"; }
 
@@ -378,7 +396,7 @@ wait_version() { # version
 # file checked against .env. Then a container of the new helper applies it.
 handle_update_request() {
   started="$(now)"
-  local id version helper files cid err
+  local id version helper files err
   id="$(ufield id)"
   version="$(ufield version)"
   log "update request to $version"
@@ -397,14 +415,10 @@ handle_update_request() {
     return
   fi
   # The new version's compose files travel inside its helper image.
-  files="$(mktemp -d)"
-  if ! cid="$(docker create "$helper")" || ! docker cp "$cid:/opt/opengps/." "$files" > /dev/null; then
-    [ -n "${cid:-}" ] && docker rm "$cid" > /dev/null
-    rm -rf "$files"
+  if ! files="$(version_files "$helper")"; then
     report_update failed files
     return
   fi
-  docker rm "$cid" > /dev/null
   if ! stage_update "$INSTALL" "$files"; then
     rm -rf "$files"
     report_update failed files
@@ -437,13 +451,19 @@ handle_update_request() {
 # the ways of installing existed leaves here the only file it knew.
 apply_update() {
   started="$(now)"
-  local folder="$HOST_INSTALL" version from main_file gateway_file files_file err
+  local folder="$HOST_INSTALL" version from files main_file gateway_file files_file err
   version="$(ufield version)"
   from="$(ufield from)"
-  if ! stage_update "$folder" /opt/opengps; then
+  if ! files="$(version_files "$(own_image)")"; then
     report_update failed files
     return
   fi
+  if ! stage_update "$folder" "$files"; then
+    rm -rf "$files"
+    report_update failed files
+    return
+  fi
+  rm -rf "$files"
   if ! err="$(compose_in "$folder/.update" config --quiet 2>&1)"; then
     rm -rf "$folder/.update"
     report_update failed env "$(echo "$err" | tail -1)"

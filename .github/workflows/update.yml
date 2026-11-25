@@ -1,9 +1,10 @@
 # Installing a version from the console, end to end (ADR-0004), for each way
 # of installing the helper can update (ADR-0005): builds three versions of the
-# images, installs the first, installs the second through the helper, and
-# checks that a third that cannot start is undone. "legacy" is an installation
-# of the published 0.1.2, from before the ways existed, which must end as
-# deploy/cloudflare. Runs when the installation or the helper changes.
+# images, installs the first in /opt/opengps, the folder of deploy/README.md,
+# installs the second through the helper, and checks that a third that cannot
+# start is undone. "legacy" is an installation of the published 0.1.2, from
+# before the ways existed, which must end as deploy/cloudflare. Runs when the
+# installation or the helper changes.
 name: Update
 
 on:
@@ -37,5 +38,7 @@ jobs:
         way: [docker-compose, caddy, cloudflare, legacy]
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Installation folder
+        run: sudo install -d -o "$(id -u)" -g "$(id -g)" /opt/opengps
       - name: Update end to end
-        run: .github/scripts/update-e2e.sh "${{ matrix.way }}" "$RUNNER_TEMP/e2e"
+        run: .github/scripts/update-e2e.sh "${{ matrix.way }}"
