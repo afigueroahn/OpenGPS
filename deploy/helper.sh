@@ -28,8 +28,10 @@
 # helper, outside the Compose project ("helper.sh apply"). That one swaps the
 # compose file, which says the version (ADR-0008), brings everything up (this
 # helper too, replaced), waits for the platform to answer with the new
-# version, and otherwise goes back to the previous files, and to the backup if
-# even that does not start. Only with Docker Compose: the folder with
+# version, and otherwise goes back to the previous files. If even that does not
+# start, it asks for the backup made before to be restored, with the same
+# request the console leaves, and whoever restores in the version it went
+# back to handles it. Only with Docker Compose: the folder with
 # docker-compose.yml and .env is mounted at /data/install. Dokploy and Coolify
 # do not mount it.
 #
@@ -56,6 +58,8 @@ UPDATE_RESULT="$DIR/update.result"
 INSTALL=/data/install
 # How long a new version has to answer before going back to the previous one.
 UPDATE_WAIT_S="${UPDATE_WAIT_S:-300}"
+# How long a restore asked for by an update may take, as long as a backup may.
+RESTORE_WAIT_S="${RESTORE_WAIT_S:-7200}"
 # The backup's files are unpacked here first; what there was waits here until the end.
 FILES_NEW="$FILES/.restore-new"
 FILES_OLD="$FILES/.restore-previous"
@@ -436,12 +440,35 @@ handle_update_request() {
   log "version $version ready; a container of it installs it"
   if ! docker run -d --rm --name "$PROJECT-updater" \
     -e HELPER_PROJECT="$PROJECT" -e HOST_INSTALL="$HOST_INSTALL" -e UPDATE_WAIT_S="$UPDATE_WAIT_S" \
-    -e POSTGRES_USER="$PGUSER" -e POSTGRES_DB="$MAIN" \
     -v /var/run/docker.sock:/var/run/docker.sock -v "$HOST_INSTALL:$HOST_INSTALL" \
-    -v "$(mount_of /data/backups):/data/backups" -v "$(mount_of /data/files):/data/files" \
+    -v "$(mount_of /data/backups):/data/backups" \
     "$helper" /usr/local/bin/helper.sh apply > /dev/null; then
     report_update failed start
   fi
+}
+
+# Asks for a backup to be restored, with the same request the console leaves,
+# and waits until it ends. Whoever restores in the version that is up handles
+# it: also a version published before this one, whose helper restored. True if
+# it ended well.
+ask_restore() { # backup id, platform dump, gateway dump, files archive (may be empty)
+  local requested at waited result
+  requested="$(now)"
+  # When the backup was made, from its files' names: the console shows it.
+  at="$(sed -nE 's/^gps_([0-9]{4})([0-9]{2})([0-9]{2})_([0-9]{2})([0-9]{2})([0-9]{2})\.dump$/\1-\2-\3T\4:\5:\6.000Z/p' <<< "$2")"
+  if ! { printf 'id=%s\nbackup=%s\nrequested=%s\ngps=%s\ntraccar=%s\nfiles=%s\n' "$1" "$at" "$requested" "$2" "$3" "$4" > "$REQUEST.tmp" &&
+    chown "$OWNER" "$REQUEST.tmp" && chmod 600 "$REQUEST.tmp" && mv "$REQUEST.tmp" "$REQUEST"; }; then
+    return 1
+  fi
+  for ((waited = 0; waited < RESTORE_WAIT_S; waited += 5)); do
+    result="$(cat "$RESULT" 2> /dev/null || true)"
+    if grep -qx "id=$1" <<< "$result" && grep -qx "requested=$requested" <<< "$result"; then
+      grep -qx 'status=ok' <<< "$result"
+      return
+    fi
+    sleep 5
+  done
+  return 1
 }
 
 # In the container of the new version: swaps the files, brings everything up
@@ -451,7 +478,7 @@ handle_update_request() {
 # the ways of installing existed leaves here the only file it knew.
 apply_update() {
   started="$(now)"
-  local folder="$HOST_INSTALL" version from files main_file gateway_file files_file err
+  local folder="$HOST_INSTALL" version from files backup main_file gateway_file files_file err
   version="$(ufield version)"
   from="$(ufield from)"
   if ! files="$(version_files "$(own_image)")"; then
@@ -486,13 +513,13 @@ apply_update() {
     report_update failed rolled_back
     return
   fi
+  backup="$(ufield backup)"
   main_file="$(ufield gps)"
   gateway_file="$(ufield traccar)"
   files_file="$(ufield files)"
-  if [ -n "$main_file" ] && [ -n "$gateway_file" ] && [ -f "$DIR/$main_file" ] && [ -f "$DIR/$gateway_file" ]; then
-    log "version $from does not start either; restoring the backup made before"
-    REASON=""
-    if replace "$DIR/$main_file" "$DIR/$gateway_file" "${files_file:+$DIR/$files_file}"; then
+  if [ -n "$backup" ] && [ -n "$main_file" ] && [ -n "$gateway_file" ] && [ -f "$DIR/$main_file" ] && [ -f "$DIR/$gateway_file" ]; then
+    log "version $from does not start either; asking for the backup made before"
+    if ask_restore "$backup" "$main_file" "$gateway_file" "$files_file" && wait_version "$from"; then
       report_update failed restored
       return
     fi

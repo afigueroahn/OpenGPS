@@ -1,10 +1,11 @@
 # Installing a version from the console, end to end (ADR-0004), for each way
-# of installing the helper can update (ADR-0005): builds three versions of the
+# of installing the helper can update (ADR-0005): builds four versions of the
 # images, installs the first in /opt/opengps, the folder of deploy/README.md,
-# installs the second through the helper, and checks that a third that cannot
-# start is undone. "legacy" is an installation of the published 0.1.2, from
-# before the ways existed, which must end as deploy/cloudflare. Runs when the
-# installation or the helper changes.
+# installs the second through the helper, checks that a third that cannot
+# start is undone, and that a fourth that leaves the second unable to start is
+# undone by restoring the backup made before. "legacy" is an installation of
+# the published 0.1.2, from before the ways existed, which must end as
+# deploy/cloudflare. Runs when the installation or the helper changes.
 name: Update
 
 on:
