@@ -28,7 +28,7 @@ Están construidos el núcleo (mapa en vivo, historial, alertas, avisos, reporte
 | Carpeta | Para qué sirve |
 |---|---|
 | `apps/server/` | La plataforma (backend, Fastify). Ver la tabla de abajo |
-| `apps/web/` | La web (React + Vite). Contiene las pantallas (`src/app`), las páginas de entrada, registro y textos legales (`src/routes`), los textos en español e inglés (`src/locales`) y el ícono (`public`) |
+| `apps/web/` | La web (React + Vite). Contiene las pantallas (`src/app`), las páginas de entrada, registro y textos legales (`src/routes`), esos textos legales (`src/legal`), los textos en español e inglés (`src/locales`) y el ícono (`public`) |
 | `apps/mobile/` | Las apps de iPhone y Android (Expo), el paso siguiente |
 | `packages/shared/` | Lo que comparten la plataforma y la web: las reglas de cada dato y los textos comunes, para que las dos validen igual |
 | `db/migrations/` | Los pasos que crean y actualizan la base, en orden: `core` para el núcleo y una carpeta por módulo (`a_antitheft` … `i_integrations`) |
@@ -59,7 +59,7 @@ En la raíz:
 
 - `node_modules`: las librerías, que `pnpm install` descarga según `pnpm-lock.yaml`. Hay una carpeta por cada parte del proyecto, pero la de la raíz guarda cada librería una sola vez y las demás solo apuntan a ella.
 - `dist`: lo compilado.
-- Los archivos de variables con valores reales: `apps/server/.env.local` en desarrollo y `deploy/docker-compose/.env` en un servidor.
+- Los archivos de variables con valores reales: `apps/server/.env.local` en desarrollo y `deploy/docker-compose/.env` al levantar la plataforma desde el código. Un servidor instalado con la guía no tiene el repositorio: su `.env` está en `/opt/opengps`.
 
 ## Requisitos
 
@@ -141,7 +141,6 @@ Para probar sin equipos, la plataforma trae un simulador en **Administración �
 - **A dónde se conecta:** como en un GPS real, se escriben el servidor y el puerto. Vienen llenos con la dirección pública de la plataforma y el puerto de la marca, y se pueden cambiar para enviar a otro servidor.
 - **Órdenes:** el equipo simulado obedece las que recibe. Si la plataforma le corta el arranque, se detiene y lo reporta hasta que se lo devuelvan.
 - **Al reiniciar el servidor,** lo que estaba en marcha sigue donde iba.
-- **Cuántos a la vez:** hasta 50.
 
 ## Despliegue
 

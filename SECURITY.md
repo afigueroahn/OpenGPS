@@ -16,5 +16,5 @@ Incluye, en lo posible:
 
 ## Versiones con soporte
 
-El proyecto aún no tiene versiones publicadas. Las correcciones de seguridad se aplican
-sobre `main`.
+Tiene soporte la última versión publicada. Las correcciones de seguridad se aplican
+sobre `main` y salen en la versión siguiente.

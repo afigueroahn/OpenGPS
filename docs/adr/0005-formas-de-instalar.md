@@ -1,6 +1,6 @@
 # ADR-0005: Formas de instalar
 
-- **Estado:** Aceptada. Superseded by ADR-0006 en un punto: `WEB_BIND` ya no existe
+- **Estado:** Aceptada. Superseded by ADR-0006 en un punto: `WEB_BIND` ya no existe. Superseded by ADR-0009 en otro: Dokploy y Coolify no llevan `helper`
 - **Fecha:** 2026-11-25
 - **Decide:** Angel Figueroa (@afigueroahn)
 

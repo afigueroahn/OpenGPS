@@ -17,7 +17,7 @@ Las acompañan estos archivos:
 | Archivo | Para qué |
 |---|---|
 | [`.env.example`](.env.example) | Las variables, con lo que hace cada una |
-| [`build.yml`](build.yml) | Construir las imágenes desde el código, para desarrollar o probar un cambio antes de publicarlo. Va detrás del compose de cualquiera de las formas |
+| [`build.yml`](build.yml) | Construir las imágenes desde el código, para desarrollar o probar un cambio antes de publicarlo. Va detrás del compose de cualquiera de las formas con Docker Compose |
 | [`generate-env.sh`](generate-env.sh) | Escribe las variables con sus secretos ya generados |
 | [`opengps.Dockerfile`](opengps.Dockerfile) | La plataforma: la imagen con la web dentro |
 | [`postgres.Dockerfile`](postgres.Dockerfile) | La base de datos, con [`postgres-init.sh`](postgres-init.sh), que crea la base `traccar` la primera vez que arranca |
@@ -173,7 +173,7 @@ Las opcionales:
 | `POSTGRES_USER` | `postgres` | El único usuario de la base, para la plataforma, los equipos y las copias. Letras, números y `_` |
 | `POSTGRES_DB` | `opengps` | El nombre de la base de la plataforma; la de los equipos es siempre `traccar` |
 | `APP_NAME` | `OpenGPS` | El nombre de la plataforma en la web, los correos y los avisos |
-| `UPDATE_REPOSITORY` | `afigueroahn/OpenGPS` | El repositorio de GitHub cuyas releases son las versiones nuevas: el dueño las ve en Administración → Actualizaciones. Vacío, la plataforma no consulta |
+| `UPDATE_REPOSITORY` | `afigueroahn/OpenGPS` | El repositorio de GitHub cuyas releases son las versiones nuevas: el dueño las ve en Administración → Sistema → Actualizaciones. Vacío, la plataforma no consulta |
 | `COMPOSE_PROJECT_NAME` | `opengps` | Solo con Docker Compose: el nombre del grupo de contenedores |
 | `WEB_PORT` | `3000` | Solo con `docker-compose/`: el puerto del servidor donde responde la web |
 | `CLOUDFLARE_TUNNEL_TOKEN` | | Solo con `cloudflare/`, y ahí es obligatoria: el token del túnel |
@@ -331,7 +331,7 @@ sh deploy/generate-env.sh https://tu-dominio.com deploy/docker-compose/.env
 docker compose -f deploy/docker-compose/docker-compose.yml -f deploy/build.yml up -d --build
 ```
 
-`build.yml` va detrás del compose de cualquiera de las formas. La primera construcción tarda de 10 a 20 minutos y pide unos 2 GB de memoria. La plataforma muestra la versión del repositorio con `-dev`.
+`build.yml` va detrás del compose de cualquiera de las formas con Docker Compose; no vale con Dokploy ni con Coolify, que no llevan el ayudante que también construye. La primera construcción tarda de 10 a 20 minutos y pide unos 2 GB de memoria. La plataforma muestra la versión del repositorio con `-dev`.
 
 ## Pasar una instalación con git a imágenes
 
@@ -391,11 +391,11 @@ Cada cuenta agrega sus equipos con «Agregar GPS»: elige la marca o el modelo y
 
 ### Probar sin equipos
 
-En **Administración → Sistema → Simulador** el dueño de la plataforma crea equipos simulados, que se conectan al receptor como un GPS real y recorren una ruta. Sirve para comprobar una instalación nueva de punta a punta: agrega un GPS con «Agregar GPS» usando el identificador que da el simulador, inícialo y míralo moverse en el mapa. Por ahora habla Teltonika y SinoTrack / MiCODUS, y corren hasta 50 a la vez. Sus rutas se arman en la pestaña «Rutas»: de una dirección a otra por calles, o marcando puntos en el mapa.
+En **Administración → Sistema → Simulador** el dueño de la plataforma crea equipos simulados, que se conectan al receptor como un GPS real y recorren una ruta. Sirve para comprobar una instalación nueva de punta a punta: agrega un GPS con «Agregar GPS» usando el identificador que da el simulador, inícialo y míralo moverse en el mapa. Por ahora habla Teltonika y SinoTrack / MiCODUS. Sus rutas se arman en la pestaña «Rutas»: de una dirección a otra por calles, o marcando puntos en el mapa.
 
 ## Copias de seguridad
 
-Las hace la plataforma, como las programes en Administración → Copias de seguridad, y se guardan en el volumen `backups-data` (`/data/backups` dentro del contenedor `opengps`). Desde la consola se descargan, y con el almacenamiento externo (S3) se guardan también fuera del servidor: conviene tenerlo antes de abrir al público.
+Las hace la plataforma, como las programes en Administración → Sistema → Copias de seguridad, y se guardan en el volumen `backups-data` (`/data/backups` dentro del contenedor `opengps`). Desde la consola se descargan, y con el almacenamiento externo (S3) se guardan también fuera del servidor: conviene tenerlo antes de abrir al público.
 
 ## Restaurar una copia
 
@@ -403,7 +403,7 @@ Restaurar devuelve toda la plataforma (cuentas, vehículos, historial, ajustes y
 
 ### Desde la consola
 
-En Administración → Copias de seguridad, cada copia completa tiene el botón **Restaurar**. Pide escribir RESTAURAR para confirmar, y después:
+En Administración → Sistema → Copias de seguridad, cada copia completa tiene el botón **Restaurar**. Pide escribir RESTAURAR para confirmar, y después:
 
 1. La plataforma hace una copia de cómo está todo ahora, de tipo «Antes de restaurar»: con ella se puede deshacer la restauración, restaurándola igual.
 2. Si la copia elegida ya no está en el servidor pero sí en el almacenamiento externo, la baja primero.
@@ -434,7 +434,7 @@ Cada copia son tres archivos con la misma fecha, como `20261124_080000`:
 | `traccar_<fecha>.dump` | La base de los equipos | La base `traccar` |
 | `files_<fecha>.tar.gz` | Los archivos que suben las personas | `/data/files`, dentro del contenedor `opengps` |
 
-Estos pasos son para Docker Compose. Con Dokploy son los mismos, sobre sus contenedores: `docker ps` dice cómo se llaman.
+Estos pasos son para Docker Compose. Con Dokploy y con Coolify son los mismos, sobre sus contenedores: `docker ps` dice cómo se llaman.
 
 1. **Junta los tres archivos en una carpeta del servidor.** Entra a la carpeta de la instalación y escribe la fecha de la copia. Si cierras la sesión a mitad de camino, vuelve a escribir estas líneas:
 
