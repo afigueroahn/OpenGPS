@@ -22,6 +22,9 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/).
 - `AGENTS.md` y `CONTRIBUTING.md` describen la plataforma como es: se instala con
   `deploy/`, se trabaja con los scripts de pnpm y la CI corre los checks que se piden.
   Se quitan las reglas que no hacían falta (ADR-0007, #50).
+- La web usa el icono oficial de la plataforma, el marcador con su órbita: en la pestaña
+  del navegador, en el logo de todas las pantallas y al guardarla en la pantalla de
+  inicio de un iPhone (#46).
 
 ### Eliminado
 
