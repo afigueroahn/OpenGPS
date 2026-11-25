@@ -6,6 +6,12 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Sin publicar]
 
+### Cambiado
+
+- `AGENTS.md` y `CONTRIBUTING.md` describen la plataforma como es: se instala con
+  `deploy/`, se trabaja con los scripts de pnpm y la CI corre los checks que se piden.
+  Se quitan las reglas que no hacían falta (ADR-0007, #50).
+
 ## [0.2.0] - 2026-11-25
 
 ### Añadido

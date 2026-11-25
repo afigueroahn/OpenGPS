@@ -30,17 +30,8 @@ feat(ingest): describir el cambio en imperativo
 Cuerpo: qué y por qué, no cómo.
 
 Closes #42
-Signed-off-by: Nombre Humano <email>
-Co-Authored-By: Claude <noreply@anthropic.com>
 ```
 
-- El autor git es siempre una persona.
-- Cada commit lleva el trailer `Signed-off-by:` de esa persona. Con él certifica el
-  [Developer Certificate of Origin](https://developercertificate.org/).
-- Si una herramienta de IA participó en el cambio, el commit lleva además un trailer
-  `Co-Authored-By:` que la identifica.
-- No se firma criptográficamente a nombre de una herramienta de IA ni se usan
-  identidades ficticias.
 - Está prohibido usar `--no-verify`, hacer force-push a `main` y reescribir historia
   publicada.
 
@@ -77,9 +68,9 @@ Hay un milestone por fase de arranque. Cada issue se asigna al de su fase.
 | Milestone | Alcance |
 |---|---|
 | Fase 1 — Gobernanza | Licencia, documentos base, plantillas y política de commits. |
-| Fase 2 — Entorno | Bootstrap del host, contenedores, Makefile y pre-commit. |
+| Fase 2 — Entorno | Instalación con Docker Compose en `deploy/` y sus variables. |
 | Fase 3 — CI | Checks obligatorios bloqueando merges y branch protection. |
-| Fase 4 — ADRs | Propuestas de stack, almacenamiento, tenancy y límites de capas. |
+| Fase 4 — ADRs | Propuestas de stack, almacenamiento y tenancy. |
 | Fase 5 — MVP | Alcance cerrado definido por el mantenedor. |
 
 ## Publicar una versión
@@ -108,6 +99,5 @@ Este proyecto se desarrolla con asistencia de IA y lo declara de forma explícit
 - Las decisiones de arquitectura, stack y alcance las toma una persona.
 - Ningún PR se mergea sin revisión humana ni con código que el mantenedor no pueda
   explicar.
-- Los commits asistidos por IA se identifican con el trailer `Co-Authored-By:`.
-- Quien contribuya usando herramientas de IA debe declararlo con ese mismo trailer y
-  responde por el contenido que envía, igual que si lo hubiera escrito a mano.
+- Quien contribuya usando herramientas de IA responde por el contenido que envía, igual
+  que si lo hubiera escrito a mano.
