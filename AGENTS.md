@@ -111,7 +111,7 @@ opengps/
 ├── AGENTS.md              # este documento (fuente de verdad)
 ├── CLAUDE.md              # importa AGENTS.md
 ├── Makefile
-├── README.md  LICENSE  CHANGELOG.md  CONTRIBUTING.md  SECURITY.md  CODEOWNERS
+├── README.md  LICENSE  NOTICE  CHANGELOG.md  CONTRIBUTING.md  SECURITY.md  CODEOWNERS
 ├── .env.example  .editorconfig  .gitignore
 ├── .devcontainer/
 ├── .github/{ISSUE_TEMPLATE,PULL_REQUEST_TEMPLATE.md,workflows}
