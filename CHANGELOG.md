@@ -29,6 +29,11 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/).
 
 ### Cambiado
 
+- La instalación descarga las imágenes publicadas en lugar de construirlas: los
+  compose usan `ghcr.io/afigueroahn/` con el tag de `OPENGPS_VERSION`, una variable
+  obligatoria nueva que `generate-env.sh` pone sola. Cada release adjunta los archivos
+  para instalar sin el código, y `deploy/docker-compose/build.yml` construye desde el
+  código. La guía explica cómo pasar una instalación hecha con git a imágenes (#18).
 - El ayudante `restorer` pasa a llamarse `helper`, con `deploy/helper.sh` y
   `deploy/helper.Dockerfile`, porque además de restaurar va a actualizar la
   plataforma. Su señal de vida es `helper.alive`. Al actualizar una instalación con
