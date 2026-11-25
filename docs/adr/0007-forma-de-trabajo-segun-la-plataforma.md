@@ -59,4 +59,4 @@ Se ajusta `AGENTS.md` a la plataforma y se quita lo que no hace falta:
 - Los commits ya no tienen que llevar `Signed-off-by` ni `Co-Authored-By`.
 - La protección de `main` sigue pendiente: es un ajuste de GitHub que hace el dueño.
 - Las descripciones de los milestones «Fase 2 — Entorno» y «Fase 4 — ADRs» en GitHub
-  hay que alinearlas con este cambio.
+  se alinean con este cambio.
