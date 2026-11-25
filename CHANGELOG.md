@@ -15,6 +15,8 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/).
   actualiza desde la consola y cada release adjunta `docker-compose.caddy.yml` (#38).
 - `deploy/coolify/`: instalar en Coolify, que genera los secretos y pone el dominio.
   Solo pide `OPENGPS_VERSION` (#38).
+- `TRUSTED_ORIGINS` y `SIMULATOR_MAX_DEVICES` se pueden fijar en una instalación: los
+  cinco compose se las pasan a la plataforma (#40).
 
 ### Cambiado
 
@@ -28,6 +30,9 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/).
 - Cada release adjunta también `docker-compose.cloudflare.yml`.
 - `deploy/docker-compose/build.yml` pasa a `deploy/build.yml` y sirve para cualquier
   forma.
+- `deploy/.env.example` queda ordenado por forma de instalar, y la CI comprueba con
+  `.github/scripts/env-check.sh` que explica las variables que leen los compose, y
+  ninguna otra (#40).
 
 ## [0.1.2] - 2026-11-25
 
