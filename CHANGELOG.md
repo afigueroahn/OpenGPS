@@ -6,6 +6,8 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Sin publicar]
 
+## [0.1.0] - 2026-11-25
+
 ### Añadido
 
 - Forma de trabajo del proyecto en `AGENTS.md` y `CLAUDE.md`.
