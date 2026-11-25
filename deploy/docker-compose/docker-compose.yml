@@ -1,23 +1,25 @@
-# OpenGPS with Docker Compose, on any server with Docker. Each release
-# attaches this file, generate-env.sh and env.example:
+# OpenGPS with Docker Compose, with the web app on a port of the server. Each
+# release attaches this file, generate-env.sh and env.example:
 #
-#   sh generate-env.sh https://example.com .env
+#   sh generate-env.sh http://203.0.113.10:3000 .env
 #   docker compose up -d
 #
 # Its variables are in deploy/.env.example: PUBLIC_URL, AUTH_SECRET,
 # POSTGRES_PASSWORD and OPENGPS_VERSION; the rest of the platform is set up
 # from its console. The images come built, for Intel/AMD and ARM, from
-# ghcr.io; deploy/docker-compose/build.yml builds them from the code instead.
-# The guide is deploy/README.md.
+# ghcr.io; deploy/build.yml builds them from the code instead. The guide is
+# deploy/README.md.
 #
-# Published to the host: only the ports the GPS devices connect to. The web app
-# and the API answer together on port 3000 of the `opengps` service, inside the
-# Docker network (opengps_default): the proxy with HTTPS joins that network and
-# points the domain to http://opengps:3000, as Dokploy's does. The `tunnel`
-# service below is one such proxy: a Cloudflare Tunnel. PostgreSQL and the
-# Traccar API are only accessible through that network too.
+# Published to the host: the ports the GPS devices connect to, and the web app
+# with the API on WEB_PORT (3000), in plain HTTP. For a domain with HTTPS, put
+# your own proxy in front of that port, or use deploy/caddy or
+# deploy/cloudflare, which bring one. PostgreSQL and the Traccar API are only
+# accessible inside the Docker network.
 
 name: ${COMPOSE_PROJECT_NAME:-opengps}
+
+# Which way of installing this file is (deploy/<this>): the helper keeps it when it installs a version.
+x-opengps-deploy: docker-compose
 
 x-logging: &logging
   driver: json-file
@@ -139,6 +141,9 @@ services:
       DATABASE_URL: postgres://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-opengps}
       TRACCAR_DATABASE_URL: postgres://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD}@postgres:5432/traccar
       TRACCAR_API_URL: http://traccar:8082
+    ports:
+      # The web app and the API. WEB_BIND=127.0.0.1 keeps it for a proxy on this same server.
+      - "${WEB_BIND:-0.0.0.0}:${WEB_PORT:-3000}:3000"
     volumes:
       - files-data:/data/files
       - backups-data:/data/backups
@@ -177,24 +182,6 @@ services:
       - backups-data:/data/backups
       - files-data:/data/files
       - .:/data/install
-    security_opt:
-      - no-new-privileges:true
-
-  # Optional: a Cloudflare Tunnel brings the domain and its HTTPS, without
-  # opening ports 80 and 443. It is started with COMPOSE_PROFILES=tunnel and the
-  # tunnel's token; in Cloudflare, the tunnel's hostnames point to
-  # http://opengps:3000.
-  tunnel:
-    image: cloudflare/cloudflared:2026.10.7
-    profiles: [tunnel]
-    restart: unless-stopped
-    logging: *logging
-    command: tunnel --no-autoupdate run
-    environment:
-      TUNNEL_TOKEN: ${CLOUDFLARE_TUNNEL_TOKEN:-}
-    depends_on:
-      opengps:
-        condition: service_started
     security_opt:
       - no-new-privileges:true
 

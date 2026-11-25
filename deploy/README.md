@@ -1,28 +1,36 @@
 # Instalar OpenGPS
 
-La única forma de instalar la plataforma: con Docker Compose en cualquier servidor con Docker, o con Dokploy. Esta guía va desde un servidor recién creado hasta la plataforma en marcha, con sus copias de seguridad.
+La plataforma se instala con Docker, de la forma que le convenga a cada servidor. Cada forma es una carpeta con su `docker-compose.yml`:
 
-| Archivo o carpeta | Para qué |
+| Carpeta | Para qué servidor | Cómo llega la web |
+|---|---|---|
+| [`docker-compose/`](docker-compose/docker-compose.yml) | Cualquier servidor con Docker | En un puerto del servidor, en HTTP. Si quieres HTTPS, lo pone tu propio proxy |
+| [`cloudflare/`](cloudflare/docker-compose.yml) | Cualquier servidor con Docker, con el dominio en Cloudflare | Por un túnel de Cloudflare, con HTTPS y sin abrir los puertos 80 y 443 |
+| [`dokploy/`](dokploy/docker-compose.yml) | Un servidor con [Dokploy](https://dokploy.com) | Por el proxy de Dokploy, que pone el dominio y su certificado |
+
+Esta guía va desde un servidor recién creado hasta la plataforma en marcha, con sus copias de seguridad.
+
+Las acompañan estos archivos:
+
+| Archivo | Para qué |
 |---|---|
-| [`docker-compose/`](docker-compose/docker-compose.yml) | Cualquier servidor con Docker y Docker Compose |
-| [`dokploy/`](dokploy/docker-compose.yml) | Un servidor con [Dokploy](https://dokploy.com), que pone el dominio y su certificado |
 | [`.env.example`](.env.example) | Las variables, con lo que hace cada una |
-| [`docker-compose/build.yml`](docker-compose/build.yml) | Construir las imágenes desde el código, para desarrollar o probar un cambio antes de publicarlo |
+| [`build.yml`](build.yml) | Construir las imágenes desde el código, para desarrollar o probar un cambio antes de publicarlo. Va detrás del compose de cualquiera de las formas |
 | [`generate-env.sh`](generate-env.sh) | Escribe las variables con sus secretos ya generados |
 | [`opengps.Dockerfile`](opengps.Dockerfile) | La plataforma: la imagen con la web dentro |
 | [`postgres.Dockerfile`](postgres.Dockerfile) | La base de datos, con [`postgres-init.sh`](postgres-init.sh), que crea la base `traccar` la primera vez que arranca |
-| [`helper.Dockerfile`](helper.Dockerfile) | El ayudante de la plataforma, con [`helper.sh`](helper.sh): restaura una copia cuando se pide desde la consola |
+| [`helper.Dockerfile`](helper.Dockerfile) | El ayudante de la plataforma, con [`helper.sh`](helper.sh): restaura una copia o instala una versión nueva cuando se pide desde la consola |
 
-Las dos formas levantan cuatro contenedores:
+Todas levantan cuatro contenedores:
 
 | Contenedor | Qué hace | Puerto |
 |---|---|---|
-| `opengps` | La plataforma: la web y la API juntas, la sesión, el mapa en vivo, las tareas y las copias | 3000, solo dentro de la red de Docker |
+| `opengps` | La plataforma: la web y la API juntas, la sesión, el mapa en vivo, las tareas y las copias | 3000, dentro de la red de Docker. Con `docker-compose/`, además en un puerto del servidor |
 | `traccar` | La entrada de los equipos GPS | 5001, 5002, 5004, 5011, 5013, 5015, 5023, 5027 y 5046, por TCP y UDP, publicados en el servidor |
 | `postgres` | Las bases `opengps` (la plataforma) y `traccar` (los equipos), con un solo usuario, `postgres` de fábrica | 5432, solo dentro de la red de Docker |
 | `helper` | El ayudante de la plataforma, el único con acceso a Docker: cuando se pide desde la consola, cambia las bases y los archivos por los de una copia | Ninguno |
 
-Con Docker Compose se puede sumar un quinto, `tunnel`: el túnel de Cloudflare, que pone el dominio con HTTPS (ver «Con un túnel de Cloudflare»).
+`cloudflare/` suma un quinto, `tunnel`: el túnel de Cloudflare, que pone el dominio con HTTPS.
 
 Las dos bases, por dentro:
 
@@ -36,7 +44,7 @@ Las dos bases, por dentro:
 
 La web y la API van en el mismo puerto a propósito: si fueran en puertos distintos serían dos sitios para el navegador, y la sesión y las llamadas de la web a la API dejarían de funcionar.
 
-Con Docker Compose y con Dokploy se comporta igual: el servidor solo publica los puertos de los equipos. La web y la base no se publican; se llega a ellas desde la red de Docker. El puerto de la web es HTTP, y el HTTPS lo pone lo que va delante: el túnel de Cloudflare que trae el Compose, el proxy de Dokploy, o un proxy en un contenedor unido a esa red, como Nginx Proxy Manager, Traefik o Caddy.
+En todas, el servidor publica los puertos de los equipos, y la base no se publica. La web sale en HTTP por el puerto 3000 del contenedor `opengps`. Lo que cambia de una forma a otra es quién la lleva hasta el navegador: un puerto del servidor, el túnel de Cloudflare o el proxy de Dokploy.
 
 Las imágenes vienen ya armadas, para procesadores Intel/AMD y ARM: cada versión las publica en `ghcr.io/afigueroahn/` y el servidor solo las descarga. Cada instalación dice en `OPENGPS_VERSION` qué versión corre.
 
@@ -102,7 +110,7 @@ Con Dokploy, prepara el servidor como diga Dokploy y sigue en «Apuntar el domin
    ufw --force enable
    ```
 
-   Si el HTTPS lo pone un proxy en el servidor, abre también `ufw allow 80/tcp` y `ufw allow 443/tcp`. Docker publica sus puertos por encima de `ufw`: por eso el Compose solo publica los de los equipos.
+   Si el HTTPS lo pone un proxy en el servidor, abre también `ufw allow 80/tcp` y `ufw allow 443/tcp`. Docker publica sus puertos por encima de `ufw`: los de los equipos y, con `docker-compose/`, el de la web quedan abiertos aunque `ufw` no los liste.
 
 8. Deja el acceso por SSH solo con llave. Antes, comprueba que entras con tu llave: si no, te quedas fuera del servidor.
 
@@ -113,16 +121,22 @@ Con Dokploy, prepara el servidor como diga Dokploy y sigue en «Apuntar el domin
 
    El nombre empieza por 10 para que mande sobre el archivo que deja el proveedor. Desde ahí la contraseña de root ya no sirve para entrar.
 
-9. Descarga los archivos de la última versión:
+9. Descarga los archivos de la última versión. El compose es el de la forma que elegiste:
 
    ```bash
    mkdir -p /opt/opengps && cd /opt/opengps
-   for f in docker-compose.yml generate-env.sh env.example; do
-     curl -fsSLO "https://github.com/afigueroahn/OpenGPS/releases/latest/download/$f"
-   done
+   B=https://github.com/afigueroahn/OpenGPS/releases/latest/download
+   curl -fsSLO "$B/generate-env.sh"
+   curl -fsSLO "$B/env.example"
+   curl -fsSL -o docker-compose.yml "$B/docker-compose.yml"
    ```
 
-   Son el compose, el script que escribe las variables y su ejemplo, con la versión ya puesta. No hace falta descargar el código.
+   | Forma | Archivo de la última línea |
+   |---|---|
+   | En un puerto del servidor | `docker-compose.yml` |
+   | Con el túnel de Cloudflare | `docker-compose.cloudflare.yml` |
+
+   Siempre se guarda como `docker-compose.yml`. No hace falta descargar el código.
 
 ## Apuntar el dominio
 
@@ -159,110 +173,70 @@ Las opcionales:
 | `APP_NAME` | `OpenGPS` | El nombre de la plataforma en la web, los correos y los avisos |
 | `UPDATE_REPOSITORY` | `afigueroahn/OpenGPS` | El repositorio de GitHub cuyas releases son las versiones nuevas: el dueño las ve en Administración → Actualizaciones. Vacío, la plataforma no consulta |
 | `COMPOSE_PROJECT_NAME` | `opengps` | Solo con Docker Compose: el nombre del grupo de contenedores |
-| `COMPOSE_PROFILES`, `CLOUDFLARE_TUNNEL_TOKEN` | | Solo con Docker Compose: `tunnel` y el token del túnel de Cloudflare (ver «Con un túnel de Cloudflare») |
+| `WEB_PORT`, `WEB_BIND` | `3000`, `0.0.0.0` | Solo con `docker-compose/`: el puerto del servidor donde responde la web, y en qué dirección escucha. `127.0.0.1` la deja solo para un proxy instalado en el mismo servidor |
+| `CLOUDFLARE_TUNNEL_TOKEN` | | Solo con `cloudflare/`, y ahí es obligatoria: el token del túnel |
 | `POSTGRES_TUNE_MEMORY`, `TRACCAR_JAVA_OPTS` | | Para servidores de 2 GB o menos: `768MB` y `-Xmx320m` |
 
 Todo lo demás se configura desde la consola de la plataforma, con la primera cuenta (ver «Configurar desde la consola»).
 
-## Con Docker Compose
+## Con Docker Compose, en un puerto del servidor
+
+La forma más simple: la web responde en un puerto del servidor, en HTTP. Sirve para una red interna, o para poner delante tu propio proxy con HTTPS.
 
 En el servidor, en la carpeta con los archivos de la versión:
 
 ```bash
 cd /opt/opengps
-sh generate-env.sh https://tu-dominio.com .env
+sh generate-env.sh http://IP-DEL-SERVIDOR:3000 .env
 docker compose up -d
 ```
 
-La primera vez tarda unos minutos: lo que se demora en descargar las imágenes. Para ver cómo van: `docker compose ps`. Los contenedores deben decir `Up`, y `postgres`, `traccar` y `opengps` además `(healthy)`.
+La dirección que le das a `generate-env.sh` es la que la gente abre en el navegador: queda en `PUBLIC_URL`. La primera vez tarda unos minutos: lo que se demora en descargar las imágenes. Para ver cómo van: `docker compose ps`. Los contenedores deben decir `Up`, y `postgres`, `traccar` y `opengps` además `(healthy)`.
 
-La web queda en el puerto 3000 del contenedor `opengps`, dentro de la red de Docker `opengps_default` (`<COMPOSE_PROJECT_NAME>_default` si le cambiaste el nombre). Lo que pone el HTTPS dirige `https://tu-dominio.com` a `http://opengps:3000`: el túnel de Cloudflare (abajo) u otro proxy en un contenedor unido a esa red. Por ejemplo, en el compose del proxy, con OpenGPS ya levantado, porque la red se crea con él:
+La web abre en `http://IP-DEL-SERVIDOR:3000`. El puerto se cambia con `WEB_PORT` en `.env`. Si el proveedor tiene un cortafuegos propio, hay que abrirlo ahí.
 
-```yaml
-services:
-  proxy:
-    networks: [default, opengps]
-networks:
-  opengps:
-    name: opengps_default
-    external: true
-```
+**Con tu propio proxy y HTTPS.** `PUBLIC_URL` es entonces `https://tu-dominio.com`, y el proxy dirige el dominio a la plataforma:
+
+- Si el proxy está instalado en el servidor, lo dirige a `http://127.0.0.1:3000`. Con `WEB_BIND=127.0.0.1` en `.env`, ese puerto deja de verse desde fuera.
+- Si el proxy es otro contenedor (Nginx Proxy Manager, Traefik…), se une a la red de la plataforma, `opengps_default` (`<COMPOSE_PROJECT_NAME>_default` si le cambiaste el nombre), y lo dirige a `http://opengps:3000`. En el compose del proxy, con OpenGPS ya levantado, porque la red se crea con él:
+
+  ```yaml
+  services:
+    proxy:
+      networks: [default, opengps]
+  networks:
+    opengps:
+      name: opengps_default
+      external: true
+  ```
 
 Para entrar a la base con una herramienta: `docker compose exec postgres psql -U postgres opengps`.
 
 Para ver el registro de la plataforma en vivo: `docker compose logs -f opengps`.
 
-### Instalar una versión nueva
-
-Cada versión está en [las releases del repositorio](https://github.com/afigueroahn/OpenGPS/releases), con sus cambios. Sus notas dicen si pide algo más, como una variable nueva. La consola avisa al dueño cuando sale una.
-
-**Desde la consola**, con Docker Compose: en Administración → Sistema → Actualizaciones, pulsa «Actualizar a X.Y.Z».
-1. La plataforma hace antes una copia de todo, de tipo «Antes de actualizar».
-2. El ayudante descarga la versión y la instala. La plataforma queda sin servicio unos segundos.
-3. Si la versión nueva no arranca, vuelve sola a la anterior, y si tampoco arranca la anterior, restaura esa copia.
-4. Deja `docker-compose.yml.previous` y `.env.previous` con lo que había.
-
-Con Dokploy el botón no aparece, porque Dokploy desharía el cambio: allí se cambia `OPENGPS_VERSION` y se pulsa *Deploy*.
-
-**A mano**, cambia `X.Y.Z` por su número:
-
-```bash
-cd /opt/opengps
-V=X.Y.Z
-curl -fsSLO "https://github.com/afigueroahn/OpenGPS/releases/download/v$V/docker-compose.yml"
-sed -i "s/^OPENGPS_VERSION=.*/OPENGPS_VERSION=$V/" .env
-docker compose up -d --remove-orphans
-```
-
-Las migraciones de la base se aplican solas al arrancar la plataforma. `--remove-orphans` quita los servicios que la versión nueva ya no tiene, para que no queden contenedores viejos en marcha.
-
-### Construir desde el código
-
-Para desarrollar, o para probar un cambio antes de que se publique, las imágenes se construyen desde el repositorio en lugar de descargarse:
-
-```bash
-git clone https://github.com/afigueroahn/OpenGPS /opt/opengps-dev && cd /opt/opengps-dev
-sh deploy/generate-env.sh https://tu-dominio.com deploy/docker-compose/.env
-docker compose -f deploy/docker-compose/docker-compose.yml -f deploy/docker-compose/build.yml up -d --build
-```
-
-La primera construcción tarda de 10 a 20 minutos y pide unos 2 GB de memoria. La plataforma muestra la versión del repositorio con `-dev`.
-
-### Pasar una instalación con git a imágenes
-
-Una instalación hecha antes de las releases, con `git clone` y `--build`, pasa a las imágenes una sola vez. Sus datos están en los volúmenes de Docker y se quedan como están:
-
-```bash
-cd /opt
-mv opengps opengps-git
-mkdir opengps && cd opengps
-for f in docker-compose.yml generate-env.sh env.example; do
-  curl -fsSLO "https://github.com/afigueroahn/OpenGPS/releases/latest/download/$f"
-done
-cp /opt/opengps-git/deploy/docker-compose/.env .env
-grep "^OPENGPS_VERSION=" env.example >> .env
-docker compose up -d --remove-orphans
-```
-
-`.env` conserva sus secretos, su túnel y el nombre del grupo (`COMPOSE_PROJECT_NAME`), así que los contenedores se reemplazan sobre los mismos volúmenes. `--remove-orphans` quita el ayudante viejo, `restorer`. Cuando la web vuelva a abrir con todo en su lugar, `/opt/opengps-git` se puede borrar.
-
-### Con un túnel de Cloudflare
+## Con Docker Compose y un túnel de Cloudflare
 
 El túnel lleva el dominio con HTTPS hasta la plataforma sin abrir los puertos 80 y 443: el servidor solo deja entrar SSH y los equipos GPS. El contenedor `tunnel` sale hacia Cloudflare, y Cloudflare pone el certificado.
 
 1. El dominio tiene que estar en tu cuenta de Cloudflare.
 2. En Cloudflare, **Zero Trust → Networks → Tunnels**, crea un túnel: tipo *Cloudflared*, entorno *Docker*. Copia su token: es el texto largo que va después de `--token` en el comando que muestra Cloudflare. No hace falta ejecutar ese comando.
 3. En el túnel, agrega dos nombres públicos (*public hostnames*): `tu-dominio.com` y `api.tu-dominio.com`, los dos con servicio **HTTP** y dirección **`opengps:3000`**. Cloudflare crea solo sus registros DNS. Si ya había registros con esos nombres, bórralos antes.
-4. En el servidor, abre `/opt/opengps/.env` con `nano` y completa:
+4. En el servidor, con el compose `docker-compose.cloudflare.yml` descargado como `docker-compose.yml`, genera las variables:
+
+   ```bash
+   cd /opt/opengps
+   sh generate-env.sh https://tu-dominio.com .env
+   ```
+
+   Después abre `.env` con `nano` y completa el token:
 
    ```
-   COMPOSE_PROFILES=tunnel
    CLOUDFLARE_TUNNEL_TOKEN=el-token-del-túnel
    ```
 
    Escribe el token directamente en el servidor. No lo mandes por correo ni por chat. Guarda con `Ctrl+O`, Enter y `Ctrl+X`.
 
-5. Levanta o actualiza la plataforma:
+5. Levanta la plataforma:
 
    ```bash
    cd /opt/opengps && docker compose up -d
@@ -276,12 +250,74 @@ El túnel lleva el dominio con HTTPS hasta la plataforma sin abrir los puertos 8
 ## Con Dokploy
 
 1. **Proyecto:** en Dokploy, *Projects → Create Service → Compose*. Como origen, el repositorio `https://github.com/afigueroahn/OpenGPS`, rama `main`. En *Compose Path*: `./deploy/dokploy/docker-compose.yml`.
-2. **Variables:** en tu computadora, con los archivos de la última versión (ver «Preparar un servidor Ubuntu nuevo», paso 9), `sh generate-env.sh https://tu-dominio.com` imprime las variables con los secretos ya generados y la versión. Pégalas en la pestaña *Environment*. Los secretos se quedan en Dokploy: no los mandes por correo ni por chat.
+2. **Variables:** en tu computadora, con `generate-env.sh` y `env.example` de la última versión (ver «Preparar un servidor Ubuntu nuevo», paso 9), `sh generate-env.sh https://tu-dominio.com` imprime las variables con los secretos ya generados y la versión. Pégalas en la pestaña *Environment*. Los secretos se quedan en Dokploy: no los mandes por correo ni por chat.
 3. **Dominio:** en la pestaña *Domains*, agrega `tu-dominio.com` al servicio **`opengps`**, puerto **3000**, con HTTPS y el certificado de Let's Encrypt. El registro DNS del dominio apunta al servidor de Dokploy.
 4. **Equipos GPS:** el registro `gw` apunta directo al servidor (en Cloudflare, «solo DNS») y sus puertos se abren en el cortafuegos. No pasan por el proxy de Dokploy: Dokploy los publica tal cual.
 5. **Deploy.** La primera vez tarda unos minutos, lo que se demora en descargar las imágenes. Cuando abra `https://tu-dominio.com`, crea tu cuenta enseguida.
 
 Para instalar una versión nueva: en *Environment*, cambia `OPENGPS_VERSION` por su número y pulsa *Deploy*.
+
+## Instalar una versión nueva
+
+Cada versión está en [las releases del repositorio](https://github.com/afigueroahn/OpenGPS/releases), con sus cambios. Sus notas dicen si pide algo más, como una variable nueva. La consola avisa al dueño cuando sale una.
+
+**Desde la consola**, con cualquiera de las formas de Docker Compose: en Administración → Sistema → Actualizaciones, pulsa «Actualizar a X.Y.Z».
+1. La plataforma hace antes una copia de todo, de tipo «Antes de actualizar».
+2. El ayudante descarga la versión y la instala. La plataforma queda sin servicio unos segundos.
+3. Si la versión nueva no arranca, vuelve sola a la anterior, y si tampoco arranca la anterior, restaura esa copia.
+4. Deja `docker-compose.yml.previous` y `.env.previous` con lo que había.
+
+La instalación conserva su forma: el ayudante toma el compose de la misma carpeta (`docker-compose/` o `cloudflare/`) en la versión nueva. Una instalación 0.1.x, de antes de que hubiera varias formas, queda sola en la suya: `cloudflare/` si usaba el túnel, y si no `docker-compose/`, con `WEB_BIND=127.0.0.1` para no abrir un puerto que antes estaba cerrado.
+
+Con Dokploy el botón no aparece, porque Dokploy desharía el cambio: allí se cambia `OPENGPS_VERSION` y se pulsa *Deploy*.
+
+**A mano**, cambia `X.Y.Z` por su número:
+
+```bash
+cd /opt/opengps
+V=X.Y.Z
+F=docker-compose.yml
+curl -fsSL -o docker-compose.yml "https://github.com/afigueroahn/OpenGPS/releases/download/v$V/$F"
+sed -i "s/^OPENGPS_VERSION=.*/OPENGPS_VERSION=$V/" .env
+docker compose up -d --remove-orphans
+```
+
+Con el túnel de Cloudflare, `F=docker-compose.cloudflare.yml`.
+
+Las migraciones de la base se aplican solas al arrancar la plataforma. `--remove-orphans` quita los servicios que la versión nueva ya no tiene, para que no queden contenedores viejos en marcha.
+
+## Construir desde el código
+
+Para desarrollar, o para probar un cambio antes de que se publique, las imágenes se construyen desde el repositorio en lugar de descargarse:
+
+```bash
+git clone https://github.com/afigueroahn/OpenGPS /opt/opengps-dev && cd /opt/opengps-dev
+sh deploy/generate-env.sh https://tu-dominio.com deploy/docker-compose/.env
+docker compose -f deploy/docker-compose/docker-compose.yml -f deploy/build.yml up -d --build
+```
+
+`build.yml` va detrás del compose de cualquiera de las formas. La primera construcción tarda de 10 a 20 minutos y pide unos 2 GB de memoria. La plataforma muestra la versión del repositorio con `-dev`.
+
+## Pasar una instalación con git a imágenes
+
+Una instalación hecha antes de las releases, con `git clone` y `--build`, pasa a las imágenes una sola vez. Sus datos están en los volúmenes de Docker y se quedan como están:
+
+```bash
+cd /opt
+mv opengps opengps-git
+mkdir opengps && cd opengps
+B=https://github.com/afigueroahn/OpenGPS/releases/latest/download
+curl -fsSLO "$B/generate-env.sh"
+curl -fsSLO "$B/env.example"
+curl -fsSL -o docker-compose.yml "$B/docker-compose.yml"
+cp /opt/opengps-git/deploy/docker-compose/.env .env
+grep "^OPENGPS_VERSION=" env.example >> .env
+docker compose up -d --remove-orphans
+```
+
+Si la instalación usaba el túnel de Cloudflare, el compose es `docker-compose.cloudflare.yml`, y sobra la línea `COMPOSE_PROFILES` de `.env`. Si no lo usaba, la web pasa a responder en el puerto 3000 del servidor: con `WEB_BIND=127.0.0.1` en `.env` sigue cerrado hacia fuera.
+
+`.env` conserva sus secretos, su túnel y el nombre del grupo (`COMPOSE_PROJECT_NAME`), así que los contenedores se reemplazan sobre los mismos volúmenes. `--remove-orphans` quita el ayudante viejo, `restorer`. Cuando la web vuelva a abrir con todo en su lugar, `/opt/opengps-git` se puede borrar.
 
 ## La primera cuenta
 

@@ -6,7 +6,12 @@
 FROM docker:29.9.2-cli
 RUN apk add --no-cache bash
 COPY deploy/helper.sh /usr/local/bin/helper.sh
-# The compose file of this version: when it installs it, the helper takes it from here.
+# The compose files of this version, one per way of installing with Docker
+# Compose: when it installs it, the helper takes from here the one of the way
+# the installation has.
+COPY deploy/docker-compose/docker-compose.yml /opt/opengps/docker-compose/docker-compose.yml
+COPY deploy/cloudflare/docker-compose.yml /opt/opengps/cloudflare/docker-compose.yml
+# Where the helpers from before the ways existed (0.1.x) look for it.
 COPY deploy/docker-compose/docker-compose.yml /opt/opengps/docker-compose.yml
 RUN chmod 755 /usr/local/bin/helper.sh
 CMD ["/usr/local/bin/helper.sh"]

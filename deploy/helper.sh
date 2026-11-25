@@ -30,7 +30,12 @@
 # too, replaced), waits for the platform to answer with the new version, and
 # otherwise goes back to the previous files, and to the backup if even that
 # does not start. Only with Docker Compose: the folder with docker-compose.yml
-# and .env is mounted at /data/install. Dokploy does not mount it.
+# and .env is mounted at /data/install. Dokploy and Coolify do not mount it.
+#
+# There are several ways of installing with Docker Compose (deploy/<way>), each
+# with its own compose file, marked "x-opengps-deploy: <way>". The helper image
+# carries the file of each way, in /opt/opengps/<way>/, and an update keeps the
+# way the installation has.
 set -uo pipefail
 
 DIR=/data/backups
@@ -313,6 +318,35 @@ helper_image() { # version
 }
 updater() { docker ps -q --filter "name=^$PROJECT-updater$"; }
 
+# Which way of installing a compose file is: its "x-opengps-deploy" mark.
+variant_of() { sed -n 's/^x-opengps-deploy:[[:space:]]*//p' "$1" 2> /dev/null | tr -d '"\r ' | head -1; }
+
+# Leaves in <base>/.update what the installation in <base> gets with a
+# version: the compose file of its way of installing, from <root>/<way>/, and
+# its .env with that version. An installation from before the ways existed
+# (0.1.x) has no mark: with the tunnel's profile it is deploy/cloudflare, and
+# otherwise deploy/docker-compose with the web app's port only for the server
+# itself, since those installations did not publish it.
+stage_update() { # base, root, version
+  local base="$1" root="$2" version="$3" stage="$1/.update" variant legacy=no
+  variant="$(variant_of "$base/docker-compose.yml")"
+  if [ -z "$variant" ]; then
+    legacy=yes
+    if grep -Eq '^COMPOSE_PROFILES=.*tunnel' "$base/.env"; then variant=cloudflare; else variant=docker-compose; fi
+  fi
+  if ! [[ "$variant" =~ ^[a-z-]+$ ]] || [ ! -f "$root/$variant/docker-compose.yml" ]; then return 1; fi
+  if ! { rm -rf "$stage" && mkdir -p "$stage" && cp "$root/$variant/docker-compose.yml" "$stage/docker-compose.yml"; }; then return 1; fi
+  {
+    if [ "$legacy" = yes ]; then
+      grep -v -e '^OPENGPS_VERSION=' -e '^COMPOSE_PROFILES=' "$base/.env"
+      if [ "$variant" = docker-compose ] && ! grep -q '^WEB_BIND=' "$base/.env"; then echo 'WEB_BIND=127.0.0.1'; fi
+    else
+      grep -v '^OPENGPS_VERSION=' "$base/.env"
+    fi
+    printf 'OPENGPS_VERSION=%s\n' "$version"
+  } > "$stage/.env"
+}
+
 # Until the platform answers with this version and the gateway is up. A
 # platform that cannot start fails quickly; one that starts slowly has up to
 # UPDATE_WAIT_S.
@@ -338,7 +372,7 @@ wait_version() { # version
 # file checked against .env. Then a container of the new helper applies it.
 handle_update_request() {
   started="$(now)"
-  local id version helper stage cid err
+  local id version helper files cid err
   id="$(ufield id)"
   version="$(ufield version)"
   log "update request to $version"
@@ -356,24 +390,26 @@ handle_update_request() {
     report_update failed pull "$helper"
     return
   fi
-  # The new version's compose file travels inside its helper image.
-  stage="$INSTALL/.update"
-  if ! { rm -rf "$stage" && mkdir -p "$stage"; }; then
-    report_update failed files
-    return
-  fi
-  if ! cid="$(docker create "$helper")" || ! docker cp "$cid:/opt/opengps/docker-compose.yml" "$stage/docker-compose.yml" > /dev/null; then
+  # The new version's compose files travel inside its helper image.
+  files="$(mktemp -d)"
+  if ! cid="$(docker create "$helper")" || ! docker cp "$cid:/opt/opengps/." "$files" > /dev/null; then
     [ -n "${cid:-}" ] && docker rm "$cid" > /dev/null
+    rm -rf "$files"
     report_update failed files
     return
   fi
   docker rm "$cid" > /dev/null
-  { grep -v '^OPENGPS_VERSION=' "$INSTALL/.env"; printf 'OPENGPS_VERSION=%s\n' "$version"; } > "$stage/.env"
-  if ! err="$(compose_in "$stage" config --quiet 2>&1)"; then
+  if ! stage_update "$INSTALL" "$files" "$version"; then
+    rm -rf "$files"
+    report_update failed files
+    return
+  fi
+  rm -rf "$files"
+  if ! err="$(compose_in "$INSTALL/.update" config --quiet 2>&1)"; then
     report_update failed env "$(echo "$err" | tail -1)"
     return
   fi
-  if ! compose_in "$stage" pull --policy missing --quiet; then
+  if ! compose_in "$INSTALL/.update" pull --policy missing --quiet; then
     report_update failed pull
     return
   fi
@@ -390,12 +426,23 @@ handle_update_request() {
 
 # In the container of the new version: swaps the files, brings everything up
 # and waits; if the new version does not answer, the previous files, and if
-# even that does not start, the backup made just before.
+# even that does not start, the backup made just before. What it installs it
+# takes from this image, whoever prepared the request: a helper from before
+# the ways of installing existed leaves here the only file it knew.
 apply_update() {
   started="$(now)"
-  local folder="$HOST_INSTALL" version from main_file gateway_file files_file
+  local folder="$HOST_INSTALL" version from main_file gateway_file files_file err
   version="$(ufield version)"
   from="$(ufield from)"
+  if ! stage_update "$folder" /opt/opengps "$version"; then
+    report_update failed files
+    return
+  fi
+  if ! err="$(compose_in "$folder/.update" config --quiet 2>&1)"; then
+    rm -rf "$folder/.update"
+    report_update failed env "$(echo "$err" | tail -1)"
+    return
+  fi
   if ! { cp "$folder/docker-compose.yml" "$folder/docker-compose.yml.previous" && cp "$folder/.env" "$folder/.env.previous" &&
     cat "$folder/.update/docker-compose.yml" > "$folder/docker-compose.yml" && cat "$folder/.update/.env" > "$folder/.env" &&
     rm -rf "$folder/.update"; }; then

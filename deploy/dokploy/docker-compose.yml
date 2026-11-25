@@ -24,6 +24,9 @@
 # install a new one, change it in the Environment tab and Deploy. The guide is
 # deploy/README.md.
 
+# Which way of installing this file is (deploy/<this>).
+x-opengps-deploy: dokploy
+
 x-logging: &logging
   driver: json-file
   options:
