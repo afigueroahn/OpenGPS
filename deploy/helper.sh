@@ -358,7 +358,10 @@ handle_update_request() {
   fi
   # The new version's compose file travels inside its helper image.
   stage="$INSTALL/.update"
-  rm -rf "$stage" && mkdir -p "$stage" || { report_update failed files; return; }
+  if ! { rm -rf "$stage" && mkdir -p "$stage"; }; then
+    report_update failed files
+    return
+  fi
   if ! cid="$(docker create "$helper")" || ! docker cp "$cid:/opt/opengps/docker-compose.yml" "$stage/docker-compose.yml" > /dev/null; then
     [ -n "${cid:-}" ] && docker rm "$cid" > /dev/null
     report_update failed files
@@ -393,9 +396,12 @@ apply_update() {
   local folder="$HOST_INSTALL" version from main_file gateway_file files_file
   version="$(ufield version)"
   from="$(ufield from)"
-  cp "$folder/docker-compose.yml" "$folder/docker-compose.yml.previous" && cp "$folder/.env" "$folder/.env.previous" &&
+  if ! { cp "$folder/docker-compose.yml" "$folder/docker-compose.yml.previous" && cp "$folder/.env" "$folder/.env.previous" &&
     cat "$folder/.update/docker-compose.yml" > "$folder/docker-compose.yml" && cat "$folder/.update/.env" > "$folder/.env" &&
-    rm -rf "$folder/.update" || { report_update failed files; return; }
+    rm -rf "$folder/.update"; }; then
+    report_update failed files
+    return
+  fi
   log "installing $version over $from"
   if compose_in "$folder" up -d --remove-orphans && wait_version "$version"; then
     report_update ok ""

@@ -63,7 +63,7 @@ grep -q '^update=yes$' <(docker exec "$(service helper)" cat /data/backups/helpe
 # Asks the helper for a version and waits for how it ended.
 update() { # version
   local id result i
-  id="$(cat /proc/sys/kernel/random/uuid 2> /dev/null || uuidgen | tr 'A-Z' 'a-z')"
+  id="$(cat /proc/sys/kernel/random/uuid 2> /dev/null || uuidgen | tr '[:upper:]' '[:lower:]')"
   docker exec "$(service helper)" sh -c "printf 'id=%s\nversion=%s\nrequested=%s\n' '$id' '$1' \"\$(date -u +%Y-%m-%dT%H:%M:%SZ)\" > /data/backups/update.request"
   for ((i = 0; i < 900; i += 5)); do
     sleep 5
@@ -87,7 +87,7 @@ grep -q '^OPENGPS_VERSION=0.0.2$' "$INSTALL/.env" || fail ".env does not say 0.0
 say "asking for 0.0.3, which cannot start"
 result="$(update 0.0.3)"
 echo "$result"
-grep -q '^status=failed$' <<< "$result" && grep -q '^reason=rolled_back$' <<< "$result" || fail "0.0.3 was not undone"
+if ! { grep -q '^status=failed$' <<< "$result" && grep -q '^reason=rolled_back$' <<< "$result"; }; then fail "0.0.3 was not undone"; fi
 answers 0.0.2 30 || fail "the platform is not back on 0.0.2"
 grep -q '^OPENGPS_VERSION=0.0.2$' "$INSTALL/.env" || fail ".env is not back on 0.0.2"
 
