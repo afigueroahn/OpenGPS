@@ -6,6 +6,13 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Sin publicar]
 
+### Cambiado
+
+- Si una versión nueva no arranca y la anterior tampoco, el ayudante pide restaurar la
+  copia sacada antes de actualizar con el mismo pedido que deja la consola, en lugar de
+  restaurarla por su cuenta. El resultado es el mismo, y la prueba de punta a punta de
+  las actualizaciones ahora cubre ese caso (#60).
+
 ### Corregido
 
 - El botón «Actualizar» de la consola vuelve a funcionar en una instalación en

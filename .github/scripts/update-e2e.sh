@@ -7,11 +7,13 @@
 # WAY is a folder of deploy/ that the helper can update (docker-compose by
 # default, caddy, cloudflare), or "legacy":
 #
-# - A way: builds three versions of the images, 0.0.1, 0.0.2 and a 0.0.3 whose
-#   platform cannot start. Installs 0.0.1 as a server would, from that way's
-#   compose file in that version and generate-env.sh, then asks the helper for
-#   0.0.2, which it must install keeping the way, and for 0.0.3, which it must
-#   undo.
+# - A way: builds four versions of the images, 0.0.1, 0.0.2, a 0.0.3 whose
+#   platform cannot start, and a 0.0.4 that cannot start either and leaves the
+#   database so that 0.0.2 cannot start. Installs 0.0.1 as a server would, from
+#   that way's compose file in that version and generate-env.sh, then asks the
+#   helper for 0.0.2, which it must install keeping the way; for 0.0.3, which
+#   it must undo; and for 0.0.4, which it must undo by restoring the backup
+#   made before.
 # - legacy: installs the published 0.1.2, from before the ways existed, with
 #   its Cloudflare Tunnel profile, and asks its helper for 0.0.2: the
 #   installation must end as deploy/cloudflare, with its tunnel.
@@ -68,11 +70,12 @@ answers() { # version, seconds
   done
   return 1
 }
+uuid() { cat /proc/sys/kernel/random/uuid 2> /dev/null || uuidgen | tr '[:upper:]' '[:lower:]'; }
 # Asks the helper for a version and waits for how it ended.
-update() { # version
+update() { # version [the request's lines about the backup made before]
   local id result i
-  id="$(cat /proc/sys/kernel/random/uuid 2> /dev/null || uuidgen | tr '[:upper:]' '[:lower:]')"
-  docker exec "$(service helper)" sh -c "printf 'id=%s\nversion=%s\nrequested=%s\n' '$id' '$1' \"\$(date -u +%Y-%m-%dT%H:%M:%SZ)\" > /data/backups/update.request"
+  id="$(uuid)"
+  docker exec "$(service helper)" sh -c "printf 'id=%s\nversion=%s\nrequested=%s\n%s\n' '$id' '$1' \"\$(date -u +%Y-%m-%dT%H:%M:%SZ)\" '${2:-}' > /data/backups/update.request"
   for ((i = 0; i < 900; i += 5)); do
     sleep 5
     result="$(docker exec "$(service helper)" cat /data/backups/update.result 2> /dev/null || true)"
@@ -82,6 +85,18 @@ update() { # version
     fi
   done
   fail "no result for the update to $1"
+}
+# A backup of everything, with the same programs and names as the platform's,
+# and the lines that tell an update about it, as the console writes them.
+backup() { # stamp
+  docker exec "$(service opengps)" sh -c "pg_dump --format=custom --file=/data/backups/gps_$1.dump \"\$DATABASE_URL\" &&
+    pg_dump --format=custom --file=/data/backups/traccar_$1.dump \"\$TRACCAR_DATABASE_URL\" &&
+    tar -czf /data/backups/files_$1.tar.gz -C /data/files ." || fail "could not make the backup"
+  printf 'backup=%s\ngps=gps_%s.dump\ntraccar=traccar_%s.dump\nfiles=files_%s.tar.gz\n' "$(uuid)" "$1" "$1" "$1"
+}
+# What 0.0.4 leaves in the database: migrations 0.0.2 no longer recognizes.
+broken_migrations() {
+  docker exec "$(service postgres)" psql -U postgres -d opengps -tAc "SELECT count(*) FROM gps.schema_migrations WHERE checksum = 'broken'"
 }
 # The way of installing the installation has now.
 way_installed() { sed -n 's/^x-opengps-deploy:[[:space:]]*//p' "$INSTALL/docker-compose.yml"; }
@@ -117,12 +132,19 @@ if [ "$WAY" = legacy ]; then
   FIRST="$LEGACY"
 else
   [ -f "deploy/$WAY/docker-compose.yml" ] || fail "deploy/$WAY has no compose file"
-  say "building the images of 0.0.1, 0.0.2 and a broken 0.0.3"
+  say "building the images of 0.0.1, 0.0.2 and a broken 0.0.3 and 0.0.4"
   build 0.0.1
   build 0.0.2
   printf 'FROM %s/opengps:0.0.2\nCMD ["sh", "-c", "echo this version cannot start; exit 1"]\n' "$REG" | docker build -q -t "$REG/opengps:0.0.3" - > /dev/null
-  docker tag "$REG/opengps-postgres:0.0.2" "$REG/opengps-postgres:0.0.3"
-  docker build -q --build-arg APP_VERSION=0.0.3 -t "$REG/opengps-helper:0.0.3" -f deploy/helper.Dockerfile . > /dev/null
+  # 0.0.4 changes the record of the migrations before failing: 0.0.2 refuses to start on that database.
+  docker build -q -t "$REG/opengps:0.0.4" - > /dev/null << EOF
+FROM $REG/opengps:0.0.2
+CMD ["sh", "-c", "psql \"\$DATABASE_URL\" -qc \"UPDATE gps.schema_migrations SET checksum = 'broken'\"; echo this version breaks the database; exit 1"]
+EOF
+  for broken in 0.0.3 0.0.4; do
+    docker tag "$REG/opengps-postgres:0.0.2" "$REG/opengps-postgres:$broken"
+    docker build -q --build-arg "APP_VERSION=$broken" -t "$REG/opengps-helper:$broken" -f deploy/helper.Dockerfile . > /dev/null
+  done
   say "installing 0.0.1 in $INSTALL, as deploy/$WAY"
   # Its compose file in 0.0.1, as the helper of that version carries it.
   docker run --rm "$REG/opengps-helper:0.0.1" cat "/opt/opengps/$WAY/docker-compose.yml" > "$INSTALL/docker-compose.yml"
@@ -167,4 +189,13 @@ answers 0.0.2 30 || fail "the platform is not back on 0.0.2"
 installed 0.0.2 || fail "the installation's files are not back on 0.0.2"
 [ "$(way_installed)" = "$WAY" ] || fail "going back changed the way of installing: $(way_installed)"
 
-say "updates work for deploy/$WAY: 0.0.1 → 0.0.2 installed, 0.0.3 undone"
+say "asking for 0.0.4, which leaves 0.0.2 unable to start: the backup made before is restored"
+result="$(update 0.0.4 "$(backup 20260101_000000)")"
+echo "$result"
+if ! { grep -q '^status=failed$' <<< "$result" && grep -q '^reason=restored$' <<< "$result"; }; then fail "0.0.4 was not undone with the backup"; fi
+grep -q '^status=ok$' <(docker exec "$(service helper)" cat /data/backups/restore.result) || fail "the restore did not end well"
+answers 0.0.2 30 || fail "the platform is not back on 0.0.2"
+installed 0.0.2 || fail "the installation's files are not back on 0.0.2"
+[ "$(broken_migrations)" = 0 ] || fail "the database is not the one of the backup"
+
+say "updates work for deploy/$WAY: 0.0.1 → 0.0.2 installed, 0.0.3 undone, 0.0.4 undone with the backup"
