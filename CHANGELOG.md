@@ -6,6 +6,15 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Sin publicar]
 
+### Cambiado
+
+- Una instalación nueva queda en la última versión sin escribir su número: cada compose
+  de `deploy/` trae escrita la versión de sus imágenes, y la variable `OPENGPS_VERSION`
+  deja de existir. Con Coolify ya no hay variables que escribir, y con Dokploy y Coolify
+  actualizar es volver a desplegar. Una instalación existente sigue funcionando: su
+  `OPENGPS_VERSION` ya no se lee, y el ayudante la quita del `.env` en la siguiente
+  actualización (ADR-0008, #54).
+
 ## [0.3.0] - 2026-11-25
 
 ### Cambiado

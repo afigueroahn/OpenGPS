@@ -9,8 +9,9 @@
 #
 # - A way: builds three versions of the images, 0.0.1, 0.0.2 and a 0.0.3 whose
 #   platform cannot start. Installs 0.0.1 as a server would, from that way's
-#   compose file and generate-env.sh, then asks the helper for 0.0.2, which it
-#   must install keeping the way, and for 0.0.3, which it must undo.
+#   compose file in that version and generate-env.sh, then asks the helper for
+#   0.0.2, which it must install keeping the way, and for 0.0.3, which it must
+#   undo.
 # - legacy: installs the published 0.1.2, from before the ways existed, with
 #   its Cloudflare Tunnel profile, and asks its helper for 0.0.2: the
 #   installation must end as deploy/cloudflare, with its tunnel.
@@ -45,7 +46,7 @@ trap cleanup EXIT
 build() { # version
   docker build -q --build-arg "APP_VERSION=$1" -t "$REG/opengps:$1" -f deploy/opengps.Dockerfile . > /dev/null
   docker build -q -t "$REG/opengps-postgres:$1" -f deploy/postgres.Dockerfile . > /dev/null
-  docker build -q -t "$REG/opengps-helper:$1" -f deploy/helper.Dockerfile . > /dev/null
+  docker build -q --build-arg "APP_VERSION=$1" -t "$REG/opengps-helper:$1" -f deploy/helper.Dockerfile . > /dev/null
 }
 # A setting of the installation, replaced or added.
 setting() { # KEY=value
@@ -80,6 +81,10 @@ update() { # version
 }
 # The way of installing the installation has now.
 way_installed() { sed -n 's/^x-opengps-deploy:[[:space:]]*//p' "$INSTALL/docker-compose.yml"; }
+# The installation runs this version: its compose file says it, and its .env no longer does (ADR-0008).
+installed() { # version
+  grep -q "image: $REG/opengps:$1$" "$INSTALL/docker-compose.yml" && ! grep -q '^OPENGPS_VERSION=' "$INSTALL/.env"
+}
 # With deploy/caddy, the web app answers through the proxy, on the server's
 # port 80, by the name of PUBLIC_URL and by api. under it.
 through_proxy() { # version
@@ -113,10 +118,12 @@ else
   build 0.0.2
   printf 'FROM %s/opengps:0.0.2\nCMD ["sh", "-c", "echo this version cannot start; exit 1"]\n' "$REG" | docker build -q -t "$REG/opengps:0.0.3" - > /dev/null
   docker tag "$REG/opengps-postgres:0.0.2" "$REG/opengps-postgres:0.0.3"
-  docker tag "$REG/opengps-helper:0.0.2" "$REG/opengps-helper:0.0.3"
+  docker build -q --build-arg APP_VERSION=0.0.3 -t "$REG/opengps-helper:0.0.3" -f deploy/helper.Dockerfile . > /dev/null
   say "installing 0.0.1 in $INSTALL, as deploy/$WAY"
-  cp "deploy/$WAY/docker-compose.yml" deploy/generate-env.sh deploy/.env.example "$INSTALL/"
-  (cd "$INSTALL" && OPENGPS_VERSION=0.0.1 sh generate-env.sh http://localhost .env > /dev/null)
+  # Its compose file in 0.0.1, as the helper of that version carries it.
+  docker run --rm "$REG/opengps-helper:0.0.1" cat "/opt/opengps/$WAY/docker-compose.yml" > "$INSTALL/docker-compose.yml"
+  cp deploy/generate-env.sh deploy/.env.example "$INSTALL/"
+  (cd "$INSTALL" && sh generate-env.sh http://localhost .env > /dev/null)
   setting "COMPOSE_PROJECT_NAME=$PROJECT"
   # Away from the port another installation on this machine may use.
   setting "WEB_PORT=13000"
@@ -133,7 +140,7 @@ result="$(update 0.0.2)"
 echo "$result"
 grep -q '^status=ok$' <<< "$result" || fail "the update to 0.0.2 did not end well"
 answers 0.0.2 30 || fail "the platform does not answer 0.0.2"
-grep -q '^OPENGPS_VERSION=0.0.2$' "$INSTALL/.env" || fail ".env does not say 0.0.2"
+installed 0.0.2 || fail "the installation's files do not say 0.0.2"
 [ "$(docker inspect -f '{{.Config.Image}}' "$(service helper)")" = "$REG/opengps-helper:0.0.2" ] || fail "the helper was not replaced"
 
 if [ "$WAY" = legacy ]; then
@@ -153,7 +160,7 @@ result="$(update 0.0.3)"
 echo "$result"
 if ! { grep -q '^status=failed$' <<< "$result" && grep -q '^reason=rolled_back$' <<< "$result"; }; then fail "0.0.3 was not undone"; fi
 answers 0.0.2 30 || fail "the platform is not back on 0.0.2"
-grep -q '^OPENGPS_VERSION=0.0.2$' "$INSTALL/.env" || fail ".env is not back on 0.0.2"
+installed 0.0.2 || fail "the installation's files are not back on 0.0.2"
 [ "$(way_installed)" = "$WAY" ] || fail "going back changed the way of installing: $(way_installed)"
 
 say "updates work for deploy/$WAY: 0.0.1 → 0.0.2 installed, 0.0.3 undone"

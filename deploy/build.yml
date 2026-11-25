@@ -6,8 +6,8 @@
 # It goes after the compose file of any of the ways of installing (deploy/caddy,
 # deploy/cloudflare…): the paths are taken from that first file's folder.
 #
-# OPENGPS_VERSION only names the images built here; the platform shows the
-# repository's version with -dev.
+# The images built here take the names the compose file gives them, with its
+# version; the platform shows the repository's version with -dev.
 services:
   postgres:
     build:

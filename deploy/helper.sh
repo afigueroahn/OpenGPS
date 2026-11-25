@@ -26,11 +26,12 @@
 # helper prepares the new version (its images and its compose file, which
 # comes inside the new helper image) and hands over to a container of the new
 # helper, outside the Compose project ("helper.sh apply"). That one swaps the
-# compose file and OPENGPS_VERSION in .env, brings everything up (this helper
-# too, replaced), waits for the platform to answer with the new version, and
-# otherwise goes back to the previous files, and to the backup if even that
-# does not start. Only with Docker Compose: the folder with docker-compose.yml
-# and .env is mounted at /data/install. Dokploy and Coolify do not mount it.
+# compose file, which says the version (ADR-0008), brings everything up (this
+# helper too, replaced), waits for the platform to answer with the new
+# version, and otherwise goes back to the previous files, and to the backup if
+# even that does not start. Only with Docker Compose: the folder with
+# docker-compose.yml and .env is mounted at /data/install. Dokploy and Coolify
+# do not mount it.
 #
 # There are several ways of installing with Docker Compose (deploy/<way>), each
 # with its own compose file, marked "x-opengps-deploy: <way>". The helper image
@@ -293,7 +294,15 @@ UPDATE_OK=no
 if [ -n "$HOST_INSTALL" ] && [ -f "$INSTALL/docker-compose.yml" ] && [ -w "$INSTALL/.env" ] && docker compose version > /dev/null 2>&1; then UPDATE_OK=yes; fi
 
 ufield() { grep -m1 "^$1=" "$UPDATE_RUNNING" 2>/dev/null | cut -d= -f2- | tr -d '\r' || true; }
-installed_version() { grep -m1 '^OPENGPS_VERSION=' "$1/.env" 2>/dev/null | cut -d= -f2- | tr -d '\r' || true; }
+# The version an installation runs: the one of the platform's image in its
+# compose file or, from before the version was written there, OPENGPS_VERSION
+# in its .env.
+installed_version() { # folder
+  local version
+  version="$(sed -nE 's#^[[:space:]]*image:[[:space:]]*[^[:space:]]+/opengps:([0-9]+\.[0-9]+\.[0-9]+)[[:space:]]*$#\1#p' "$1/docker-compose.yml" 2>/dev/null | head -1)"
+  if [ -z "$version" ]; then version="$(grep -m1 '^OPENGPS_VERSION=' "$1/.env" 2>/dev/null | cut -d= -f2- | tr -d '\r')"; fi
+  echo "$version"
+}
 report_update() { # status (ok|failed), reason code, detail
   local tmp="$UPDATE_RESULT.tmp"
   printf 'id=%s\nversion=%s\nfrom=%s\nrequested=%s\nstarted=%s\nfinished=%s\nstatus=%s\nreason=%s\ndetail=%s\n' \
@@ -321,13 +330,14 @@ updater() { docker ps -q --filter "name=^$PROJECT-updater$"; }
 # Which way of installing a compose file is: its "x-opengps-deploy" mark.
 variant_of() { sed -n 's/^x-opengps-deploy:[[:space:]]*//p' "$1" 2> /dev/null | tr -d '"\r ' | head -1; }
 
-# Leaves in <base>/.update what the installation in <base> gets with a
-# version: the compose file of its way of installing, from <root>/<way>/, and
-# its .env with that version. An installation from before the ways existed
-# (0.1.x) has no mark: with the tunnel's profile it is deploy/cloudflare, and
-# otherwise deploy/docker-compose, with the web app on a port of the server.
-stage_update() { # base, root, version
-  local base="$1" root="$2" version="$3" stage="$1/.update" variant legacy=no
+# Leaves in <base>/.update what the installation in <base> gets with another
+# version: the compose file of its way of installing, from <root>/<way>/, which
+# says that version, and its .env without OPENGPS_VERSION, which is no longer
+# read (ADR-0008). An installation from before the ways existed (0.1.x) has no
+# mark: with the tunnel's profile it is deploy/cloudflare, and otherwise
+# deploy/docker-compose, with the web app on a port of the server.
+stage_update() { # base, root
+  local base="$1" root="$2" stage="$1/.update" variant legacy=no
   variant="$(variant_of "$base/docker-compose.yml")"
   if [ -z "$variant" ]; then
     legacy=yes
@@ -335,14 +345,12 @@ stage_update() { # base, root, version
   fi
   if ! [[ "$variant" =~ ^[a-z-]+$ ]] || [ ! -f "$root/$variant/docker-compose.yml" ]; then return 1; fi
   if ! { rm -rf "$stage" && mkdir -p "$stage" && cp "$root/$variant/docker-compose.yml" "$stage/docker-compose.yml"; }; then return 1; fi
-  {
-    if [ "$legacy" = yes ]; then
-      grep -v -e '^OPENGPS_VERSION=' -e '^COMPOSE_PROFILES=' "$base/.env"
-    else
-      grep -v '^OPENGPS_VERSION=' "$base/.env"
-    fi
-    printf 'OPENGPS_VERSION=%s\n' "$version"
-  } > "$stage/.env"
+  if [ "$legacy" = yes ]; then
+    grep -v -e '^OPENGPS_VERSION=' -e '^COMPOSE_PROFILES=' "$base/.env" > "$stage/.env"
+  else
+    grep -v '^OPENGPS_VERSION=' "$base/.env" > "$stage/.env"
+  fi
+  [ -s "$stage/.env" ]
 }
 
 # Until the platform answers with this version and the gateway is up. A
@@ -397,7 +405,7 @@ handle_update_request() {
     return
   fi
   docker rm "$cid" > /dev/null
-  if ! stage_update "$INSTALL" "$files" "$version"; then
+  if ! stage_update "$INSTALL" "$files"; then
     rm -rf "$files"
     report_update failed files
     return
@@ -432,7 +440,7 @@ apply_update() {
   local folder="$HOST_INSTALL" version from main_file gateway_file files_file err
   version="$(ufield version)"
   from="$(ufield from)"
-  if ! stage_update "$folder" /opt/opengps "$version"; then
+  if ! stage_update "$folder" /opt/opengps; then
     report_update failed files
     return
   fi
