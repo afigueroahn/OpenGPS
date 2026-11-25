@@ -14,6 +14,10 @@
 #   helper for 0.0.2, which it must install keeping the way; for 0.0.3, which
 #   it must undo; and for 0.0.4, which it must undo by restoring the backup
 #   made before.
+#   With docker-compose it then restores backups as the console asks for them,
+#   which the platform does by itself (ADR-0009): one that cannot be read
+#   changes nothing, one the platform cannot start on is undone, and a good
+#   one brings back both databases and the files, restarting Traccar.
 # - legacy: installs the published 0.1.2, from before the ways existed, with
 #   its Cloudflare Tunnel profile, and asks its helper for 0.0.2: the
 #   installation must end as deploy/cloudflare, with its tunnel.
@@ -94,9 +98,31 @@ backup() { # stamp
     tar -czf /data/backups/files_$1.tar.gz -C /data/files ." || fail "could not make the backup"
   printf 'backup=%s\ngps=gps_%s.dump\ntraccar=traccar_%s.dump\nfiles=files_%s.tar.gz\n' "$(uuid)" "$1" "$1" "$1"
 }
+sql() { # database, statement
+  docker exec "$(service postgres)" psql -U postgres -d "$1" -tAc "$2"
+}
 # What 0.0.4 leaves in the database: migrations 0.0.2 no longer recognizes.
-broken_migrations() {
-  docker exec "$(service postgres)" psql -U postgres -d opengps -tAc "SELECT count(*) FROM gps.schema_migrations WHERE checksum = 'broken'"
+broken_migrations() { sql opengps "SELECT count(*) FROM gps.schema_migrations WHERE checksum = 'broken'"; }
+started() { docker inspect -f '{{.State.StartedAt}}' "$(service "$1")"; }
+# Leaves a restore request, as the console does, and waits for how it ended.
+restore() { # the backup's stamp
+  local id result i
+  id="$(uuid)"
+  docker exec "$(service helper)" sh -c "cd /data/backups && printf 'id=%s\nbackup=\nrequested=%s\ngps=gps_%s.dump\ntraccar=traccar_%s.dump\nfiles=files_%s.tar.gz\n' '$id' \"\$(date -u +%Y-%m-%dT%H:%M:%SZ)\" '$1' '$1' '$1' > restore.tmp &&
+    chown 1000:1000 restore.tmp && chmod 600 restore.tmp && mv restore.tmp restore.request"
+  for ((i = 0; i < 600; i += 5)); do
+    sleep 5
+    result="$(docker exec "$(service helper)" cat /data/backups/restore.result 2> /dev/null || true)"
+    if grep -q "^id=$id$" <<< "$result"; then
+      echo "$result"
+      return 0
+    fi
+  done
+  fail "no result for the restore of $1"
+}
+# Which state the platform's database, Traccar's and the files are in.
+state() {
+  echo "$(sql opengps 'SELECT v FROM e2e_state') $(sql traccar 'SELECT v FROM e2e_state') $(docker exec "$(service opengps)" cat /data/files/e2e-state)"
 }
 # The way of installing the installation has now.
 way_installed() { sed -n 's/^x-opengps-deploy:[[:space:]]*//p' "$INSTALL/docker-compose.yml"; }
@@ -199,3 +225,46 @@ installed 0.0.2 || fail "the installation's files are not back on 0.0.2"
 [ "$(broken_migrations)" = 0 ] || fail "the database is not the one of the backup"
 
 say "updates work for deploy/$WAY: 0.0.1 → 0.0.2 installed, 0.0.3 undone, 0.0.4 undone with the backup"
+[ "$WAY" = docker-compose ] || exit 0
+
+say "making the backups to restore"
+for db in opengps traccar; do sql "$db" "CREATE TABLE e2e_state (v text); INSERT INTO e2e_state VALUES ('backup')" > /dev/null; done
+docker exec "$(service opengps)" sh -c 'echo backup > /data/files/e2e-state'
+backup 20260102_000000 > /dev/null
+# One on whose database the platform cannot start: migrations it does not recognize.
+sql opengps "UPDATE gps.schema_migrations SET checksum = 'x' || checksum" > /dev/null
+backup 20260103_000000 > /dev/null
+sql opengps "UPDATE gps.schema_migrations SET checksum = substr(checksum, 2)" > /dev/null
+# And one that cannot be read.
+docker exec "$(service opengps)" sh -c 'cd /data/backups && echo not a dump > gps_20260104_000000.dump && echo not a dump > traccar_20260104_000000.dump && cp files_20260102_000000.tar.gz files_20260104_000000.tar.gz'
+# What changes afterwards.
+for db in opengps traccar; do sql "$db" "UPDATE e2e_state SET v = 'after'" > /dev/null; done
+docker exec "$(service opengps)" sh -c 'echo after > /data/files/e2e-state'
+[ "$(state)" = "after after after" ] || fail "the state to restore over is not ready: $(state)"
+
+say "restoring one that cannot be read: nothing changes, nothing stops"
+was="$(started opengps)"
+result="$(restore 20260104_000000)"
+echo "$result"
+grep -q '^reason=unreadable$' <<< "$result" || fail "an unreadable backup was not refused"
+[ "$(state)" = "after after after" ] || fail "an unreadable backup changed something: $(state)"
+[ "$(started opengps)" = "$was" ] || fail "an unreadable backup restarted the platform"
+
+say "restoring one the platform cannot start on: it goes back to what there was"
+result="$(restore 20260103_000000)"
+echo "$result"
+grep -q '^reason=start$' <<< "$result" || fail "a backup the platform cannot start on was not undone"
+answers 0.0.2 180 || fail "the platform did not come back after undoing the restore"
+[ "$(state)" = "after after after" ] || fail "undoing the restore did not leave what there was: $(state)"
+
+say "restoring the good one: both databases and the files come back, and Traccar restarts"
+was="$(started traccar)"
+result="$(restore 20260102_000000)"
+echo "$result"
+grep -q '^status=ok$' <<< "$result" || fail "the backup was not restored"
+answers 0.0.2 60 || fail "the platform does not answer after the restore"
+[ "$(state)" = "backup backup backup" ] || fail "what came back is not the backup: $(state)"
+[ "$(started traccar)" != "$was" ] || fail "Traccar was not restarted"
+[ "$(sql postgres "SELECT count(*) FROM pg_database WHERE datname LIKE '%\_previous' OR datname LIKE '%\_new' OR datname LIKE '%\_failed'")" = 0 ] || fail "the restore left databases behind"
+
+say "restores work: the platform restores by itself, without the helper"

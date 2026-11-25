@@ -1,6 +1,6 @@
 # The platform's helper: the Docker client and the script that handles the
-# requests the platform's console leaves in the backups folder (restore a
-# backup, install a version), and the compose file of its version.
+# requests to install a version the platform's console leaves in the backups
+# folder, and the compose files of its version.
 # Built at deploy time, like the database's image, so Dokploy needs nothing
 # mounted from the repository.
 FROM docker:29.9.2-cli

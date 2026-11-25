@@ -12,6 +12,12 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/).
   copia sacada antes de actualizar con el mismo pedido que deja la consola, en lugar de
   restaurarla por su cuenta. El resultado es el mismo, y la prueba de punta a punta de
   las actualizaciones ahora cubre ese caso (#60).
+- Restaurar una copia ya no necesita al ayudante: la plataforma la restaura sola.
+  Restaura aparte sin dejar de servir, se reinicia un momento para cambiar las bases,
+  reinicia la entrada de los equipos y vuelve a lo que había si no arranca con la copia.
+  El botón «Restaurar» aparece siempre que la plataforma tiene acceso a las bases. El
+  ayudante queda solo para instalar versiones y ya no ve la carpeta de archivos
+  (ADR-0009, #61).
 
 ### Corregido
 

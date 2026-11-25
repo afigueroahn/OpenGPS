@@ -157,27 +157,19 @@ services:
     security_opt:
       - no-new-privileges:true
 
-  # Restores a backup or installs a new version when the console asks for it
-  # (deploy/helper.sh): restores the databases and the files aside, stops the
-  # platform and the gateway, swaps them and brings them back; or brings up
-  # the new version's images and compose file. Either way it goes back to what
-  # there was if the platform does not start. It is the only service with
-  # access to Docker, through its socket, and it opens no port. It sees this
-  # folder, with docker-compose.yml and .env, to install versions.
+  # Installs a new version when the console asks for it (deploy/helper.sh,
+  # ADR-0004): brings up the new version's images and compose file, and goes
+  # back to what there was if the platform does not start. It is the only
+  # service with access to Docker, through its socket, and it opens no port.
+  # It sees this folder, with docker-compose.yml and .env, to install versions.
+  # Restoring a backup the platform does by itself (ADR-0009).
   helper:
     image: ghcr.io/afigueroahn/opengps-helper:0.4.0
     restart: unless-stopped
     logging: *logging
-    depends_on:
-      postgres:
-        condition: service_healthy
-    environment:
-      POSTGRES_USER: ${POSTGRES_USER:-postgres}
-      POSTGRES_DB: ${POSTGRES_DB:-opengps}
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - backups-data:/data/backups
-      - files-data:/data/files
       - .:/data/install
     security_opt:
       - no-new-privileges:true

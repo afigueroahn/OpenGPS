@@ -3,11 +3,9 @@
 // also in the external storage. Scheduling and retention come from the
 // settings.
 //
-// Restoring a backup is not done by the backend: it would have to delete the
-// database it lives on and stop the device gateway. Here the request is only
-// left in the backups folder; a helper service handles it (deploy/helper.sh),
-// which restores aside, stops the platform, swaps the databases and brings it
-// back up. Before requesting it, a backup of the current state of everything is made.
+// Restoring a backup: here the request is left in the backups folder, after a
+// backup of the current state of everything, and the platform itself restores
+// it (core/restore.ts, ADR-0009).
 import { spawn } from "node:child_process";
 import { randomUUID } from "node:crypto";
 import { createReadStream, createWriteStream } from "node:fs";
@@ -22,11 +20,14 @@ import { type Db, withTransaction } from "../db";
 import { AppError, badRequest, conflict, notFound } from "../errors";
 import { type ServerKey, render, say, tr } from "../i18n";
 import { audit } from "./audit";
+import type { Restore } from "./restore";
 import { S3Error, deleteObject, getObject, keyOf, listObjects, removeEmptyFolder, uploadFile } from "./s3";
 import type { KeptKeys, Settings, SettingsActor } from "./settings";
 import type { SystemNotifier } from "./system";
 
 const TICK_MS = 60_000;
+/** How often it looks for a restore request. */
+const RESTORE_TICK_MS = 5_000;
 const DUMP_TIMEOUT_MS = 2 * 60 * 60_000;
 /** Backups shown by the console. */
 const LIST_MAX = 60;
@@ -38,15 +39,15 @@ const REMOTE_ROOT = "backups";
 /** From a backup file: which part it is and when it is from. */
 const FILE_STAMP = /^(gps|traccar|files)_(\d{4})(\d{2})(\d{2})_(\d{2})(\d{2})(\d{2})\./;
 
-// Files the backend and the restore helper use to talk to each other, in the
-// backups folder. They are "key=value" lines, easy to read from bash.
-/** The helper touches it every 30 seconds: if it is recent, someone is there to handle a request. */
+// Files the backend and the helper use to talk to each other, in the backups
+// folder. They are "key=value" lines, easy to read from bash.
+/** The helper touches it every 30 seconds: if it is recent, someone is there to install a version. */
 export const HELPER_ALIVE = "helper.alive";
-/** The restore request, written by the backend. */
+/** The restore request, written by the backend, or by the helper when an update cannot start. */
 export const RESTORE_REQUEST = "restore.request";
-/** The same request, while the helper handles it. */
+/** The same request, while the platform restores it. */
 export const RESTORE_RUNNING = "restore.running";
-/** How the last restore ended, written by the helper. */
+/** How the last restore ended. */
 export const RESTORE_RESULT = "restore.result";
 /** The request to install a version, written by the backend (ADR-0004). */
 export const UPDATE_REQUEST = "update.request";
@@ -68,12 +69,13 @@ const INDEX = "backups.json";
  */
 const RESTORE_KEYS = "restore.settings";
 const RUNNER_FRESH_MS = 3 * 60_000;
-/** Why the helper could not restore: the codes it writes, and what they say. */
+/** Why a restore did not end well: the codes restore.result carries, and what they say. */
 const RESTORE_REASONS = {
   invalid: "core.backups.reason.invalid",
   unreadable: "core.backups.reason.unreadable",
   incomplete: "core.backups.reason.incomplete",
   files: "core.backups.reason.files",
+  gateway: "core.backups.reason.gateway",
   swap: "core.backups.reason.swap",
   start: "core.backups.reason.start",
   cut: "core.backups.reason.cut",
@@ -113,7 +115,7 @@ const toBackup = (r: Row): Backup => ({
 });
 
 /** Reads a file of "key=value" lines; null if it does not exist. */
-async function readNote(path: string): Promise<Record<string, string> | null> {
+export async function readNote(path: string): Promise<Record<string, string> | null> {
   const text = await readFile(path, "utf8").catch(() => null);
   if (text === null) return null;
   const out: Record<string, string> = {};
@@ -130,7 +132,7 @@ const stamp = (ms: number) => {
 };
 
 /** Runs a program and waits for it to finish; if it fails, the error carries the last thing it said, or says why in `language`. */
-function run(command: string, args: string[], env: NodeJS.ProcessEnv, language: Language): Promise<void> {
+export function run(command: string, args: string[], env: NodeJS.ProcessEnv, language: Language): Promise<void> {
   return new Promise((resolve, reject) => {
     const child = spawn(command, args, { env, stdio: ["ignore", "ignore", "pipe"] });
     let said = "";
@@ -150,8 +152,8 @@ function run(command: string, args: string[], env: NodeJS.ProcessEnv, language: 
   });
 }
 
-/** Variables pg_dump uses to connect, without leaving the password visible in the process list. */
-function pgEnv(url: string): NodeJS.ProcessEnv {
+/** Variables pg_dump and pg_restore use to connect, without leaving the password visible in the process list. */
+export function pgEnv(url: string): NodeJS.ProcessEnv {
   const u = new URL(url);
   return { PATH: process.env.PATH, PGHOST: u.hostname, PGPORT: u.port || "5432", PGUSER: decodeURIComponent(u.username), PGPASSWORD: decodeURIComponent(u.password), PGDATABASE: u.pathname.slice(1), PGCONNECT_TIMEOUT: "15" };
 }
@@ -170,7 +172,7 @@ export interface Backups {
   open(id: string, name: string, actor: SettingsActor): Promise<{ name: string; bytes: number; stream: Readable }>;
   /**
    * Requests restoring a backup. First makes a backup of the current state of everything and
-   * then leaves the request for the restore helper. Responds as soon as it
+   * then leaves the request, which the platform restores. Responds as soon as it
    * checks it; the rest happens afterwards.
    */
   restore(id: string, actor: SettingsActor): Promise<void>;
@@ -198,14 +200,18 @@ export interface Backups {
   lastUpdate(): Promise<UpdateInstall["last"]>;
 }
 
-/** With `tickEveryMs` null there is no clock: whoever creates it calls `tick` when it wants (tests). */
-export function createBackups(deps: { db: Db; bus: Bus; config: Config; settings: Settings; system?: SystemNotifier; tickEveryMs?: number | null }): Backups {
+/**
+ * With `tickEveryMs` null there is no clock: whoever creates it calls `tick` when it wants (tests).
+ * `restore` takes the restore requests while serving; when one is ready to swap in, `restart` ends the process.
+ */
+export function createBackups(deps: { db: Db; bus: Bus; config: Config; settings: Settings; system?: SystemNotifier; tickEveryMs?: number | null; restore?: Restore; restart?: () => void }): Backups {
   const { db, config, settings } = deps;
   const dir = () => config.backup.dir;
   const available = () => Boolean(config.backup.databaseUrl);
   const startedAt = Date.now();
   let running: Promise<Backup> | null = null;
   let timer: NodeJS.Timeout | null = null;
+  let restoreTimer: NodeJS.Timeout | null = null;
   let queue: Promise<unknown> = Promise.resolve();
   /** Restore this backend is preparing (making the prior backup), or that it could not prepare. */
   let preparing: RestoreInfo | null = null;
@@ -595,10 +601,21 @@ export function createBackups(deps: { db: Db; bus: Bus; config: Config; settings
       timer = setInterval(() => {
         queue = queue.then(() => tick()).catch((err: Error) => console.error("[backups] the scheduled backup failed:", err.message));
       }, every);
+      const restore = deps.restore;
+      if (!restore) return;
+      restoreTimer = setInterval(() => {
+        queue = queue
+          .then(async () => {
+            if (await restore.pickUp()) deps.restart?.();
+          })
+          .catch((err: Error) => console.error("[backups] the restore failed:", err.message));
+      }, RESTORE_TICK_MS);
     },
     stop() {
       if (timer) clearInterval(timer);
+      if (restoreTimer) clearInterval(restoreTimer);
       timer = null;
+      restoreTimer = null;
     },
     idle: async () => {
       await queue;
@@ -617,7 +634,7 @@ export function createBackups(deps: { db: Db; bus: Bus; config: Config; settings
         running: running !== null,
         nextAt: next === null ? null : new Date(next).toISOString(),
         backups: r.rows.map(toBackup),
-        canRestore: await runnerAlive(now),
+        canRestore: available(),
         restore: await restoreInfo(),
       };
     },
@@ -645,7 +662,7 @@ export function createBackups(deps: { db: Db; bus: Bus; config: Config; settings
     async restore(id, actor) {
       const row = await rowOf(id);
       if (row.status !== "ok" || !row.files.some((f) => f.part === "gps") || !row.files.some((f) => f.part === "traccar")) throw badRequest(say("core.backups.incomplete"));
-      if (!(await runnerAlive(Date.now()))) throw badRequest(say("core.backups.noRunner"));
+      if (!available()) throw badRequest(say("core.backups.unavailable"));
       const now = await restoreInfo();
       if (now && (now.state === "requested" || now.state === "running")) throw conflict("restore_running", say("core.backups.restoreRunning"));
       if (running) throw conflict("backup_running", say("core.backups.busy"));

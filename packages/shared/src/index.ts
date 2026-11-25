@@ -1996,9 +1996,9 @@ export interface Backup {
   /** Why it did not reach the external storage, if it was attempted. */
   remoteError: string | null;
 }
-/** How the restore of a backup is going. The restore helper does it, not the platform, which stops while it lasts. */
+/** How the restore of a backup is going. The platform does it, and stops a moment while it swaps the databases (ADR-0009). */
 export interface RestoreInfo {
-  /** "requested": asked for, the helper has not started yet. "running": in progress. "done" and "failed": how the last one ended. */
+  /** "requested": asked for, not started yet. "running": in progress. "done" and "failed": how the last one ended. */
   state: "requested" | "running" | "done" | "failed";
   backupId: string;
   /** When the backup being restored was made. */
@@ -2013,7 +2013,7 @@ export interface BackupsInfo {
   /** Next scheduled backup. */
   nextAt: string | null;
   backups: Backup[];
-  /** The restore helper is running: a backup can be restored from the console. */
+  /** A backup can be restored from the console: the platform has access to the databases. */
   canRestore: boolean;
   /** The restore requested or in progress, or how the last one ended; null if there has never been one. */
   restore: RestoreInfo | null;

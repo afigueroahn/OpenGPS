@@ -1,5 +1,6 @@
-// OpenGPS backend startup: migrates the database, prepares Traccar,
-// brings up the API and starts ingest and the periodic tasks.
+// OpenGPS backend startup: goes on with a restore under way, migrates the
+// database, prepares Traccar, brings up the API and starts ingest and the
+// periodic tasks.
 import { buildApp } from "./api/server";
 import { createAuth } from "./auth";
 import { Bus } from "./bus";
@@ -13,6 +14,7 @@ import { createNotifier } from "./core/notifications";
 import { createOutbox } from "./core/outbox";
 import { createSystemNotifier } from "./core/system";
 import { deleteOwnedAccounts } from "./core/privacy";
+import { createRestore } from "./core/restore";
 import { createSettings } from "./core/settings";
 import { createTasks, syncRetention } from "./core/tasks";
 import { createUpdates } from "./core/updates";
@@ -46,12 +48,19 @@ async function retry<T>(what: string, fn: () => Promise<T>, attempts = 30, delay
   }
 }
 
+/** A restore the platform starts on, until it is confirmed: if the start fails, it is undone (ADR-0009). */
+let unconfirmed: (() => Promise<void>) | null = null;
+
 async function main(): Promise<void> {
   const config = loadConfig();
+  const traccar = createTraccar(config);
+  // Before anything opens the database: a restore under way swaps it now, or undoes what was left halfway.
+  const restore = createRestore({ config, traccar });
+  const restoring = await restore.atStartup();
   const db = createDb(config);
+  if (restoring) unconfirmed = () => db.close().then(() => restore.undo());
   const bus = new Bus();
   const mailer = createMailer(config);
-  const traccar = createTraccar(config);
 
   await retry("Postgres", () => db.core.query("SELECT 1"));
   const applied = await migrate(db.core, findMigrationsDir(config.migrationsDir));
@@ -85,7 +94,8 @@ async function main(): Promise<void> {
   const gate = createModuleGate(db.core, bus);
   const moduleDeps = { db, bus, config, traccar, mailer, gate, outbox };
   const moduleEngines = [createAntitheftEngine(moduleDeps), createDriversEngine(moduleDeps), createFuelEngine(moduleDeps), createDiagnosticsEngine(moduleDeps), createFleetEngine(moduleDeps), createMaintenanceEngine(moduleDeps), createRoutesEngine(moduleDeps), createIntegrationsEngine(moduleDeps), createReportsEngine(moduleDeps)];
-  const backups = createBackups({ db, bus, config, settings, system });
+  // A restore ready to swap in ends the process, as a stop would: Docker brings it back and it swaps on starting.
+  const backups = createBackups({ db, bus, config, settings, system, restore, restart: () => process.kill(process.pid, "SIGTERM") });
   const simulator = createSimulator({ db, bus, config });
   const updates = createUpdates({ config });
   const { fastify } = await buildApp({ config, db, auth, bus, traccar, mailer, ingest, gate, settings, backups, outbox, system, simulator, updates });
@@ -94,6 +104,10 @@ async function main(): Promise<void> {
   await backups.reconcile().catch((err: Error) => console.error("[backups] could not check the list of backups at startup:", err.message));
   await fastify.listen({ port: config.port, host: config.host });
   console.log(`[api] ${config.appName} listening on port ${config.port} · ${config.publicUrl}`);
+  if (restoring) {
+    await restore.confirm();
+    unconfirmed = null;
+  }
 
   if (!config.disableBackground) {
     await retry("Traccar", () => traccar.bootstrap());
@@ -149,7 +163,8 @@ async function main(): Promise<void> {
   process.on("SIGINT", () => void shutdown("SIGINT"));
 }
 
-main().catch((err) => {
+main().catch(async (err) => {
   console.error("[startup] could not start:", err);
+  await unconfirmed?.().catch((undoErr: Error) => console.error("[restore] could not undo the restore:", undoErr.message));
   process.exit(1);
 });

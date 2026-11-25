@@ -35,7 +35,7 @@ import {
 } from "@opengps/shared";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { type S3Target, loadConfig } from "../src/config";
-import { RESTORE_REQUEST, RESTORE_RESULT, RESTORE_RUNNING, HELPER_ALIVE } from "../src/core/backups";
+import { RESTORE_REQUEST, RESTORE_RESULT, RESTORE_RUNNING } from "../src/core/backups";
 import { S3Error, deleteObject, getObject, keyOf, listObjects, putObject, rcloneVersion, removeEmptyFolder, testStorage, uploadFile } from "../src/core/s3";
 import { createVault } from "../src/core/secrets";
 import { createRouting } from "../src/simulator/routing";
@@ -696,11 +696,8 @@ describe("backups", () => {
     const target = (await info()).backups.find((b) => b.kind === "manual" && b.status === "ok") as Backup;
     const restore = (body: unknown, id = target.id) => admin("POST", `/api/admin/backups/${id}/restore`, body);
 
-    // Without the server helper there is nobody to restore, and without the word neither.
-    expect(await info()).toMatchObject({ canRestore: false, restore: null });
-    expect((await restore({ word: "RESTAURAR" })).status).toBe(400);
-    writeFileSync(join(dir, HELPER_ALIVE), "");
-    expect((await info()).canRestore).toBe(true);
+    // The platform restores by itself, without the helper (ADR-0009). Without the word, it is not requested.
+    expect(await info()).toMatchObject({ canRestore: true, restore: null });
     expect((await restore({ word: "restaurar" })).status).toBe(400);
     expect((await restore({})).status).toBe(400);
     expect((await h.request("POST", `/api/admin/backups/${target.id}/restore`, { ...as(customer), body: { word: "RESTAURAR" } })).status).toBe(404);
@@ -730,7 +727,7 @@ describe("backups", () => {
     const log = await h.db.core.query(`SELECT 1 FROM gps.audit_log WHERE user_id = $1 AND action = 'admin.backup_restore'`, [boss.userId]);
     expect(log.rowCount).toBe(1);
 
-    // The helper takes it and restores: the database goes back to how it was, without the backups made afterwards and without knowing about this
+    // The platform takes it and restores: the database goes back to how it was, without the backups made afterwards and without knowing about this
     // request (here, one with another time, because audit records cannot be deleted).
     await h.db.core.query(`DELETE FROM gps.backups WHERE id = $1`, [safety.id]);
     await h.db.core.query(`INSERT INTO gps.backups (kind, status) VALUES ('manual', 'failed')`);
@@ -744,7 +741,7 @@ describe("backups", () => {
     await h.backups.reconcile();
     const noted = () => h.db.core.query<{ user_id: string | null; entity_id: string; detail: object }>(`SELECT user_id, entity_id, detail FROM gps.audit_log WHERE action = 'admin.backup_restored' AND entity_id = $1`, [target.id]);
     expect((await noted()).rows).toEqual([{ user_id: null, entity_id: target.id, detail: { startedAt: target.startedAt, requestedAt: unseen, keptKeys: [] } }]);
-    // The helper finishes and says so.
+    // The restore finishes and says so.
     rmSync(join(dir, RESTORE_RUNNING));
     writeFileSync(join(dir, RESTORE_RESULT), `id=${target.id}\nbackup=${target.startedAt}\nrequested=${note.requested}\nstarted=2026-11-22T10:00:00Z\nfinished=2026-11-22T10:03:00Z\nstatus=ok\nerror=\n`);
     const now = await info();
@@ -792,7 +789,6 @@ describe("backups", () => {
     expect((await info()).restore).toMatchObject({ state: "failed", backupId: safety.id });
     expect((await info()).restore?.error).toContain("ya no están en el servidor");
     expect(existsSync(join(dir, RESTORE_REQUEST))).toBe(false);
-    rmSync(join(dir, HELPER_ALIVE));
     rmSync(join(dir, RESTORE_RESULT));
   });
 
@@ -874,8 +870,7 @@ describe("backups", () => {
     // It is downloaded from the console…
     const file = await h.fastify.inject({ method: "GET", url: `/api/admin/backups/${copy.id}/files/${copy.files[0]?.name}`, headers: { cookie: boss.cookie } });
     expect(file.payload).toBe("copia de prueba de gps por reader");
-    // …and on restoring it, the platform downloads its files, makes the prior backup and leaves the request for the server.
-    writeFileSync(join(dir, HELPER_ALIVE), "");
+    // …and on restoring it, the platform downloads its files, makes the prior backup and leaves the request.
     const asked = await admin("POST", `/api/admin/backups/${copy.id}/restore`, { word: "RESTAURAR" });
     expect(asked.status, JSON.stringify(asked.json)).toBe(202);
     await h.backups.idle();
@@ -921,6 +916,5 @@ describe("backups", () => {
     await testStorage(h.config.storage as S3Target);
 
     rmSync(join(dir, RESTORE_RUNNING));
-    rmSync(join(dir, HELPER_ALIVE));
   }, 120_000);
 });

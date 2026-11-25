@@ -58,6 +58,13 @@ export function fakeTraccar() {
   const state = { online: true, types: ["engineStop", "engineResume", "positionPeriodic", "custom"] };
   const api: Traccar = {
     async bootstrap() {},
+    async signIn() {
+      return "JSESSIONID=fake";
+    },
+    async reboot() {},
+    async ready() {
+      return true;
+    },
     async createDevice(uniqueId, name) {
       const id = devices.get(uniqueId) ?? next++;
       devices.set(uniqueId, id);
