@@ -5,7 +5,6 @@ export default {
     routeNotFound: "Esa ruta ya no existe: elige otra",
     brandNotYet: "El simulador todavía no habla esa marca",
     identifierInUse: "El identificador {{identifier}} ya está en otra simulación",
-    tooManyDevices: "No caben más equipos simulados a la vez: el máximo es {{max}}. Detén alguno primero",
     notRunning: "Ese equipo simulado está detenido: inícialo primero",
     notConnected: "El equipo todavía no está conectado al receptor: espera a que conecte",
     noTank: "Ese equipo no reporta combustible: activa «Reporta el nivel de combustible» en sus opciones",

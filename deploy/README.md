@@ -152,6 +152,8 @@ Con Dokploy o con Coolify, prepara el servidor como digan ellos y sigue en «Apu
 
 Los cambios de DNS pueden tardar unos minutos en verse.
 
+A quien configura un equipo, la plataforma le muestra el nombre `gw.tu-dominio.com` y la IP a la que apunta ese registro: no hay que escribirlos en ninguna parte. Si la plataforma se abre por una IP en lugar de un dominio, los equipos apuntan a esa misma IP.
+
 ## Las variables
 
 Solo hay cuatro obligatorias. Si falta una, el despliegue se detiene y dice cuál.
@@ -171,15 +173,10 @@ Las opcionales:
 |---|---|---|
 | `POSTGRES_USER` | `postgres` | El único usuario de la base, para la plataforma, los equipos y las copias. Letras, números y `_` |
 | `POSTGRES_DB` | `opengps` | El nombre de la base de la plataforma; la de los equipos es siempre `traccar` |
-| `DEVICE_GATEWAY_HOST` | `gw.` + el dominio | A qué nombre se configuran los equipos |
-| `DEVICE_GATEWAY_IP` | | La IP del servidor, para los equipos que solo aceptan números |
 | `APP_NAME` | `OpenGPS` | El nombre de la plataforma en la web, los correos y los avisos |
-| `TRUSTED_ORIGINS` | | Otras direcciones en las que también se abre la web, además de `PUBLIC_URL`, separadas por comas. Desde ellas también se puede entrar y guardar cambios |
-| `SIMULATOR_MAX_DEVICES` | `50` | Cuántos equipos simulados puede correr a la vez el simulador de la consola (de 1 a 5000) |
 | `UPDATE_REPOSITORY` | `afigueroahn/OpenGPS` | El repositorio de GitHub cuyas releases son las versiones nuevas: el dueño las ve en Administración → Actualizaciones. Vacío, la plataforma no consulta |
 | `COMPOSE_PROJECT_NAME` | `opengps` | Solo con Docker Compose: el nombre del grupo de contenedores |
-| `WEB_PORT`, `WEB_BIND` | `3000`, `0.0.0.0` | Solo con `docker-compose/`: el puerto del servidor donde responde la web, y en qué dirección escucha. `127.0.0.1` la deja solo para un proxy instalado en el mismo servidor |
-| `CADDY_SITES` | `PUBLIC_URL` | Solo con `caddy/`: los sitios que atiende Caddy, separados por comas, para sumar otro nombre como `api.` |
+| `WEB_PORT` | `3000` | Solo con `docker-compose/`: el puerto del servidor donde responde la web |
 | `CLOUDFLARE_TUNNEL_TOKEN` | | Solo con `cloudflare/`, y ahí es obligatoria: el token del túnel |
 | `POSTGRES_TUNE_MEMORY`, `TRACCAR_JAVA_OPTS` | | Para servidores de 2 GB o menos: `768MB` y `-Xmx320m` |
 
@@ -203,7 +200,7 @@ La web abre en `http://IP-DEL-SERVIDOR:3000`. El puerto se cambia con `WEB_PORT`
 
 **Con tu propio proxy y HTTPS.** `PUBLIC_URL` es entonces `https://tu-dominio.com`, y el proxy dirige el dominio a la plataforma:
 
-- Si el proxy está instalado en el servidor, lo dirige a `http://127.0.0.1:3000`. Con `WEB_BIND=127.0.0.1` en `.env`, ese puerto deja de verse desde fuera.
+- Si el proxy está instalado en el servidor, lo dirige a `http://127.0.0.1:3000`. Para que ese puerto no se vea desde fuera, ciérralo en el cortafuegos del proveedor: `ufw` no alcanza a los puertos que publica Docker.
 - Si el proxy es otro contenedor (Nginx Proxy Manager, Traefik…), se une a la red de la plataforma, `opengps_default` (`<COMPOSE_PROJECT_NAME>_default` si le cambiaste el nombre), y lo dirige a `http://opengps:3000`. En el compose del proxy, con OpenGPS ya levantado, porque la red se crea con él:
 
   ```yaml
@@ -236,11 +233,7 @@ Caddy pone el dominio con HTTPS: pide el certificado él solo la primera vez y l
 
    Aparece el contenedor `caddy`. A los pocos segundos de levantar, `https://tu-dominio.com` abre con su certificado. Si no, `docker compose logs caddy` dice por qué no pudo conseguirlo.
 
-4. Opcional: para que la API responda también en `api.tu-dominio.com`, crea su registro DNS y escribe en `.env` los dos sitios. Después, `docker compose up -d`:
-
-   ```
-   CADDY_SITES=https://tu-dominio.com, https://api.tu-dominio.com
-   ```
+4. Opcional: para que la API responda también en `api.tu-dominio.com`, crea su registro DNS hacia el servidor. Caddy ya atiende ese nombre: consigue su certificado cuando el registro existe y, mientras no exista, lo sigue intentando sin afectar al dominio.
 
 Esta forma pide Docker Compose 2.23.1 o posterior (`docker compose version`), porque la configuración de Caddy va dentro del compose.
 
@@ -307,7 +300,7 @@ Cada versión está en [las releases del repositorio](https://github.com/afiguer
 3. Si la versión nueva no arranca, vuelve sola a la anterior, y si tampoco arranca la anterior, restaura esa copia.
 4. Deja `docker-compose.yml.previous` y `.env.previous` con lo que había.
 
-La instalación conserva su forma: el ayudante toma el compose de la misma carpeta (`docker-compose/`, `caddy/` o `cloudflare/`) en la versión nueva. Una instalación 0.1.x, de antes de que hubiera varias formas, queda sola en la suya: `cloudflare/` si usaba el túnel, y si no `docker-compose/`, con `WEB_BIND=127.0.0.1` para no abrir un puerto que antes estaba cerrado.
+La instalación conserva su forma: el ayudante toma el compose de la misma carpeta (`docker-compose/`, `caddy/` o `cloudflare/`) en la versión nueva. Una instalación 0.1.x, de antes de que hubiera varias formas, queda sola en la suya: `cloudflare/` si usaba el túnel, y si no `docker-compose/`, que publica la web en el puerto 3000 del servidor.
 
 Con Dokploy y con Coolify el botón no aparece, porque ellos desharían el cambio: allí se cambia `OPENGPS_VERSION` y se vuelve a desplegar.
 
@@ -355,7 +348,7 @@ grep "^OPENGPS_VERSION=" env.example >> .env
 docker compose up -d --remove-orphans
 ```
 
-Si la instalación usaba el túnel de Cloudflare, el compose es `docker-compose.cloudflare.yml`, y sobra la línea `COMPOSE_PROFILES` de `.env`. Si no lo usaba, la web pasa a responder en el puerto 3000 del servidor: con `WEB_BIND=127.0.0.1` en `.env` sigue cerrado hacia fuera.
+Si la instalación usaba el túnel de Cloudflare, el compose es `docker-compose.cloudflare.yml`, y sobra la línea `COMPOSE_PROFILES` de `.env`. Si no lo usaba, la web pasa a responder en el puerto 3000 del servidor.
 
 `.env` conserva sus secretos, su túnel y el nombre del grupo (`COMPOSE_PROJECT_NAME`), así que los contenedores se reemplazan sobre los mismos volúmenes. `--remove-orphans` quita el ayudante viejo, `restorer`. Cuando la web vuelva a abrir con todo en su lugar, `/opt/opengps-git` se puede borrar.
 
