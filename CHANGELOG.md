@@ -6,6 +6,12 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Sin publicar]
 
+### Cambiado
+
+- La web tiene un icono nuevo, cuadrado, con el marcador más grande y un verde más vivo:
+  en la pestaña del navegador, en el logo de todas las pantallas y al guardarla en la
+  pantalla de inicio de un iPhone (#72).
+
 ### Corregido
 
 - La documentación vuelve a decir lo que hace la plataforma: el simulador no tiene tope
