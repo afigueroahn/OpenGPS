@@ -1,0 +1,89 @@
+{
+  "lock": {
+    "locked": "Engine locked",
+    "unlocked": "Engine not locked",
+    "lockStart": "Lock the engine",
+    "unlockStart": "Unlock the engine",
+    "unsupported": "This GPS device doesn't support remote locking.",
+    "supportUnknown": "Once the device reports, we'll know whether it supports remote locking."
+  },
+  "note": {
+    "never": "No lock command has ever been sent to this vehicle.",
+    "lockConfirmed": "The device confirmed the cut-off {{when}}.",
+    "lockSent": "The command went out {{when}}; the device doesn't report whether it applied it.",
+    "unlockConfirmed": "The device confirmed it restored the engine {{when}}.",
+    "unlockSent": "The unlock command went out {{when}}; the device doesn't report whether it applied it."
+  },
+  "pending": {
+    "lock": "Lock: {{status}}",
+    "unlock": "Unlock: {{status}}",
+    "waiting": "Waiting",
+    "expires": "{{note}}. If it can't be sent, it expires in {{minutes}} min.",
+    "sent": "Waiting for the device to confirm it applied it.",
+    "cancel": "Cancel the command"
+  },
+  "lastFailed": {
+    "lock": "The last lock command didn't complete: {{status}}.",
+    "lockNote": "The last lock command didn't complete: {{status}} ({{note}}).",
+    "unlock": "The last unlock command didn't complete: {{status}}.",
+    "unlockNote": "The last unlock command didn't complete: {{status}} ({{note}})."
+  },
+  "recovery": {
+    "title": "Recovery mode",
+    "active": "Turned on {{since}}. The link for the authorities is still valid.",
+    "inactive": "If it was stolen: more frequent reports and a link for the police.",
+    "linkTitle": "Recovery mode on",
+    "linkBody": "This link shows live where <b>{{name}}</b> is, no account needed. Give it to the police or to whoever will recover it. It's valid for 72 hours, or until you turn off recovery mode.",
+    "linkLabel": "Link for the authorities",
+    "copyNow": "Copy it now: for security it won't be shown again. The case was opened in Incidents.",
+    "offTitle": "Turn off recovery mode",
+    "offBody": "The link for the authorities will stop working and the device will go back to its normal reporting rate.",
+    "off": "Turn off"
+  },
+  "dialog": {
+    "lockBody": "You're about to cut off the engine of <b>{{name}}</b>. For safety, the command only goes out when the vehicle is under {{speed}} km/h: a moving vehicle's engine is never cut.",
+    "unlockBody": "You're about to restore the engine of <b>{{name}}</b>.",
+    "speedNow": "Speed now",
+    "lastFix": "Last position",
+    "noFix": "no position",
+    "fixAge": "{{duration}} ago",
+    "safeNow": "The vehicle is stopped or moving slowly: the command will be sent right away.",
+    "notSafe": "It isn't safe to cut off the engine now. The command will wait and go out on its own as soon as the vehicle drops below {{speed}} km/h. If that doesn't happen within {{minutes}} minutes, it's cancelled.",
+    "typeWord": "To confirm, type {{word}}",
+    "recheck": "Check again",
+    "lock": "Lock",
+    "unlock": "Unlock",
+    "logged": "Who gave the command and when is recorded ({{when}})."
+  },
+  "incidents": {
+    "title": "Incidents",
+    "report": "Report",
+    "open": "Open",
+    "emptyOpen": "No open incidents. A panic button, a tow, device tampering or a parked vehicle that moves shows up here.",
+    "emptyAll": "There haven't been any incidents yet.",
+    "statusPriority": "{{status}} · priority",
+    "opened": "Opened {{when}}",
+    "openedAttended": "Opened {{when}} · handled by {{name}}",
+    "attend": "Handle",
+    "showOnMap": "Show on map",
+    "close": "Close incident",
+    "timeline": "Timeline",
+    "addNote": "Add a note",
+    "notePlaceholder": "What was done, who was contacted…",
+    "saveNote": "Save note",
+    "attach": "Attach evidence",
+    "attachHint": "Photos (JPG, PNG, WebP) or PDF, up to 8 MB: the police report, a photo of the scene…",
+    "platform": "The platform"
+  },
+  "close": {
+    "title": "Close the incident",
+    "how": "How did it end?",
+    "note": "Closing note (optional)",
+    "lead": "A closed incident no longer accepts notes or evidence. If something happens to the vehicle again, a new one is opened."
+  },
+  "report": {
+    "title": "Report an incident",
+    "lead": "For what the GPS device doesn't report on its own: a theft someone tells you about by phone, a crash, a vehicle being held.",
+    "what": "What happened?"
+  }
+}

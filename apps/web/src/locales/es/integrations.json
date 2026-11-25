@@ -1,0 +1,240 @@
+{
+  "period": "Periodo",
+  "giveName": "Ponle un nombre.",
+  "secret": {
+    "copied": "Copiada",
+    "note": "Cópiala ahora y guárdala en un lugar seguro: no se vuelve a mostrar. Si la pierdes, se crea otra."
+  },
+  "eventPicker": {
+    "label": "Eventos",
+    "alert": "alerta"
+  },
+  "api": {
+    "endpoint": {
+      "vehicles": "Vehículos, con su última posición, odómetro y horas de motor",
+      "positions": "Posiciones de un periodo",
+      "trips": "Viajes de un periodo",
+      "events": "Eventos y alertas; con «after» se piden solo los nuevos",
+      "geofences": "Geocercas y grupos",
+      "modules": "Lo de los módulos que tenga la cuenta",
+      "dispatch": "Crear un despacho (clave que puede anotar)",
+      "fill": "Anotar un abastecimiento (clave que puede anotar)"
+    },
+    "keys": {
+      "title": "Claves de la API",
+      "note": "Cada sistema que consulte tu cuenta lleva la suya: así se puede quitar una sin tocar las demás",
+      "new": "Nueva clave",
+      "fresh": "Clave «{{name}}»",
+      "empty": "Todavía no hay claves. Crea una para que tu sistema contable, tu CRM o una herramienta como n8n o Make consulten tus vehículos.",
+      "readWrite": "lee y anota",
+      "readOnly": "solo lee",
+      "usedAt": "usada el {{when}}",
+      "unused": "sin usar todavía",
+      "remove": "Quitar la clave {{name}}"
+    },
+    "usage": {
+      "title": "Cómo se usa",
+      "note": "Cada clave admite {{n}} consultas por minuto",
+      "lead": "Cada consulta lleva la clave en una cabecera. Por ejemplo, para pedir los vehículos con su posición:",
+      "openapi": "Descripción completa, en formato OpenAPI",
+      "openapiNote": "Ese archivo lo leen Postman, n8n, Make y los generadores de código: con él arman las consultas solos."
+    },
+    "remove": {
+      "title": "Quitar la clave",
+      "body": "La clave «{{name}}» deja de servir en el acto. El sistema que la use dejará de poder consultar tu cuenta hasta que le pongas otra."
+    },
+    "dialog": {
+      "title": "Nueva clave de la API",
+      "name": "Para qué sistema es",
+      "namePlaceholder": "Sistema contable, CRM de ventas, n8n…",
+      "canWrite": "También puede anotar",
+      "canWriteNote": "Crear despachos y anotar abastecimientos. Sin marcar, la clave solo consulta."
+    }
+  },
+  "webhooks": {
+    "title": "Webhooks",
+    "note": "Cuando pasa algo en tu cuenta, se le avisa en el acto a la dirección que indiques",
+    "new": "Nuevo webhook",
+    "secretTitle": "Secreto de «{{name}}»",
+    "secretNote": "Con él se firma cada aviso. Tu sistema lo usa para comprobar que el aviso es nuestro y no de otro.",
+    "empty": "Todavía no hay webhooks. Sirven para que otro sistema reciba tus alertas sin tener que preguntar: un ERP, un CRM, o una herramienta como n8n, Make o Zapier.",
+    "off": "apagado",
+    "allEvents": "Todos los eventos",
+    "events_one": "{{count}} evento",
+    "events_other": "{{count}} eventos",
+    "noDeliveries": "sin envíos",
+    "payload": {
+      "title": "Qué recibe tu sistema",
+      "note": "Un POST con el evento en JSON y una firma",
+      "delivery": "Si tu sistema responde con un código 2xx, el aviso se da por entregado. Si no, se reintenta al minuto, a los 5 y 30 minutos, a las 2 y a las 6 horas. Cada envío lleva las cabeceras <h>X-OpenGPS-Event</h>, <h>X-OpenGPS-Timestamp</h> y <h>X-OpenGPS-Signature</h>.",
+      "verify": "Cómo comprueba tu sistema que el aviso es nuestro (Node.js)",
+      "sample": {
+        "label": "Exceso de velocidad",
+        "vehicle": "Camión 12",
+        "summary": "iba a 112 km/h con un límite de 90 km/h"
+      }
+    },
+    "dialog": {
+      "namePlaceholder": "ERP: alertas, n8n, CRM…",
+      "url": "Dirección a la que se avisa",
+      "urlHint": "La que te da el otro sistema para recibir avisos.",
+      "events": "Qué eventos le interesan",
+      "someEvents": "Solo algunos",
+      "headers": "Cabeceras propias <note>· opcional: la clave que pide el otro sistema</note>",
+      "headersKept": "Lleva: {{names}}. Sus valores no se muestran.",
+      "headersNone": "No lleva ninguna.",
+      "headersChange": "Cambiarlas",
+      "headerName": "Nombre de la cabecera {{n}}",
+      "headerValue": "Valor de la cabecera {{n}}",
+      "headerRemove": "Quitar la cabecera {{n}}",
+      "addHeader": "Agregar cabecera",
+      "headersReplace": "Al guardar, estas reemplazan a las que había.",
+      "active": "Encendido",
+      "log": "Últimos envíos",
+      "test": "Enviar una prueba",
+      "rotateTitle": "El secreto anterior deja de valer",
+      "rotate": "Secreto nuevo",
+      "logEmpty": "Todavía no se le ha enviado nada.",
+      "testTopic": "Aviso de prueba",
+      "attempts": "{{n}} intentos",
+      "retry": "reintenta {{when}}",
+      "confirmDelete": "Se borra el webhook con su bitácora. Dejará de recibir avisos.",
+      "urlStart": "La dirección empieza por https://",
+      "needEvents": "Elige al menos un evento, o marca que le interesan todos.",
+      "badHeader": "Cada cabecera lleva su nombre (letras, números y guiones) y su valor."
+    }
+  },
+  "automations": {
+    "title": "Automatizaciones",
+    "note": "Cuando pasa esto, en estos vehículos y a estas horas, haz esto otro",
+    "new": "Nueva automatización",
+    "empty": "Todavía no hay automatizaciones. Por ejemplo: cuando aparezca un código de falla del motor, abrir una orden de trabajo; o cuando un camión entre a una zona prohibida de noche, enviar un correo al supervisor.",
+    "off": "apagada",
+    "runs_one": "{{count}} vez",
+    "runs_other": "{{count}} veces",
+    "triggersMore": "{{first}} y {{n}} más",
+    "action": {
+      "notify_one": "aviso por {{channel}} a un destino",
+      "notify_other": "aviso por {{channel}} a {{count}} destinos",
+      "webhook": "aviso a un webhook",
+      "order": "orden de trabajo"
+    },
+    "address": {
+      "email": {
+        "label": "A qué correos",
+        "placeholder": "supervisor@empresa.com, taller@empresa.com"
+      },
+      "sms": {
+        "label": "A qué teléfonos",
+        "placeholder": "+50499887766"
+      },
+      "webhook": {
+        "label": "Para quién (opcional)",
+        "placeholder": "+50499887766, supervisor@empresa.com"
+      }
+    },
+    "dialog": {
+      "new": "Nueva automatización",
+      "namePlaceholder": "Falla del motor → orden de trabajo",
+      "when": "1 · Cuando pase cualquiera de estos eventos",
+      "where": "2 · En estos vehículos",
+      "whereLabel": "A qué vehículos aplica",
+      "allVehicles": "Todos los vehículos",
+      "groupOption": "Los de un grupo, con sus subgrupos",
+      "vehiclesOption": "Unos vehículos que elijo",
+      "timed": "Solo ciertos días y horas",
+      "overnight": "Pasa de medianoche: termina al día siguiente.",
+      "localTime": "Hora de tu reloj.",
+      "do": "3 · Haz esto",
+      "doLabel": "Qué hacer",
+      "channel": "Por qué canal",
+      "addressesHint": "Hasta cinco, separados por comas. El canal tiene que estar conectado en la plataforma.",
+      "customHint": "Hasta cinco correos o teléfonos, separados por comas: cada uno llena las variables de quien recibe el aviso en Personalizado. Vacío, se envía una vez.",
+      "noWebhooks": "Primero crea un webhook en su pestaña: aquí eliges a cuál se avisa.",
+      "webhook": "Webhook al que se avisa",
+      "orderTitle": "Trabajo de la orden (opcional)",
+      "orderPlaceholder": "Revisar el motor",
+      "orderHint": "Vacío: el nombre del evento. La orden queda abierta, como correctiva, en Mantenimiento.",
+      "cooldown": "Esperar antes de repetir, en minutos",
+      "cooldownHint": "Por el mismo vehículo. 0: actúa cada vez.",
+      "active": "Encendida",
+      "runs": "Últimas veces que actuó",
+      "runsEmpty": "Todavía no se ha disparado.",
+      "needTrigger": "Elige al menos un evento que la dispare.",
+      "needGroup": "Elige el grupo.",
+      "needVehicle": "Elige al menos un vehículo.",
+      "needDay": "Marca al menos un día.",
+      "cooldownRange": "La espera va de 0 a 1.440 minutos.",
+      "needAddresses": "Escribe de uno a cinco destinos, separados por comas.",
+      "needWebhook": "Primero crea un webhook en su pestaña."
+    }
+  },
+  "sensors": {
+    "title": "Sensores",
+    "note": "Sondas de temperatura, puertas, básculas y otros equipos que envían sus lecturas por internet",
+    "new": "Nuevo sensor",
+    "keyTitle": "Clave del sensor «{{name}}»",
+    "keyNote": "El sensor, o el equipo que lo lee, envía cada lectura así:",
+    "empty": "Todavía no hay sensores.",
+    "emptyHint": "Agrega uno, ponle su rango y, si va en un vehículo, sus lecturas fuera de rango saldrán como alertas de ese vehículo.",
+    "noReadings": "Sin lecturas",
+    "outOfRange": "Fuera de rango",
+    "inRange": "En rango",
+    "dialog": {
+      "namePlaceholder": "Sonda de la caja fría",
+      "kind": "Qué mide",
+      "vehicle": "Va en este vehículo",
+      "noVehicle": "En ninguno: es de un lugar fijo",
+      "vehicleNote": "Si va en un vehículo, cuando una lectura sale de su rango queda como alerta de ese vehículo, y puede disparar una automatización.",
+      "min": "Mínimo",
+      "max": "Máximo",
+      "unit": "Unidad",
+      "keyPrefix": "Su clave empieza por <k>{{prefix}}</k>",
+      "rotateTitle": "La clave anterior deja de valer",
+      "rotate": "Clave nueva",
+      "deleteTitle": "Se borra con todas sus lecturas",
+      "needName": "Ponle un nombre al sensor.",
+      "notNumbers": "El mínimo y el máximo son números.",
+      "minBelowMax": "El mínimo debe ser menor que el máximo."
+    },
+    "chart": {
+      "span": {
+        "h24": "24 horas",
+        "d7": "7 días",
+        "d30": "30 días"
+      },
+      "last": "Última lectura:",
+      "never": "Todavía no ha enviado lecturas.",
+      "empty": "Sin lecturas en este periodo.",
+      "label": "Lecturas de {{name}}: de {{min}} a {{max}}",
+      "now": "ahora",
+      "limitNote": "La línea roja punteada es el límite del rango."
+    }
+  },
+  "data": {
+    "export": {
+      "title": "Exportar",
+      "note": "Para abrir en Excel o pasar a otro sistema"
+    },
+    "import": {
+      "title": "Importar",
+      "note": "Desde un archivo CSV: la primera línea son los títulos de las columnas",
+      "what": "Qué vas a cargar",
+      "columns": "Columnas: <c>{{columns}}</c>.",
+      "vehiclesNote": "«modelo» es el del equipo GPS, como aparece al agregar uno. Cada vehículo queda esperando el primer reporte de su equipo.",
+      "geofencesNote": "Un círculo lleva latitud, longitud y radio; un polígono, sus puntos como «latitud longitud», separados por punto y coma.",
+      "driversNote": "Solo el nombre es obligatorio.",
+      "existing": "Lo que ya existe se deja como está.",
+      "easiest": "La forma más fácil: exporta primero, llena el archivo con el mismo formato y guárdalo como CSV.",
+      "file": "Archivo CSV para importar",
+      "choose": "Elegir archivo",
+      "loaded_one": "{{count}} fila cargada",
+      "loaded_other": "{{count}} filas cargadas",
+      "skipped_one": "{{count}} que ya existía",
+      "skipped_other": "{{count}} que ya existían",
+      "failed": "{{n}} con problemas",
+      "row": "Fila {{row}}",
+      "noPermission": "Importar datos necesita el permiso de administrar integraciones."
+    }
+  }
+}

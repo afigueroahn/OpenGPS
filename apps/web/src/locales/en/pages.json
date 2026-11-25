@@ -1,0 +1,192 @@
+{
+  "linkGone": {
+    "title": "This link is no longer available",
+    "askNew": "Ask whoever sent it to you for a new one."
+  },
+  "auth": {
+    "headline": "Your vehicle on the map, live.",
+    "pitch": "Create your account, add your GPS device and watch it move. It's open and free: it works with Teltonika, Concox, SinoTrack, Coban, Queclink, Suntech and more.",
+    "operator": "A service by {{operator}}",
+    "terms": "Terms of use",
+    "privacy": "Privacy",
+    "email": "Email",
+    "password": "Password",
+    "backToLogin": "Back to sign in",
+    "login": {
+      "title": "Sign in to your account",
+      "noAccount": "Don't have an account yet?",
+      "signUp": "Create one for free",
+      "linkFailed": "This link is no longer valid. Sign in with your email and password, and we'll send you a new one.",
+      "passwordChanged": "Your password was changed. You can now sign in with the new one.",
+      "submit": "Sign in",
+      "forgot": "I forgot my password"
+    },
+    "register": {
+      "title": "Create your account",
+      "lead": "Free, no card needed. Then add your GPS device in two minutes.",
+      "haveAccount": "Already have an account?",
+      "signIn": "Sign in here",
+      "nameMissing": "Enter your name.",
+      "mustAccept": "To create your account you need to accept the terms of use and the privacy policy.",
+      "closed": "Sign-up for new accounts is closed. Only people who received an invitation by email can sign up.",
+      "name": "Your name",
+      "accept": "I accept the <terms>terms of use</terms> and the <privacy>privacy policy</privacy>.",
+      "submit": "Create my account"
+    },
+    "services": {
+      "orSignIn": "or sign in with",
+      "orSignUp": "or create your account with",
+      "with": "Continue with {{name}}",
+      "notLinked": "There is already an account with that email, but the service does not confirm it is yours. Sign in with your password.",
+      "noEmail": "The service did not share your email. Allow it when signing in, or use another one.",
+      "cancelled": "You cancelled signing in with the service.",
+      "failed": "Could not sign in with that service. Try again.",
+      "terms": "If you do not have an account yet, it is created when you continue. By doing so you accept the <terms>terms of use</terms> and the <privacy>privacy policy</privacy>."
+    },
+    "checkEmail": {
+      "title": "Check your email",
+      "sent": "We sent an email to <b>{{email}}</b>. If the account is new, open it to confirm it and you'll go straight in; if you already had one with that email, it tells you how to sign in.",
+      "resent": "Your account isn't confirmed yet. We sent the link again to <b>{{email}}</b>. Open it and you'll go straight to your account.",
+      "slow": "It may take a minute. Check your spam folder too.",
+      "resentOk": "Done, we sent it again.",
+      "resendFailed": "We couldn't resend it. Try again in a moment.",
+      "resend": "Resend the link"
+    },
+    "forgot": {
+      "title": "Reset your password",
+      "lead": "Enter your account's email and we'll send you a link to create a new one.",
+      "sent": "If that email has an account, the link is on its way. It expires in 1 hour.",
+      "submit": "Send me the link"
+    },
+    "reset": {
+      "invalidTitle": "This link is no longer valid",
+      "invalidText": "Password reset links expire in 1 hour and work only once.",
+      "requestNew": "Request a new link",
+      "title": "Create a new password",
+      "password": "New password",
+      "submit": "Save and sign in"
+    }
+  },
+  "delivery": {
+    "done": "Delivered",
+    "doneAt": "On {{date}}.",
+    "failed": "Couldn't be delivered",
+    "failedText": "Contact whoever sent you this link to arrange it again.",
+    "rescheduled": "This delivery will be rescheduled",
+    "rescheduledText": "Contact whoever sent you this link.",
+    "arrived": "The vehicle has arrived",
+    "arrivedAt": "It's been there since {{date}}.",
+    "onTheWay": "On the way",
+    "yoursIsNext": "Your delivery is next.",
+    "stopsBefore_one": "There's {{count}} stop before yours.",
+    "stopsBefore_other": "There are {{count}} stops before yours.",
+    "scheduled": "Delivery scheduled",
+    "plannedFor": "Expected on {{date}}.",
+    "notLeft": "The vehicle hasn't left yet.",
+    "steps": {
+      "scheduled": "Scheduled",
+      "onTheWay": "On the way",
+      "arrived": "On site",
+      "delivered": "Delivered"
+    },
+    "stepsLabel": "Delivery steps",
+    "yourDelivery": "Your delivery · {{stop}}",
+    "map": "Delivery map",
+    "vehicleMoving": "The vehicle is moving",
+    "vehicleStopped": "The vehicle is stopped",
+    "positionAge": "position from {{ago}}",
+    "yourAddress": "Your address",
+    "legend": "The red dot is the delivery location. The vehicle is shown while it's on its way."
+  },
+  "driver": {
+    "actionFailed": "We couldn't complete that. Check your connection and try again.",
+    "departs": "departs <num>{{date}}</num>",
+    "allStopsDone": "All stops handled",
+    "stopsLeft_one": "{{count}} of {{total}} stops left",
+    "stopsLeft_other": "{{count}} of {{total}} stops left",
+    "finished": "Route finished. Thank you.",
+    "cancelled": "This route was cancelled.",
+    "start": "Start the route",
+    "planned": "expected <num>{{date}}</num>",
+    "receives": "for {{name}}",
+    "received": "Received by {{name}}",
+    "quote": "“{{note}}”",
+    "directions": "Directions",
+    "arrive": "I've arrived",
+    "onSite": "On site",
+    "deliver": "Deliver",
+    "couldNot": "Couldn't deliver",
+    "unattended_one": "{{count}} stop not handled: it will be marked as skipped.",
+    "unattended_other": "{{count}} stops not handled: they will be marked as skipped.",
+    "closing": "The route will be closed.",
+    "keepGoing": "Keep going",
+    "end": "Finish",
+    "endRoute": "Finish the route",
+    "sheet": {
+      "whyMissing": "Write why it couldn't be delivered.",
+      "failedTitle": "Couldn't deliver: {{stop}}",
+      "deliverTitle": "Deliver: {{stop}}",
+      "recipient": "Received by",
+      "why": "Why it couldn't be delivered",
+      "note": "Note (optional)",
+      "whyPlaceholder": "Closed, nobody there, wrong address…",
+      "photo": "Photo (optional)",
+      "photoOfPlace": "Photo of the place (optional)",
+      "photoInput": "Delivery photo",
+      "photoTaken": "Photo taken",
+      "retake": "Take another",
+      "takePhoto": "Take photo",
+      "signature": "Recipient's signature (optional)",
+      "recordFailed": "Record that it couldn't be delivered",
+      "confirm": "Confirm delivery"
+    },
+    "signature": {
+      "label": "Box to sign in",
+      "clear": "Clear",
+      "hint": "Sign here with your finger"
+    }
+  },
+  "invitation": {
+    "title": "Invitation",
+    "notFound": "This invitation doesn't exist",
+    "home": "Go to the home page",
+    "notFoundText": "It may have been withdrawn. Ask whoever invited you to send you another one.",
+    "invited": "You've been invited to {{account}}",
+    "accepted": "This invitation was already accepted.",
+    "expired": "This invitation expired. Ask whoever invited you to send you another one.",
+    "revoked": "This invitation was withdrawn.",
+    "myVehicles": "Go to my vehicles",
+    "lead": "<b>{{inviter}}</b> invited you to see their vehicles as <b>{{role}}</b>.",
+    "forEmail": "The invitation is for <b>{{email}}</b>. Sign in with that email or create your account with it.",
+    "signUp": "Create my account",
+    "signIn": "I already have an account",
+    "otherEmail": "The invitation is for {{email}}, and you're signed in as {{current}}. Sign out and sign in with the invited email.",
+    "signOut": "Sign out",
+    "acceptFailed": "Couldn't accept the invitation.",
+    "accept": "Accept and continue",
+    "ownAccount": "Your own account is still there: you can switch between the two from your profile menu."
+  },
+  "legal": {
+    "home": "Go to the home page",
+    "terms": "Terms of use",
+    "privacy": "Privacy policy",
+    "draft": "Draft version, under review · {{version}}",
+    "missing": {
+      "owner": "owner to be defined",
+      "country": "country to be defined",
+      "contact": "contact email to be defined"
+    }
+  },
+  "sharedLocation": {
+    "title": "Shared location",
+    "noPosition": "No position yet",
+    "map": "Map with the shared location",
+    "gone": "It may have expired or been withdrawn. Ask whoever sent it to you for a new one.",
+    "loadFailed": "We couldn't load the location. Retrying…",
+    "follow": "Follow the vehicle again",
+    "followTitle": "Follow the vehicle",
+    "lastReport": "Last report {{ago}}",
+    "noReport": "This vehicle's GPS device hasn't reported yet.",
+    "validUntil": "This link works until {{date}}."
+  }
+}

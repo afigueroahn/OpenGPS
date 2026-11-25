@@ -1,0 +1,109 @@
+{
+  "title": "Geofences",
+  "new": "New",
+  "empty": {
+    "title": "Draw your first geofence",
+    "lead": "Mark a yard, a customer, a no-go zone or a route on the map. The platform logs every entry and exit, and alerts you when something goes off plan.",
+    "create": "New geofence",
+    "notAllowed": "Your role can't create geofences."
+  },
+  "inside": "inside",
+  "showEvents": "See entries, exits and alerts",
+  "summary": {
+    "corridor": "Route with tolerance",
+    "inSchedule": "within hours",
+    "outOfSchedule": "outside hours",
+    "vehicles_one": "{{count}} vehicle",
+    "vehicles_other": "{{count}} vehicles",
+    "groups_one": "{{count}} group",
+    "groups_other": "{{count}} groups",
+    "off": "off"
+  },
+  "shape": {
+    "circle": "Circle",
+    "polygon": "Zone",
+    "corridor": "Route"
+  },
+  "hint": {
+    "circle": "Tap the map to place the center. Drag the square point to change the size.",
+    "polygon": "Tap the map to mark each corner of the zone. You can drag the points to adjust it.",
+    "corridor": "Tap the map to mark the route point by point. The width is the total margin: half on each side of the line."
+  },
+  "editor": {
+    "newTitle": "New geofence",
+    "editTitle": "Edit geofence",
+    "shape": "Geofence shape",
+    "radius": "Radius",
+    "width": "Width",
+    "points_one": "{{count}} point",
+    "points_other": "{{count}} points",
+    "undoLast": "Remove the last one",
+    "clear": "Clear drawing",
+    "namePlaceholder": "Yard, customer, restricted zone…",
+    "kind": "What it does",
+    "corridorNote": "Alerts when a vehicle leaves the route and logs when it comes back.",
+    "stay": "Stay (optional)",
+    "stayLess": "Alert if it stays less than",
+    "stayMore": "Alert if it stays more than",
+    "appliesTo": "Which vehicles it applies to",
+    "noGroups": "No groups.",
+    "noVehicles": "No vehicles.",
+    "active": "Geofence on",
+    "save": "Save changes",
+    "create": "Create geofence",
+    "delete": "Delete geofence",
+    "startDrawing": "Start by marking the geofence on the map.",
+    "keepDrawing": "Keep marking points on the map.",
+    "needName": "Give it a name."
+  },
+  "remove": {
+    "title": "Delete the geofence",
+    "confirm": "Delete",
+    "body": "<b>{{name}}</b> will be deleted and will stop alerting. The events it already logged are kept."
+  },
+  "pickOne": "Choose at least one.",
+  "schedule": {
+    "title": "When it applies",
+    "always": "Always",
+    "onSchedule": "On a schedule",
+    "from": "{{day}}, from",
+    "to": "{{day}}, to",
+    "until": "to",
+    "zoneNote": "Times in {{zone}}. If the end time is earlier than the start time, the window ends the next day.",
+    "needDay": "Choose at least one day."
+  },
+  "events": {
+    "title": "Events",
+    "filter": "Which events are shown",
+    "alertsOnly": "Alerts only",
+    "noAlerts": "No alerts yet.",
+    "empty": "No events yet. They'll show up when a vehicle enters or leaves a geofence.",
+    "alert": "Alert",
+    "record": "Note",
+    "older": "Show older",
+    "dismiss": "Close the alert",
+    "note": {
+      "routeDeviation": "Went {{meters}} m off its route",
+      "noDescription": "no description",
+      "overrev": "Reached {{rpm}} rpm; the limit is {{limit}} rpm",
+      "overheat": "Reached {{temp}} °C; the limit is {{limit}} °C",
+      "batteryLow": "At {{volts}} V; the minimum is {{limit}} V",
+      "fuelTheft": "{{liters}} L left the tank with the engine off",
+      "fuelDrain": "{{liters}} L left the tank while stopped",
+      "fuelRefuel": "{{liters}} L went into the tank",
+      "drivingDaily": "Has been at the wheel for {{time}} this shift; the maximum is {{max}}",
+      "drivingDailyDriver": "{{driver}} has been at the wheel for {{time}} this shift; the maximum is {{max}}",
+      "drivingNonstop": "Has been at the wheel for {{time}} without a break; the maximum is {{max}}",
+      "drivingNonstopDriver": "{{driver}} has been at the wheel for {{time}} without a break; the maximum is {{max}}",
+      "speeding": "Was going {{speed}} km/h; the limit is {{limit}} km/h",
+      "signalLost": "Not reporting for {{time}}",
+      "unauthorizedMovement": "Moved {{meters}} m from where it was parked",
+      "tow": "Moving at {{speed}} km/h with the engine off",
+      "lessThanMinute": "less than a minute",
+      "stayShort": "Stayed {{stayed}}; the minimum is {{min}}",
+      "stayLong": "Has stayed {{stayed}}; the maximum is {{max}}",
+      "bySchedule": "The geofence schedule started",
+      "stayed": "Stayed {{stayed}}"
+    }
+  }
+}

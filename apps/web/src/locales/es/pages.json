@@ -1,0 +1,192 @@
+{
+  "linkGone": {
+    "title": "Este enlace ya no está disponible",
+    "askNew": "Pídele a quien te lo envió que te mande uno nuevo."
+  },
+  "auth": {
+    "headline": "Tu vehículo en el mapa, en vivo.",
+    "pitch": "Crea tu cuenta, agrega tu GPS y empieza a verlo moverse. Es abierta y gratuita: funciona con Teltonika, Concox, SinoTrack, Coban, Queclink, Suntech y más.",
+    "operator": "Un servicio de {{operator}}",
+    "terms": "Términos de uso",
+    "privacy": "Privacidad",
+    "email": "Correo",
+    "password": "Contraseña",
+    "backToLogin": "Volver a entrar",
+    "login": {
+      "title": "Entra a tu cuenta",
+      "noAccount": "¿Aún no tienes cuenta?",
+      "signUp": "Créala gratis",
+      "linkFailed": "El enlace ya no es válido. Entra con tu correo y contraseña, y te enviamos uno nuevo.",
+      "passwordChanged": "Tu contraseña se cambió. Ya puedes entrar con la nueva.",
+      "submit": "Entrar",
+      "forgot": "Olvidé mi contraseña"
+    },
+    "register": {
+      "title": "Crea tu cuenta",
+      "lead": "Gratis y sin tarjeta. Después agregas tu GPS en dos minutos.",
+      "haveAccount": "¿Ya tienes cuenta?",
+      "signIn": "Entra aquí",
+      "nameMissing": "Escribe tu nombre.",
+      "mustAccept": "Para crear tu cuenta tienes que aceptar los términos de uso y la política de privacidad.",
+      "closed": "El registro de cuentas nuevas está cerrado. Solo puede registrarse quien recibió una invitación a su correo.",
+      "name": "Tu nombre",
+      "accept": "Acepto los <terms>términos de uso</terms> y la <privacy>política de privacidad</privacy>.",
+      "submit": "Crear mi cuenta"
+    },
+    "services": {
+      "orSignIn": "o entra con",
+      "orSignUp": "o crea tu cuenta con",
+      "with": "Continuar con {{name}}",
+      "notLinked": "Ya hay una cuenta con ese correo, pero el servicio no confirma que sea tuyo. Entra con tu contraseña.",
+      "noEmail": "El servicio no compartió tu correo. Permítelo al entrar, o usa otro.",
+      "cancelled": "Cancelaste la entrada con el servicio.",
+      "failed": "No se pudo entrar con ese servicio. Inténtalo de nuevo.",
+      "terms": "Si aún no tienes cuenta, se crea al continuar. Al hacerlo aceptas los <terms>términos de uso</terms> y la <privacy>política de privacidad</privacy>."
+    },
+    "checkEmail": {
+      "title": "Revisa tu correo",
+      "sent": "Te enviamos un correo a <b>{{email}}</b>. Si la cuenta es nueva, ábrelo para confirmarla y entrarás directo; si ya tenías una con ese correo, te dice cómo entrar.",
+      "resent": "Tu cuenta aún no está confirmada. Te enviamos otra vez el enlace a <b>{{email}}</b>. Ábrelo y entrarás directo a tu cuenta.",
+      "slow": "Puede tardar un minuto. Mira también en la carpeta de correo no deseado.",
+      "resentOk": "Listo, te lo enviamos de nuevo.",
+      "resendFailed": "No pudimos reenviarlo. Inténtalo en un momento.",
+      "resend": "Reenviar el enlace"
+    },
+    "forgot": {
+      "title": "Recupera tu contraseña",
+      "lead": "Escribe el correo de tu cuenta y te enviamos un enlace para crear una nueva.",
+      "sent": "Si ese correo tiene una cuenta, ya va en camino el enlace. Vence en 1 hora.",
+      "submit": "Enviarme el enlace"
+    },
+    "reset": {
+      "invalidTitle": "El enlace ya no es válido",
+      "invalidText": "Los enlaces para cambiar la contraseña vencen en 1 hora y sirven una sola vez.",
+      "requestNew": "Pedir un enlace nuevo",
+      "title": "Crea una contraseña nueva",
+      "password": "Contraseña nueva",
+      "submit": "Guardar y entrar"
+    }
+  },
+  "delivery": {
+    "done": "Entregado",
+    "doneAt": "El {{date}}.",
+    "failed": "No se pudo entregar",
+    "failedText": "Comunícate con quien te envió este enlace para coordinar de nuevo.",
+    "rescheduled": "Esta entrega se reprogramará",
+    "rescheduledText": "Comunícate con quien te envió este enlace.",
+    "arrived": "El vehículo llegó",
+    "arrivedAt": "Está en el lugar desde el {{date}}.",
+    "onTheWay": "Va en camino",
+    "yoursIsNext": "Tu entrega es la siguiente.",
+    "stopsBefore_one": "Antes de la tuya hay {{count}} parada.",
+    "stopsBefore_other": "Antes de la tuya hay {{count}} paradas.",
+    "scheduled": "Entrega programada",
+    "plannedFor": "Prevista para el {{date}}.",
+    "notLeft": "El vehículo todavía no ha salido.",
+    "steps": {
+      "scheduled": "Programada",
+      "onTheWay": "En camino",
+      "arrived": "En el lugar",
+      "delivered": "Entregada"
+    },
+    "stepsLabel": "Pasos de la entrega",
+    "yourDelivery": "Tu entrega · {{stop}}",
+    "map": "Mapa de la entrega",
+    "vehicleMoving": "El vehículo va en movimiento",
+    "vehicleStopped": "El vehículo está detenido",
+    "positionAge": "posición de {{ago}}",
+    "yourAddress": "Tu dirección",
+    "legend": "El punto rojo es el lugar de la entrega. El vehículo se muestra mientras viene en camino."
+  },
+  "driver": {
+    "actionFailed": "No pudimos completar la acción. Revisa tu conexión e inténtalo de nuevo.",
+    "departs": "sale <num>{{date}}</num>",
+    "allStopsDone": "Todas las paradas atendidas",
+    "stopsLeft_one": "Queda {{count}} parada de {{total}}",
+    "stopsLeft_other": "Quedan {{count}} paradas de {{total}}",
+    "finished": "Ruta terminada. Gracias.",
+    "cancelled": "Esta ruta se anuló.",
+    "start": "Iniciar la ruta",
+    "planned": "previsto <num>{{date}}</num>",
+    "receives": "recibe {{name}}",
+    "received": "Recibió {{name}}",
+    "quote": "«{{note}}»",
+    "directions": "Cómo llegar",
+    "arrive": "Llegué",
+    "onSite": "En el lugar",
+    "deliver": "Entregar",
+    "couldNot": "No se pudo",
+    "unattended_one": "Queda {{count}} parada sin atender: quedará como omitida.",
+    "unattended_other": "Quedan {{count}} paradas sin atender: quedarán como omitidas.",
+    "closing": "Se cierra la ruta.",
+    "keepGoing": "Seguir",
+    "end": "Terminar",
+    "endRoute": "Terminar la ruta",
+    "sheet": {
+      "whyMissing": "Escribe por qué no se pudo entregar.",
+      "failedTitle": "No se pudo: {{stop}}",
+      "deliverTitle": "Entregar: {{stop}}",
+      "recipient": "Quién recibe",
+      "why": "Por qué no se pudo",
+      "note": "Nota (opcional)",
+      "whyPlaceholder": "Cerrado, no había nadie, dirección equivocada…",
+      "photo": "Foto (opcional)",
+      "photoOfPlace": "Foto del lugar (opcional)",
+      "photoInput": "Foto de la entrega",
+      "photoTaken": "Foto tomada",
+      "retake": "Tomar otra",
+      "takePhoto": "Tomar foto",
+      "signature": "Firma de quien recibe (opcional)",
+      "recordFailed": "Anotar que no se pudo",
+      "confirm": "Confirmar entrega"
+    },
+    "signature": {
+      "label": "Recuadro para firmar",
+      "clear": "Borrar",
+      "hint": "Firmar aquí con el dedo"
+    }
+  },
+  "invitation": {
+    "title": "Invitación",
+    "notFound": "Esta invitación no existe",
+    "home": "Ir al inicio",
+    "notFoundText": "Puede que la hayan retirado. Pide a quien te invitó que te envíe otra.",
+    "invited": "Te invitaron a {{account}}",
+    "accepted": "Esta invitación ya fue aceptada.",
+    "expired": "Esta invitación venció. Pide a quien te invitó que te envíe otra.",
+    "revoked": "Esta invitación fue retirada.",
+    "myVehicles": "Ir a mis vehículos",
+    "lead": "<b>{{inviter}}</b> te invitó a ver sus vehículos como <b>{{role}}</b>.",
+    "forEmail": "La invitación es para <b>{{email}}</b>. Entra con ese correo o crea tu cuenta con él.",
+    "signUp": "Crear mi cuenta",
+    "signIn": "Ya tengo cuenta",
+    "otherEmail": "La invitación es para {{email}}, y entraste como {{current}}. Cierra sesión y entra con el correo invitado.",
+    "signOut": "Cerrar sesión",
+    "acceptFailed": "No se pudo aceptar la invitación.",
+    "accept": "Aceptar y entrar",
+    "ownAccount": "Tu propia cuenta sigue ahí: puedes cambiar entre las dos desde el menú de tu perfil."
+  },
+  "legal": {
+    "home": "Ir al inicio",
+    "terms": "Términos de uso",
+    "privacy": "Política de privacidad",
+    "draft": "Versión preliminar, en revisión · {{version}}",
+    "missing": {
+      "owner": "titular por definir",
+      "country": "país por definir",
+      "contact": "correo de contacto por definir"
+    }
+  },
+  "sharedLocation": {
+    "title": "Ubicación compartida",
+    "noPosition": "Aún sin posición",
+    "map": "Mapa con la ubicación compartida",
+    "gone": "Puede que haya vencido o que lo hayan retirado. Pídele uno nuevo a quien te lo envió.",
+    "loadFailed": "No pudimos cargar la ubicación. Reintentando…",
+    "follow": "Volver a seguir al vehículo",
+    "followTitle": "Seguir al vehículo",
+    "lastReport": "Último reporte {{ago}}",
+    "noReport": "El GPS de este vehículo aún no ha reportado.",
+    "validUntil": "Este enlace funciona hasta el {{date}}."
+  }
+}

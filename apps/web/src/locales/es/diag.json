@@ -1,0 +1,91 @@
+{
+  "card": {
+    "title": "Diagnóstico",
+    "faults_one": "{{count}} código de falla activo",
+    "faults_other": "{{count}} códigos de falla activos",
+    "noData": "Este equipo todavía no ha enviado datos del motor.",
+    "engineHours": "{{hours}} h de motor",
+    "engineHoursRead": "{{hours}} h de motor · leído {{when}}",
+    "open": "Ver diagnóstico"
+  },
+  "source": {
+    "ecu": "leído del vehículo",
+    "gps": "sumado por la plataforma con lo recorrido",
+    "ignition": "sumado por la plataforma con el motor encendido"
+  },
+  "tabs": {
+    "now": "Ahora",
+    "chart": "Gráficas",
+    "faults": "Fallas",
+    "meters": "Odómetro",
+    "limits": "Avisos"
+  },
+  "dialog": {
+    "title": "Diagnóstico de {{name}}"
+  },
+  "now": {
+    "empty": "Este equipo no ha enviado datos del vehículo en los últimos siete días. Para leerlos hace falta un equipo con lector OBD o conectado a la red del vehículo (CAN).",
+    "note": "Solo aparece lo que este equipo lee del vehículo. De cada dato se muestra la última lectura.",
+    "others": "Otros datos que envía el equipo ({{n}})",
+    "othersNote": "Llegan sin nombre: la plataforma no sabe qué miden. Se muestran tal cual por si te sirven para identificar un sensor."
+  },
+  "chart": {
+    "param": "Dato a graficar",
+    "delta": "Avanzó en el periodo",
+    "start": "Al empezar",
+    "end": "Al terminar",
+    "min": "Mínimo",
+    "avg": "Promedio",
+    "max": "Máximo",
+    "empty": "El equipo no envió ese dato en este periodo.",
+    "aria": "{{label}}: de {{from}} a {{to}} {{unit}}",
+    "limit": "límite de aviso"
+  },
+  "faults": {
+    "empty": "Este vehículo no ha reportado códigos de falla. Aparecen aquí cuando el equipo los lee de la computadora del vehículo, con su explicación.",
+    "active": "Activos",
+    "none": "Ninguno: el vehículo no reporta fallas ahora.",
+    "solved": "Resueltos",
+    "cleared": "{{system}} · desde el <num>{{from}}</num> hasta el <num>{{to}}</num>",
+    "seen": "{{system}} · desde el <num>{{from}}</num> · visto por última vez el <num>{{last}}</num>"
+  },
+  "meters": {
+    "needValue": "Escribe lo que marca el tablero: el odómetro, las horas, o los dos.",
+    "notNumber": "Son números, sin letras.",
+    "odometer": "Odómetro",
+    "hours": "Horas de motor",
+    "lead": "Si el equipo los lee de la computadora del vehículo, valen esos. Si no, la plataforma los suma desde el <num>{{since}}</num>: por eso conviene ajustarlos una vez a lo que marca el tablero.",
+    "adjustTitle": "Ajustar a lo que marca el tablero",
+    "odometerKm": "Odómetro, en km",
+    "saved": "Ajustado. Desde aquí siguen sumando.",
+    "adjust": "Ajustar"
+  },
+  "limits": {
+    "rpmMax": {
+      "label": "Revoluciones",
+      "note": "Avisa si el motor pasa de aquí unos segundos."
+    },
+    "tempMaxC": {
+      "label": "Temperatura del motor",
+      "note": "Avisa si pasa de aquí medio minuto."
+    },
+    "voltageMinV": {
+      "label": "Batería del vehículo",
+      "note": "Avisa si baja de aquí varios minutos. Es para 12 V: en un vehículo de 24 V vale el doble."
+    },
+    "needOwn": "Escribe el límite de {{label}} para este vehículo.",
+    "modeAria": "Aviso de {{label}}",
+    "account": "El de la cuenta",
+    "accountOff": "El de la cuenta: sin aviso",
+    "accountValue": "El de la cuenta: {{value}} {{unit}}",
+    "own": "Uno propio de este vehículo",
+    "off": "Sin aviso en este vehículo",
+    "ownAria": "Límite de {{label}} de este vehículo, en {{unit}}",
+    "saved": "Guardado. Vale desde la próxima posición.",
+    "accountTitle": "Avisos de diagnóstico de la cuenta",
+    "note": "Un código de falla nuevo avisa siempre. Los avisos aparecen entre las alertas de la plataforma.",
+    "accountLead": "Valen para todos los vehículos que no tengan un límite propio. Deja uno vacío para apagar ese aviso en la cuenta.",
+    "whoNote": "A quién se avisa de las fallas, el recalentamiento, las revoluciones y la batería baja se decide en Administración → Notificaciones.",
+    "saveAccount": "Guardar los de la cuenta"
+  }
+}

@@ -1,0 +1,1029 @@
+{
+  "theme": {
+    "label": "Tema",
+    "system": "Equipo",
+    "light": "Claro",
+    "dark": "Oscuro"
+  },
+  "language": {
+    "label": "Idioma"
+  },
+  "combobox": {
+    "empty": "Nada coincide con lo que escribiste"
+  },
+  "format": {
+    "noData": "sin datos",
+    "now": "ahora",
+    "compass": {
+      "n": "norte",
+      "ne": "noreste",
+      "e": "este",
+      "se": "sureste",
+      "s": "sur",
+      "sw": "suroeste",
+      "w": "oeste",
+      "nw": "noroeste"
+    }
+  },
+  "admin": {
+    "title": "Administración",
+    "back": "Mis vehículos",
+    "groups": {
+      "general": "General",
+      "modules": "Módulos",
+      "account": "Mi cuenta",
+      "system": "Sistema"
+    },
+    "nav": {
+      "overview": "Resumen",
+      "fleet": "Flota",
+      "maintenance": "Mantenimiento",
+      "routes": "Rutas",
+      "reports": "Reportes",
+      "integrations": "Integraciones",
+      "users": "Usuarios",
+      "roles": "Roles y permisos",
+      "vehicleGroups": "Grupos",
+      "activity": "Actividad",
+      "profile": "Perfil",
+      "accounts": "Cuentas",
+      "settings": "Ajustes",
+      "signIn": "Inicio de sesión",
+      "storage": "Almacenamiento",
+      "backups": "Copias de seguridad",
+      "simulator": "Simulador",
+      "logs": "Registros y métricas",
+      "notifications": "Notificaciones",
+      "channels": "Canales de aviso",
+      "systemNotifications": "Avisos del sistema"
+    },
+    "lead": {
+      "overview": "Mira de un vistazo cómo está tu cuenta y entra a su configuración.",
+      "fleet": "El inventario de tus vehículos, cuánto se usan, lo que cuestan y el árbol de grupos.",
+      "maintenance": "Lo que necesita atención, las órdenes de trabajo, los planes de servicio y los catálogos de talleres y repuestos.",
+      "routes": "El despacho del día, las rutas planeadas y los lugares que visitan tus vehículos.",
+      "reports": "El tablero de indicadores, los reportes y los que se envían solos.",
+      "integrations": "La API, los webhooks, las automatizaciones, los sensores y el intercambio de datos en archivos.",
+      "users": "Quién entra a la cuenta, con qué rol y qué vehículos ve.",
+      "roles": "Los roles de la cuenta y lo que permite cada uno.",
+      "vehicleGroups": "Agrupa tus vehículos por sucursal, ruta o lo que te sirva, y filtra la lista y el mapa por grupo.",
+      "activity": "Quién hizo qué y cuándo en esta cuenta.",
+      "profile": "Tus datos, cómo ves la plataforma y tu privacidad.",
+      "accounts": "Todas las cuentas de la plataforma, con su estado, sus cuotas y sus módulos.",
+      "settings": "Registro, cuotas de las cuentas nuevas, mapa, direcciones y contraseñas.",
+      "signIn": "Con qué otros servicios pueden entrar y crear su cuenta las personas, además de su correo y contraseña.",
+      "storage": "El almacenamiento externo donde también se guardan las copias.",
+      "backups": "Cuándo se hacen las copias de seguridad, cuáles hay y cómo descargarlas o restaurarlas.",
+      "simulator": "Equipos GPS simulados que se conectan como uno real, para probar la plataforma sin tener equipos.",
+      "logs": "Las cifras de la plataforma ahora mismo y lo hecho desde su administración.",
+      "notifications": "A quién se avisa de cada alerta y por qué canal.",
+      "channels": "Los canales por los que la plataforma avisa. Se conectan una vez, aquí, y los usan todas las cuentas.",
+      "systemNotifications": "A quién avisa la plataforma de lo que le pasa a ella: copias de seguridad, disco, canales y cuentas nuevas."
+    },
+    "menu": {
+      "open": "Abrir el menú",
+      "close": "Cerrar el menú",
+      "collapse": "Plegar el menú",
+      "expand": "Desplegar el menú",
+      "sections": "Secciones de administración",
+      "tabs": "Pestañas de {{section}}"
+    },
+    "themeToggle": {
+      "toDark": "Cambiar a modo oscuro",
+      "toLight": "Cambiar a modo claro"
+    },
+    "user": {
+      "menu": "Tu cuenta",
+      "signOut": "Cerrar sesión"
+    },
+    "overview": {
+      "workspace": "Espacio de trabajo",
+      "stats": {
+        "vehicles": "Vehículos",
+        "vehiclesNote_one": "{{count}} reportando ahora",
+        "vehiclesNote_other": "{{count}} reportando ahora",
+        "users": "Usuarios",
+        "usersNote": "en esta cuenta",
+        "events": "Eventos (24 h)",
+        "eventsNote": "alertas y avisos del último día",
+        "modules": "Módulos activos",
+        "modulesNote": "de {{total}} disponibles"
+      },
+      "shortcuts": {
+        "title": "Configuración",
+        "lead": "Acceso rápido a cada sección"
+      },
+      "activity": {
+        "title": "Actividad reciente",
+        "lead": "Últimos cambios en la cuenta",
+        "all": "Ver todo"
+      },
+      "platform": {
+        "title": "Plataforma",
+        "lead": "Las cifras de toda la instalación"
+      }
+    },
+    "profile": {
+      "identity": "Tus datos",
+      "photo": {
+        "change": "Cambiar foto",
+        "remove": "Quitar foto",
+        "failed": "No pudimos guardar la foto. Inténtalo de nuevo.",
+        "unreadable": "No pudimos abrir esa imagen. Prueba con una foto JPG, PNG o WebP."
+      },
+      "name": {
+        "person": "Tu nombre",
+        "account": "Nombre de la cuenta",
+        "edit": "Cambiar: {{what}}",
+        "save": "Guardar",
+        "cancel": "Cancelar"
+      },
+      "account": "Cuenta",
+      "role": "Rol",
+      "appearance": "Apariencia",
+      "appearanceLead": "El modo claro u oscuro se guarda con tu usuario y te sigue a otros dispositivos.",
+      "language": "Idioma",
+      "languageLead": "En este idioma ves la plataforma y recibes tus correos y avisos.",
+      "privacy": "Privacidad",
+      "terms": "Términos de uso",
+      "privacyPolicy": "Política de privacidad",
+      "delete": "Eliminar mi cuenta",
+      "deleteLead": "Borra tu usuario y, si eres el dueño, la cuenta con todos sus datos.",
+      "session": "Sesión",
+      "leave": "Salir de esta cuenta",
+      "leaveLead": "Dejas de ver los vehículos de esta cuenta. La tuya propia queda intacta.",
+      "contact": {
+        "title": "Teléfono",
+        "lead": "Para recibir por SMS los avisos que te incluyan.",
+        "none": "Todavía no tienes un teléfono.",
+        "add": "Agregar teléfono",
+        "edit": "Editar",
+        "remove": "Borrar",
+        "save": "Guardar",
+        "cancel": "Cancelar",
+        "phone": "Teléfono",
+        "phoneNote": "Con su código de país, por ejemplo +50499887766."
+      }
+    },
+    "roles": {
+      "note": "Todos los roles ven los vehículos de su alcance. Un rol propio suma solo los permisos que marques.",
+      "included": "Incluido",
+      "own": "Propio",
+      "viewOnly": "Solo ver",
+      "delete": "Borrar el rol {{name}}",
+      "new": "Rol nuevo",
+      "name": "Nombre",
+      "namePlaceholder": "Supervisor",
+      "allows": "Qué permite",
+      "create": "Crear rol",
+      "edit": "Editar el rol {{name}}",
+      "editTitle": "Editar el rol {{name}}",
+      "save": "Guardar cambios",
+      "cancel": "Cancelar"
+    },
+    "users": {
+      "scope": {
+        "legend": "Vehículos que puede ver",
+        "sees": "Ve:",
+        "all": "Todos los vehículos",
+        "some": "Solo algunos:",
+        "groups": "Grupos",
+        "vehicles": "Vehículos sueltos",
+        "noVehicles": "Ninguno elegido",
+        "vehiclesCount_one": "{{count}} vehículo suelto",
+        "vehiclesCount_other": "{{count}} vehículos sueltos",
+        "none": "Ningún vehículo",
+        "unknownGroup": "grupo",
+        "pick": "Elegir vehículos…",
+        "change": "Cambiar los vehículos…"
+      },
+      "invitations": {
+        "title": "Invitaciones pendientes",
+        "line_one": "{{role}} · {{scope}} · vence en {{count}} día",
+        "line_other": "{{role}} · {{scope}} · vence en {{count}} días",
+        "cancel": "Retirar"
+      },
+      "you": "(tú)",
+      "blocked": "Bloqueado",
+      "roleOf": "Rol de {{name}}",
+      "block": "Bloquear a {{name}}",
+      "unblock": "Desbloquear a {{name}}",
+      "remove": "Quitar a {{name}} de la cuenta",
+      "invite": {
+        "title": "Invitar a alguien",
+        "email": "Correo",
+        "emailPlaceholder": "persona@empresa.com",
+        "role": "Rol",
+        "send": "Enviar invitación",
+        "sent": "Invitación enviada a {{email}}. Vence en 7 días."
+      }
+    },
+    "notify": {
+      "channel": {
+        "email": "Correo",
+        "sms": "Twilio",
+        "webhook": "Personalizado",
+        "push": "Push"
+      },
+      "status": {
+        "ok": "Enviado",
+        "pending": "Pendiente",
+        "failed": "No salió"
+      },
+      "source": {
+        "test": "prueba",
+        "automation": "automatización"
+      },
+      "log": {
+        "title": "Bitácora de envíos",
+        "lead": "Los últimos mensajes: a dónde fue cada uno y cómo terminó. Lo que no sale se reintenta varias veces, cada vez con más espera.",
+        "empty": "Todavía no se ha enviado ningún mensaje.",
+        "retryAt": "Reintenta el {{when}}"
+      },
+      "channelNote": {
+        "email": "Al correo de cada persona",
+        "sms": "Mensajes de texto (SMS) al teléfono",
+        "webhook": "A otro sistema conectado a la plataforma",
+        "push": "A la app móvil de cada persona"
+      },
+      "headers": {
+        "title": "Cabeceras",
+        "note": "Opcional. Cabeceras propias que lleva cada envío, como la clave que pide el otro sistema (Authorization).",
+        "add": "Agregar cabecera",
+        "name": "Nombre de la cabecera {{n}}",
+        "value": "Valor de la cabecera {{n}}",
+        "remove": "Quitar la cabecera {{n}}",
+        "kept": "Lleva: {{names}}. Sus valores no se muestran.",
+        "none": "No lleva ninguna.",
+        "change": "Cambiar las cabeceras"
+      },
+      "unavailable": "Falta conectarlo en Canales de aviso"
+    },
+    "notifications": {
+      "new": "Nuevo aviso",
+      "test": "Probar",
+      "tested": "Resultado de la prueba",
+      "active": "Aviso {{name}} activo",
+      "edit": "Editar el aviso {{name}}",
+      "delete": "Borrar el aviso {{name}}",
+      "channelOff": "Este canal está apagado en la plataforma: el aviso no envía nada hasta que se vuelva a encender o elijas otro.",
+      "list": {
+        "title": "Avisos de la cuenta",
+        "note": "Cada aviso dice a quién se avisa, de qué y por qué canal. Una persona solo recibe lo que trata de vehículos que puede ver."
+      },
+      "empty": {
+        "title": "Todavía no hay avisos",
+        "lead": "Las alertas se ven en la plataforma, pero nadie recibe un mensaje fuera de ella hasta que crees un aviso."
+      },
+      "starter": {
+        "name": "Correo a todos",
+        "action": "Avisar por correo a todos de todas las alertas"
+      },
+      "usage": {
+        "capped": "{{sent}} de {{cap}} este mes",
+        "open": "{{sent}} este mes"
+      },
+      "who": {
+        "everyone": "A todos",
+        "people_one": "{{count}} persona",
+        "people_other": "{{count}} personas",
+        "addresses_one": "{{count}} dirección",
+        "addresses_other": "{{count}} direcciones"
+      },
+      "what": {
+        "all": "Todas las alertas",
+        "types_one": "{{count}} tipo de alerta",
+        "types_other": "{{count}} tipos de alerta",
+        "rules_one": "{{count}} alerta",
+        "rules_other": "{{count}} alertas"
+      },
+      "where": {
+        "all": "Todos los vehículos",
+        "groups_one": "{{count}} grupo",
+        "groups_other": "{{count}} grupos",
+        "vehicles_one": "{{count}} vehículo",
+        "vehicles_other": "{{count}} vehículos"
+      },
+      "remove": {
+        "title": "Borrar el aviso",
+        "confirm": "Borrar",
+        "body": "El aviso «{{name}}» deja de enviar mensajes. Su bitácora se conserva."
+      },
+      "editor": {
+        "newTitle": "Nuevo aviso",
+        "editTitle": "Editar el aviso",
+        "name": "Nombre",
+        "namePlaceholder": "Correo al jefe de flota",
+        "channel": "Por qué canal",
+        "who": "A quién",
+        "everyone": "A todos los de la cuenta",
+        "roles": "A estos roles",
+        "people": "A estas personas",
+        "noPhone": "sin teléfono",
+        "scopeNote": "Cada persona recibe solo lo que trata de vehículos que puede ver.",
+        "personNote": {
+          "sms": "Le llega a quien tenga su teléfono en su perfil, y solo lo de vehículos que puede ver.",
+          "push": "Le llega a quien tenga la app móvil de la plataforma con su sesión iniciada, y solo lo de vehículos que puede ver. La app todavía no está disponible: el aviso queda listo para cuando la instalen.",
+          "webhook": "Cada persona elegida llena las variables de quien recibe el aviso: le llega su propio mensaje, y solo de vehículos que puede ver.",
+          "webhookOnce": "Personalizado no usa los datos de cada persona: se envía un solo mensaje por aviso, si alguna de las elegidas puede ver el vehículo."
+        },
+        "otherAddresses": "Y también a estas direcciones",
+        "addressesNote": "Una por línea. Reciben todo lo que el aviso abarque, sin importar quién las lea.",
+        "addressHint": {
+          "email": "supervisor@empresa.com",
+          "sms": "+50499887766"
+        },
+        "noAddresses": "Las direcciones escritas a mano solo las cambia quien ve toda la cuenta.",
+        "what": "De qué",
+        "allEvents": "Todas las alertas",
+        "someEvents": "Solo estos tipos",
+        "byRule": "Solo lo que avisen estas alertas",
+        "where": "De qué vehículos",
+        "allVehicles": "Todos",
+        "groups": "Grupos",
+        "vehicles": "Vehículos",
+        "active": "Activo",
+        "cancel": "Cancelar",
+        "save": "Guardar",
+        "needName": "Ponle un nombre al aviso.",
+        "needWho": "Elige a quién avisar.",
+        "needEvents": "Elige al menos un tipo de alerta.",
+        "needRules": "Elige al menos una alerta.",
+        "needGroups": "Elige al menos un grupo.",
+        "needVehicles": "Elige al menos un vehículo.",
+        "noApp": "sin la app"
+      }
+    },
+    "signIn": {
+      "configure": "Configurar {{name}}",
+      "on": "Activo",
+      "off": "Apagado",
+      "note": "Cada servicio encendido aparece como un botón en la entrada y en «Crea tu cuenta». Quien no tiene cuenta la crea al continuar con el servicio, aceptando los términos que se muestran junto al botón; quien ya tiene cuenta entra con el servicio si este confirma que el correo es suyo.",
+      "steps": "Dónde se obtienen los datos",
+      "back": "Dirección de regreso: cópiala en el servicio",
+      "enable": "Activo",
+      "enableNote": "Apagado, su botón no aparece y nadie entra con él.",
+      "secretNote": "Se guarda cifrado y no vuelve a mostrarse. Déjalo vacío para conservar el que ya está.",
+      "secretKept": "Guardado · escribe para cambiarlo",
+      "secretEmpty": "Secreto",
+      "save": "Guardar",
+      "saved": "Guardado. Ya está en uso.",
+      "unsaved": "Hay cambios sin guardar.",
+      "google": {
+        "lead": "Que las personas entren y se registren con su cuenta de Google.",
+        "steps": "En console.cloud.google.com, dentro de «APIs y servicios», configura la pantalla de consentimiento y crea en «Credenciales» un «ID de cliente de OAuth» de tipo «Aplicación web». En «URI de redireccionamiento autorizados» pega la dirección de regreso.",
+        "clientId": "ID de cliente",
+        "clientIdNote": "Termina en .apps.googleusercontent.com.",
+        "secret": "Secreto del cliente"
+      },
+      "github": {
+        "lead": "Que las personas entren y se registren con su cuenta de GitHub.",
+        "steps": "En github.com/settings/developers crea una «OAuth App». En «Authorization callback URL» pega la dirección de regreso y, al guardarla, genera un secreto del cliente.",
+        "clientId": "Client ID",
+        "clientIdNote": "El que GitHub muestra al crear la aplicación.",
+        "secret": "Client secret"
+      },
+      "facebook": {
+        "lead": "Que las personas entren y se registren con su cuenta de Facebook.",
+        "steps": "En developers.facebook.com crea una app con «Inicio de sesión con Facebook» y pide el permiso de correo (email). En su configuración, en «URI de redireccionamiento de OAuth válidos», pega la dirección de regreso. Los datos están en «Configuración de la app» → «Básica».",
+        "clientId": "Identificador de la app",
+        "clientIdNote": "El «App ID» de Meta.",
+        "secret": "Clave secreta de la app"
+      },
+      "apple": {
+        "lead": "Que las personas entren y se registren con su Apple ID.",
+        "steps": "En developer.apple.com, en «Certificates, IDs & Profiles», crea un «Services ID» con «Sign in with Apple», registra tu dominio y pega la dirección de regreso en «Return URLs». Después crea una «Key» con «Sign in with Apple» y descarga su archivo .p8: solo se puede descargar una vez.",
+        "clientId": "Services ID",
+        "clientIdNote": "El identificador del servicio, por ejemplo com.empresa.web.",
+        "teamId": "Team ID",
+        "teamIdNote": "Los 10 caracteres de tu equipo, arriba a la derecha en la página de Apple.",
+        "keyId": "Key ID",
+        "keyIdNote": "Los 10 caracteres de la clave que creaste.",
+        "secret": "Clave privada (.p8)"
+      },
+      "custom": {
+        "title": "Otro",
+        "lead": "Cualquier otro servicio que hable OpenID Connect: Microsoft, Keycloak, Auth0, Okta o el de tu empresa.",
+        "steps": "En el servicio, registra una aplicación web con la dirección de regreso. Te dará un ID de cliente, un secreto y la dirección de su emisor (issuer).",
+        "name": "Nombre del botón",
+        "nameNote": "Cómo lo ven las personas: «Continuar con…».",
+        "namePlaceholder": "Mi empresa",
+        "issuer": "Dirección del emisor",
+        "issuerNote": "La del «issuer» de OpenID Connect. La plataforma lee de ahí lo demás.",
+        "clientId": "ID de cliente",
+        "clientIdNote": "El que te dio el servicio.",
+        "secret": "Secreto del cliente",
+        "scopes": "Permisos que pide",
+        "scopesNote": "Separados por espacios. Hacen falta openid y email."
+      }
+    },
+    "channels": {
+      "save": "Guardar",
+      "saved": "Guardado. Ya está en uso.",
+      "unsaved": "Hay cambios sin guardar.",
+      "key": {
+        "title": "Clave de acceso",
+        "note": "Se guarda cifrada y no vuelve a mostrarse. Déjala vacía para conservar la que ya está.",
+        "kept": "Clave guardada · escribe para cambiarla",
+        "empty": "Clave"
+      },
+      "cap": {
+        "title": "Tope mensual por cuenta",
+        "note": "Cuántos mensajes puede enviar cada cuenta al mes por este canal. Vacío es sin tope. Lo que pasa del tope no se envía y queda en la bitácora de la cuenta.",
+        "none": "Sin tope"
+      },
+      "test": {
+        "label": "Enviar un mensaje de prueba a",
+        "send": "Enviar prueba",
+        "saveFirst": "Guarda antes de probar",
+        "sent": "El mensaje de prueba salió hacia {{to}}.",
+        "failed": "No salió: {{reason}}",
+        "placeholder": {
+          "email": "tu@correo.com",
+          "sms": "+50499887766",
+          "webhook": "Correo o teléfono (opcional)"
+        }
+      },
+      "email": {
+        "lead": "Sale por el servidor de correo de la plataforma: confirmaciones de cuenta, invitaciones, alertas e informes."
+      },
+      "sms": {
+        "lead": "Mensajes de texto (SMS) por Twilio.",
+        "account": "Cuenta",
+        "accountNote": "El «Account SID» de Twilio.",
+        "from": "Remitente",
+        "fromNote": "El número de Twilio que envía, con su código de país, o el identificador de un servicio de mensajería (empieza por MG)."
+      },
+      "webhook": {
+        "lead": "Llama a otro sistema, por ejemplo una pasarela de SMS o de WhatsApp: tú escribes la dirección, las cabeceras y el cuerpo, con variables que llena cada aviso.",
+        "address": "Dirección a la que se envía",
+        "method": "Método",
+        "addressNote": "Las variables van en la ruta o en los parámetros, no en el servidor. Sus valores se escriben como los pide una dirección web.",
+        "body": "Cuerpo",
+        "bodyNote": "Opcional. Vacío, se envían todas las variables como JSON. En JSON, cada valor sale listo para ir entre comillas; con una cabecera Content-Type de formulario, como en una dirección web.",
+        "variables": "Variables",
+        "variablesNote": "Toca una para ponerla donde estaba el cursor, en la dirección o en el cuerpo. También sirven en el valor de las cabeceras.",
+        "insert": "Poner {{name}}",
+        "perPerson": "Las verdes son de quien recibe el aviso: si usas alguna, se envía un mensaje por cada persona del aviso; si no, uno solo para todos.",
+        "variable": {
+          "type": "Qué pasó, como dato: speeding, sos, backup_failed, test",
+          "event": "Qué pasó, en palabras: Exceso de velocidad",
+          "title": "La primera línea: Camión 1: exceso de velocidad",
+          "body": "El detalle del aviso",
+          "message": "El título y el detalle en una sola línea, para un SMS o un chat",
+          "vehicle": "El nombre del vehículo",
+          "time": "Cuándo pasó, en formato ISO 8601",
+          "latitude": "Latitud",
+          "longitude": "Longitud",
+          "speed": "Velocidad, en km/h",
+          "link": "El enlace a la plataforma",
+          "app": "El nombre de la plataforma",
+          "name": "El nombre de quien recibe el aviso",
+          "email": "Su correo",
+          "phone": "Su teléfono, con su código de país: +50499887766",
+          "phone_digits": "Su teléfono, solo los dígitos: 50499887766",
+          "language": "Su idioma: es o en"
+        }
+      },
+      "status": {
+        "on": "Encendido",
+        "off": "Apagado",
+        "missing": "Falta conectarlo"
+      },
+      "configure": "Configurar {{channel}}",
+      "close": "Cerrar",
+      "enableRow": "Canal encendido",
+      "enableNote": "Apagado, las cuentas no pueden usarlo.",
+      "push": {
+        "lead": "Notificaciones en la app móvil.",
+        "note": "Llegan a quien tenga la app móvil de la plataforma con su sesión iniciada. La app todavía no está disponible: los avisos por este canal quedan listos y empezarán a llegar cuando cada persona la instale."
+      }
+    },
+    "system": {
+      "list": {
+        "title": "Avisos del sistema",
+        "note": "Cada uno es un destino y las cosas de las que quiere enterarse. Mientras no haya ninguno, los problemas llegan al correo de avisos de los ajustes."
+      },
+      "empty": "Todavía no hay avisos del sistema. Crea uno para enterarte de una copia que falla, de un disco que se llena o de un canal que deja de entregar.",
+      "things_one": "avisa de {{count}} cosa",
+      "things_other": "avisa de {{count}} cosas",
+      "logLead": "Los últimos mensajes de la plataforma: a dónde fue cada uno y cómo terminó.",
+      "event": {
+        "backup_ok": "Una copia de seguridad terminó bien",
+        "backup_failed": "Una copia de seguridad falló",
+        "restore_done": "Terminó una restauración",
+        "disk_high": "El disco del servidor se está llenando",
+        "ingest_stalled": "Dejaron de llegar posiciones de los GPS",
+        "channel_failing": "Un canal de aviso está fallando",
+        "account_created": "Se creó una cuenta nueva"
+      },
+      "editor": {
+        "namePlaceholder": "Guardia por correo",
+        "target": "A dónde",
+        "targetOptional": "Para quién (opcional)",
+        "targetNote": "Un correo o un teléfono: llena las variables de quien recibe el aviso en Personalizado.",
+        "events": "De qué avisa",
+        "needEvents": "Elige al menos una cosa de la que avisar."
+      }
+    },
+    "settings": {
+      "saved": "Guardado. Ya está en uso.",
+      "unsaved": "Hay cambios sin guardar.",
+      "noLimit": "Sin límite",
+      "reset": {
+        "action": "Restablecer",
+        "title": "Restablecer los valores de fábrica"
+      },
+      "general": {
+        "signup": "Registro y cuentas nuevas",
+        "registrationOpen": "Registro abierto",
+        "registrationOpenNote": "Cualquiera puede crear una cuenta. Apagado, solo se registra quien recibió una invitación a su correo.",
+        "quotas": "Cuotas de las cuentas nuevas",
+        "quotasNote": "Con cuántos vehículos y usuarios puede llegar a tener cada cuenta que se cree a partir de ahora. Vacío es sin límite. Las cuentas que ya existen no cambian.",
+        "quotaUsers": "Usuarios",
+        "modules": "Módulos de las cuentas nuevas",
+        "modulesNote": "Los módulos opcionales con que nace cada cuenta. Después se cambian cuenta por cuenta.",
+        "map": "Mapa y direcciones",
+        "mapStyle": "Estilo del mapa",
+        "mapStyleNote": "Dirección del estilo de mapa que usan la web y las apps.",
+        "geocoder": "Servicio de direcciones",
+        "geocoderNote": "Convierte coordenadas en una dirección aproximada. De inicio es el servicio público y gratuito de OpenStreetMap. Otro servicio debe ser compatible con Nominatim y terminar en /reverse. Vacío lo apaga.",
+        "geocoderOff": "Apagado",
+        "geocoderAgent": "Identificación ante el servicio",
+        "geocoderAgentNote": "Cómo se presenta la plataforma al pedir direcciones. El servicio público de OpenStreetMap pide que diga quién es y cómo contactarlo. Vacío vuelve a la automática.",
+        "geocoderAgentAuto": "Automática: el nombre y la dirección de la plataforma",
+        "geocoderInterval": "Espera entre consultas",
+        "geocoderIntervalNote": "Milisegundos entre dos consultas al servicio. El público de OpenStreetMap admite una por segundo: 1100.",
+        "routing": "Servicio de rutas",
+        "routingNote": "Traza por calles las rutas del simulador. De inicio es el servicio público de OSRM sobre datos de OpenStreetMap, gratuito y con una consulta por segundo. Otro servicio debe hablar la API de OSRM. Vacío lo apaga.",
+        "routingOff": "Apagado",
+        "data": "Equipos y datos",
+        "claimWindow": "Plazo para el primer reporte",
+        "claimWindowNote": "Minutos que tiene un GPS recién agregado para enviar su primer reporte. Si no llega, el identificador queda libre.",
+        "maxPending": "GPS esperando su primer reporte",
+        "maxPendingNote": "Cuántos GPS recién agregados, sin su primer reporte, puede tener una cuenta a la vez.",
+        "history": "Historial de posiciones",
+        "historyNote": "Días de recorridos que se conservan. Vacío es sin límite; con un plazo, mínimo {{min}} días. Lo que pase del plazo se borra y no se puede recuperar.",
+        "traccarRetention": "Memoria del receptor de equipos",
+        "traccarRetentionNote": "Días que el receptor guarda sus propias copias de las posiciones ya leídas. No afecta al historial.",
+        "maxUpload": "Tamaño máximo de un archivo",
+        "maxUploadNote": "En MB, para lo que suben los usuarios, como las evidencias de un incidente. Hasta {{max}}.",
+        "operations": "Avisos de operación",
+        "alertEmail": "Correo de avisos",
+        "alertEmailNote": "Recibe los problemas de la plataforma mientras no haya ningún aviso en «Avisos del sistema»: el disco casi lleno, una copia de seguridad que falla. Con avisos del sistema creados, mandan ellos.",
+        "alertEmailNone": "Sin correo de avisos",
+        "disk": "Aviso de disco",
+        "diskNote": "Porcentaje de disco usado a partir del cual se avisa.",
+        "alertEmailsPerHour": "Correos de alerta por hora",
+        "alertEmailsPerHourNote": "Tope de correos de alerta que una misma cuenta puede generar en una hora. Protege los buzones ante una alerta mal ajustada.",
+        "legal": "Datos legales",
+        "legalNote": "Aparece en los términos de uso y en la política de privacidad.",
+        "legalContact": "Correo de contacto",
+        "legalContactNote": "Para solicitudes de privacidad y denuncias.",
+        "legalContactNone": "Sin definir",
+        "reset": "Los ajustes de arriba vuelven a lo que trae el servidor: registro abierto, cuentas nuevas sin cuotas ni módulos, y el mapa, el servicio de direcciones, los plazos, los avisos y los datos legales de sus variables. Las contraseñas no cambian.",
+        "shortenTitle": "Acortar el historial",
+        "shortenBody": "Vas a conservar solo {{days}} días de recorridos. Las posiciones más antiguas de <strong>todas las cuentas</strong> se borran y no se pueden recuperar.",
+        "shortenConfirm": "Sí, acortar",
+        "language": "Idioma",
+        "defaultLanguage": "Idioma por defecto",
+        "defaultLanguageNote": "El de quien todavía no eligió el suyo, y el de los correos y avisos que van a direcciones escritas a mano y los de la propia plataforma."
+      },
+      "passwords": {
+        "title": "Contraseñas",
+        "note": "Vale para las contraseñas que se creen o cambien desde ahora. Las que ya existen siguen sirviendo.",
+        "minLength": "Longitud mínima",
+        "minLengthNote": "Entre {{min}} y 64 caracteres.",
+        "rules": "Qué debe llevar",
+        "rulesNote": "Así se le explica a quien se registra: \"{{hint}}\"",
+        "number": "Al menos un número",
+        "symbol": "Al menos un símbolo",
+        "lowercase": "Al menos una letra minúscula",
+        "uppercase": "Al menos una letra mayúscula",
+        "reset": "La política de contraseñas vuelve a un mínimo de 8 caracteres, sin más requisitos."
+      },
+      "mail": {
+        "title": "Servidor de correo",
+        "note": "Por aquí salen los correos de la plataforma: confirmación de cuenta, cambio de contraseña, invitaciones, alertas e informes.",
+        "custom": "Usar un servidor de correo propio",
+        "customOn": "La plataforma envía con los datos de abajo.",
+        "customOff": "Apagado, se usa el que trae el servidor.",
+        "customOffHost": "Apagado, se usa el que trae el servidor: {{host}}.",
+        "customOffNone": "Apagado, se usa el que trae el servidor, que no tiene ninguno configurado.",
+        "server": "Servidor y puerto",
+        "serverNote": "Los da tu proveedor de correo. Lo habitual es el puerto 587 con STARTTLS.",
+        "hostPlaceholder": "smtp.ejemplo.com",
+        "port": "Puerto",
+        "security": "Cifrado",
+        "credentials": "Usuario y clave",
+        "credentialsNote": "La clave se guarda cifrada y no vuelve a mostrarse. Déjala vacía para conservar la que ya está.",
+        "user": "Usuario",
+        "passwordKept": "Clave guardada · escribe para cambiarla",
+        "password": "Clave",
+        "from": "Remitente",
+        "fromNote": "Quién aparece como autor de los correos. El dominio debe estar autorizado en tu proveedor.",
+        "fromPlaceholder": "OpenGPS <avisos@ejemplo.com>",
+        "saveFirst": "Guarda antes de probar",
+        "test": "Enviar un correo de prueba",
+        "reset": "Se deja de usar el servidor de correo propio y se borran sus datos y su clave guardada. Vuelve a usarse el que trae el servidor.",
+        "testSent": "El servidor de correo aceptó el envío a {{to}}. Revisa ese buzón.",
+        "testNote": "La prueba se envía a tu correo, {{email}}, con lo que esté guardado."
+      },
+      "mailTemplates": {
+        "title": "Plantillas de correo",
+        "note": "Los correos que escribe la plataforma. Puedes cambiar sus palabras en cada idioma; lo que no cambies sale como viene.",
+        "custom": "Personalizada",
+        "edit": "Editar la plantilla {{name}}",
+        "language": "Idioma",
+        "customLanguage": "{{language}}, personalizada",
+        "subject": "Asunto",
+        "heading": "Título",
+        "body": "Texto",
+        "bodyNote": "Los saltos de línea se respetan en el correo.",
+        "action": "Texto del botón",
+        "actionNote": "El botón lleva al enlace que corresponde. La dirección la pone la plataforma.",
+        "variables": "Variables",
+        "variablesNote": "Pulsa una para ponerla donde está el cursor. La plataforma la rellena al enviar.",
+        "preview": "Vista previa",
+        "restore": "Volver al original",
+        "restoreNote": "Vuelve al texto con que viene la plataforma, en {{language}}. Se aplica al guardar.",
+        "saved": "Guardado. Los próximos correos salen así.",
+        "problemIn": "{{language}}: {{problem}}",
+        "items": {
+          "verifyEmail": {
+            "name": "Confirmación de correo",
+            "note": "Se envía al crear una cuenta, con el enlace para confirmar el correo."
+          },
+          "resetPassword": {
+            "name": "Cambio de contraseña",
+            "note": "Se envía cuando alguien pide una contraseña nueva, con el enlace para crearla."
+          },
+          "existingAccount": {
+            "name": "Cuenta ya existente",
+            "note": "Se envía a quien intenta registrarse con un correo que ya tiene una cuenta."
+          },
+          "invitation": {
+            "name": "Invitación a una cuenta",
+            "note": "Se envía a quien invitan a ver los vehículos de una cuenta."
+          },
+          "panic": {
+            "name": "Botón de pánico",
+            "note": "Se envía a quienes administran la cuenta cuando alguien pulsa el botón de pánico de un vehículo."
+          },
+          "panicUnattended": {
+            "name": "Botón de pánico sin atender",
+            "note": "Se vuelve a enviar cuando nadie atiende a tiempo el botón de pánico."
+          },
+          "scheduledReport": {
+            "name": "Informe programado",
+            "note": "Lleva adjunto un informe programado, cada día, semana o mes."
+          },
+          "mailTest": {
+            "name": "Correo de prueba",
+            "note": "Se envía con el botón «Enviar un correo de prueba» para comprobar el servidor de correo."
+          }
+        },
+        "variable": {
+          "app": "Nombre de la plataforma",
+          "inviter": "Quién invita",
+          "account": "Nombre de la cuenta",
+          "role": "Rol que tendrá",
+          "days": "Días que dura la invitación",
+          "vehicle": "Nombre del vehículo",
+          "minutes": "Minutos sin atender",
+          "schedule": "Nombre del informe programado",
+          "headline": "Primera frase del resumen",
+          "title": "Tipo de informe",
+          "summary": "Resumen del periodo",
+          "every": "Cada cuánto llega",
+          "who": "Quién lo programó",
+          "host": "Servidor de correo"
+        }
+      },
+      "storage": {
+        "missing": "Escribe antes los datos del almacenamiento",
+        "fixFlags": "Corrige antes los argumentos",
+        "unreadableSecret": "La clave secreta guardada no se puede leer en este servidor: viene de otro, por ejemplo de una copia restaurada. Escríbela de nuevo y guarda.",
+        "title": "Almacenamiento externo",
+        "note": "Un espacio fuera del servidor, compatible con S3, donde la plataforma guarda archivos. Hoy lo usan las copias de seguridad.",
+        "enabled": "Usar almacenamiento externo",
+        "enabledNote": "Apagado, todo queda solo en el servidor.",
+        "provider": "Proveedor",
+        "providerNote": "Quién da el servicio. Si el tuyo no está en la lista, deja «Cualquier otro compatible con S3».",
+        "accessKey": "Clave de acceso",
+        "accessKeyNote": "El identificador de la clave, «Access Key ID».",
+        "secret": "Clave secreta",
+        "secretNote": "Se guarda cifrada y no vuelve a mostrarse. Déjala vacía para conservar la que ya está.",
+        "secretKept": "Guardada · escribe para cambiarla",
+        "bucket": "Bucket",
+        "bucketNote": "Debe existir ya. La clave necesita permiso para leer, escribir y borrar en él.",
+        "bucketPlaceholder": "nombre-del-bucket",
+        "region": "Región",
+        "regionNote": "Si tu proveedor no usa regiones, déjala vacía: vale us-east-1.",
+        "endpoint": "Dirección del servicio",
+        "endpointNote": "La del servicio S3, con https; no la de su panel de administración. Por ejemplo, https://s3.ejemplo.com.",
+        "endpointNoteAws": "Con Amazon puede quedar vacía: sale de la región.",
+        "prefix": "Carpeta",
+        "prefixNote": "Dentro del bucket, dónde guarda la plataforma lo suyo. Vacía es la raíz.",
+        "flags": "Argumentos adicionales",
+        "flagsNote": "Opcional. Los archivos los mueve rclone, y aquí van los argumentos que se le pasan, uno por línea, como en otras herramientas que lo usan. Valen los de S3, que empiezan por <code>--s3-</code>, y algunos generales, como <code>--header</code> o <code>--no-check-certificate</code>.",
+        "flagsList": "Ver la lista",
+        "flag": "Argumento {{n}}",
+        "removeFlag": "Quitar el argumento {{n}}",
+        "addFlag": "Agregar argumento",
+        "test": "Probar la conexión",
+        "reset": "Se apaga el almacenamiento externo y se borran sus datos, sus argumentos y su clave guardada. Lo que ya está guardado allí no se toca.",
+        "testOk": "Conexión correcta con lo que hay escrito: se escribió, se leyó y se borró un archivo de prueba.",
+        "testOkUnsaved": "Conexión correcta con lo que hay escrito: se escribió, se leyó y se borró un archivo de prueba. Falta guardar."
+      }
+    },
+    "backups": {
+      "kind": {
+        "scheduled": "Programada",
+        "manual": "A pedido",
+        "pre_restore": "Antes de restaurar",
+        "imported": "Encontrada en el almacenamiento"
+      },
+      "signedOut": "La plataforma volvió a como estaba en la copia y tu sesión ya no vale. <login>Vuelve a entrar</login> para ver cómo terminó.",
+      "unavailable": "Este servidor no tiene acceso a las bases de datos para hacer copias. Revisa sus variables de conexión.",
+      "noDetail": "sin detalle",
+      "restore": "Restaurar",
+      "banner": {
+        "running": "Restaurando",
+        "runningTo": "Restaurando a la copia del {{date}}",
+        "down": "La plataforma está detenida mientras el servidor cambia las bases. Esta página se pone al día sola en unos minutos.",
+        "steps": "Primero se guarda una copia de cómo está todo ahora. Después, en menos de un minuto, el servidor detiene la plataforma unos minutos para cambiar las bases.",
+        "done": "Restauración terminada el {{at}}: la plataforma volvió.",
+        "doneTo": "Restauración terminada el {{at}}: la plataforma volvió a la copia del {{date}}.",
+        "failed": "La restauración no se hizo: {{reason}}. La plataforma sigue con los datos que tenía.",
+        "failedTo": "La restauración a la copia del {{date}} no se hizo: {{reason}}. La plataforma sigue con los datos que tenía."
+      },
+      "schedule": {
+        "title": "Copias programadas",
+        "note": "Cada copia lleva la base de la plataforma, la del receptor de equipos y los archivos que suben los usuarios.",
+        "scheduled": "Hacer copias solas",
+        "scheduledNote": "Apagado, solo hay copias cuando alguien las pide aquí.",
+        "frequency": "Frecuencia",
+        "frequencyNote": "Cuándo se ejecutan las copias programadas. Las horas están en UTC.",
+        "cron": "Horario, como expresión cron",
+        "upcoming": "Próximas copias, en tu hora: {{times}}.",
+        "upcomingOff": "Con las copias encendidas tocaría, en tu hora: {{times}}.",
+        "cronHelp": "Son cinco datos: minuto, hora, día del mes, mes y día de la semana (0 es domingo). Un asterisco vale por todos, y <num>*/6</num> significa cada 6. Por ejemplo, <num>30 3 * * 1</num> es cada lunes a las 03:30 UTC.",
+        "retention": "Retención",
+        "retentionNote": "Cuánto tiempo se conservan las copias programadas antes de eliminarse. Las copias manuales nunca se eliminan automáticamente.",
+        "days": "{{days}} días",
+        "upload": "Enviar también al almacenamiento externo",
+        "uploadNote": "Además de quedar en el servidor, cada copia se sube al bucket {{bucket}}. Si el servidor se pierde, la copia sigue ahí.",
+        "uploadSetup": "Para tener las copias fuera del servidor, configura primero el <storage>almacenamiento externo</storage>.",
+        "reset": "La programación de las copias vuelve a como venía: una copia diaria a las 00:00 UTC, con 7 días de retención y sin envío al almacenamiento externo."
+      },
+      "where": {
+        "both": "Servidor y almacenamiento externo",
+        "remote": "Almacenamiento externo",
+        "local": "Servidor",
+        "gone": "Sus archivos ya no están"
+      },
+      "list": {
+        "title": "Copias",
+        "noteRestore": "Cada copia se puede descargar o restaurar: restaurar devuelve la plataforma a como estaba en ese momento.",
+        "noteDownload": "Desde aquí se descargan sus archivos. Para restaurar una, el ayudante de restauración (el servicio restorer) tiene que estar en marcha en el servidor.",
+        "copying": "Copiando…",
+        "now": "Hacer una copia ahora",
+        "empty": "Todavía no hay ninguna copia en la lista.",
+        "failed": "Falló: {{reason}}",
+        "remoteFailed": "No llegó al almacenamiento externo: {{reason}}",
+        "delete": "Eliminar esta copia",
+        "deleteShort": "Eliminar"
+      },
+      "discover": {
+        "prompt": "¿Hay copias en el almacenamiento externo que no salen aquí, como las de otra instalación? Búscalas para poder descargarlas o restaurarlas.",
+        "setup": "Para traer las copias de otra instalación, configura primero el <storage>almacenamiento externo</storage> y búscalas aquí.",
+        "search": "Buscar en el almacenamiento",
+        "none": "No hay ninguna copia completa en la carpeta «backups» del almacenamiento.",
+        "known_one": "En el almacenamiento hay {{count}} copia, y ya estaba en la lista.",
+        "known_other": "En el almacenamiento hay {{count}} copias, y ya estaban en la lista.",
+        "added_one": "Se agregó {{count}} copia a la lista.",
+        "added_other": "Se agregaron {{count}} copias a la lista.",
+        "addedSome_one": "Se agregó {{count}} copia a la lista; las demás del almacenamiento ya estaban.",
+        "addedSome_other": "Se agregaron {{count}} copias a la lista; las demás del almacenamiento ya estaban."
+      },
+      "remove": {
+        "title": "Eliminar la copia",
+        "confirm": "Eliminar",
+        "body": "Se borra la copia del {{date}}. No se puede deshacer.",
+        "bodyRemote": "Se borra la copia del {{date}}, también del almacenamiento externo. No se puede deshacer."
+      },
+      "restoreDialog": {
+        "title": "Restaurar esta copia",
+        "lead": "La plataforma volverá a como estaba el <strong>{{date}}</strong>.",
+        "lose": "Se pierde todo lo posterior a esa copia, en <strong>todas las cuentas</strong>: recorridos, vehículos, usuarios, alertas y ajustes.",
+        "undo": "Antes se guarda una copia de cómo está todo ahora. Con ella puedes deshacer esta restauración.",
+        "stop": "La plataforma se detiene unos minutos. Los GPS que reporten mientras tanto pierden esos datos, salvo que el equipo los guarde y los reenvíe.",
+        "passwords": "Quien haya creado o cambiado su contraseña después de esa copia entra con la de entonces, y puede que tengas que volver a entrar tú.",
+        "type": "Escribe <word>{{word}}</word> para confirmar"
+      }
+    },
+    "accounts": {
+      "failed": "No pudimos completar la acción. Inténtalo de nuevo.",
+      "title": "Cuentas",
+      "searchPlaceholder": "Buscar por cuenta o correo del dueño",
+      "searchLabel": "Buscar cuenta",
+      "empty": "Ninguna cuenta coincide con la búsqueda.",
+      "columns": {
+        "account": "Cuenta",
+        "users": "Usuarios",
+        "vehicles": "Vehículos",
+        "lastSeen": "Último reporte",
+        "lastAccess": "Último acceso",
+        "created": "Creada",
+        "status": "Estado"
+      },
+      "stats": {
+        "label": "Resumen de la plataforma",
+        "accounts": "Cuentas",
+        "suspended_one": "{{count}} suspendida",
+        "suspended_other": "{{count}} suspendidas",
+        "users": "Usuarios",
+        "vehicles": "Vehículos",
+        "devices": "Equipos activos",
+        "pending": "{{n}} esperando señal",
+        "reporting": "Reportando ahora",
+        "reportingNote": "últimos 10 min",
+        "positions": "Posiciones hoy",
+        "disk": "Disco usado"
+      },
+      "status": {
+        "suspended": "Suspendida",
+        "active": "Activa"
+      },
+      "noOwner": "sin dueño",
+      "signIn": {
+        "email": "Entra con su correo",
+        "google": "Entra con Google",
+        "github": "Entra con GitHub",
+        "facebook": "Entra con Facebook",
+        "apple": "Entra con Apple",
+        "other": "Entra con otro servicio"
+      },
+      "dialog": {
+        "title": "Cuenta",
+        "users_one": "{{count}} usuario",
+        "users_other": "{{count}} usuarios",
+        "vehicles_one": "{{count}} vehículo",
+        "vehicles_other": "{{count}} vehículos",
+        "devices_one": "{{count}} equipo activo",
+        "devices_other": "{{count}} equipos activos",
+        "created": "Creada el {{date}}",
+        "members": "Usuarios",
+        "userSuspended": "Suspendido",
+        "reactivateUser": "Reactivar",
+        "suspendUser": "Suspender usuario",
+        "suspendUserNote": "Suspender a un usuario cierra sus sesiones y no lo deja entrar a ninguna cuenta hasta que lo reactives; sus cuentas siguen como están. Eliminarlo lo borra para siempre, junto con las cuentas de las que es dueño.",
+        "platformOwner": "Dueño de la plataforma",
+        "lastAccess": "Último acceso: {{when}}",
+        "neverAccessed": "Sin accesos todavía",
+        "deleteUser": "Eliminar a {{name}}",
+        "deleteUserTitle": "Eliminar a {{name}}",
+        "deleteUserBody": "Se borra para siempre la persona {{email}} y, con ella, las cuentas de las que es dueña, con todos sus vehículos, equipos, historial y archivos. De las demás cuentas solo sale. No se puede deshacer."
+      },
+      "suspension": {
+        "suspended": "Cuenta suspendida",
+        "reason": "Motivo: {{reason}} Sus usuarios no pueden usarla.",
+        "noReason": "Sin motivo anotado. Sus usuarios no pueden usarla.",
+        "reactivate": "Reactivar la cuenta",
+        "title": "Suspender la cuenta",
+        "note": "Nadie puede usarla mientras esté suspendida: sus usuarios la ven bloqueada y pueden pasar a otras cuentas que tengan. Los equipos siguen guardando datos, por si se reactiva.",
+        "reasonPlaceholder": "Motivo (queda en el registro)",
+        "reasonLabel": "Motivo de la suspensión",
+        "submit": "Suspender"
+      },
+      "limits": {
+        "title": "Cuotas",
+        "vehicles": "Vehículos, máximo",
+        "users": "Usuarios, máximo",
+        "none": "Sin límite",
+        "save": "Guardar cuotas",
+        "note": "Deja un campo vacío para que no tenga límite. Una cuota no borra lo que la cuenta ya tiene."
+      },
+      "modules": {
+        "title": "Módulos opcionales",
+        "note": "Queda anotado qué módulos tiene cada cuenta; se activan a medida que se construyen."
+      },
+      "delete": {
+        "title": "Eliminar la cuenta",
+        "note": "Se borran para siempre sus vehículos, equipos GPS, historial, archivos y registro de actividad. Sus usuarios no se borran: solo salen de ella, y quien no tenga otra cuenta recibe una vacía al volver a entrar. No se puede deshacer.",
+        "ownerNote": "Es la cuenta del dueño de la plataforma: no se puede eliminar.",
+        "action": "Eliminar la cuenta",
+        "confirmTitle": "Eliminar la cuenta «{{name}}»",
+        "word": "Escribe {{word}} para confirmar",
+        "confirm": "Eliminar definitivamente"
+      }
+    },
+    "vehicleGroups": {
+      "name": "Nombre del grupo",
+      "saveName": "Guardar nombre",
+      "vehicles_one": "{{count}} vehículo",
+      "vehicles_other": "{{count}} vehículos",
+      "rename": "Renombrar {{name}}",
+      "delete": "Borrar {{name}}",
+      "new": "Grupo nuevo",
+      "placeholder": "Reparto norte",
+      "note": "Al borrar un grupo, sus vehículos no se borran: quedan sin grupo."
+    },
+    "modules": {
+      "loadGroupsFailed": "No pudimos cargar tus grupos. Revisa tu conexión y vuelve a intentarlo.",
+      "loadVehiclesFailed": "No pudimos cargar tus vehículos. Revisa tu conexión y vuelve a intentarlo.",
+      "fleet": {
+        "tabs": {
+          "vehicles": "Vehículos",
+          "usage": "Uso",
+          "expenses": "Gastos",
+          "groups": "Grupos"
+        }
+      },
+      "maintenance": {
+        "tabs": {
+          "pending": "Pendientes",
+          "orders": "Órdenes",
+          "plans": "Planes",
+          "catalogs": "Catálogos"
+        }
+      },
+      "routes": {
+        "tabs": {
+          "dispatch": "Despacho",
+          "routes": "Rutas",
+          "places": "Lugares"
+        }
+      },
+      "reports": {
+        "tabs": {
+          "dashboard": "Tablero",
+          "reports": "Reportes",
+          "scheduled": "Programados"
+        }
+      },
+      "integrations": {
+        "tabs": {
+          "api": "API",
+          "webhooks": "Webhooks",
+          "webhooksShort": "Avisos",
+          "automations": "Automatizaciones",
+          "automationsShort": "Reglas",
+          "sensors": "Sensores",
+          "data": "Datos"
+        }
+      }
+    }
+  },
+  "gps": {
+    "find": {
+      "label": "Marca o modelo de tu GPS",
+      "placeholder": "Escribe para buscar: FMC920, ST-901, GT06N…",
+      "hint": "{{models}} modelos de {{families}} familias. Si el tuyo no está, elige «otro modelo» de su marca.",
+      "empty": "No encontramos ese modelo. Escribe la marca y elige «otro modelo» de ella.",
+      "other": "Otro modelo de {{family}}",
+      "needed": "Elige la marca o el modelo de tu GPS.",
+      "chosen": "{{family}} · puerto {{port}}"
+    }
+  },
+  "common": {
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "close": "Cerrar",
+    "delete": "Borrar",
+    "remove": "Quitar",
+    "edit": "Editar",
+    "add": "Agregar",
+    "create": "Crear",
+    "back": "Atrás",
+    "continue": "Continuar",
+    "done": "Listo",
+    "ok": "Entendido",
+    "yes": "Sí",
+    "no": "No",
+    "search": "Buscar",
+    "all": "Todos",
+    "none": "Ninguno",
+    "optional": "opcional",
+    "loading": "Cargando…",
+    "version": "Versión {{version}}",
+    "retry": "Reintentar",
+    "download": "Descargar",
+    "copy": "Copiar",
+    "copied": "Copiado",
+    "name": "Nombre",
+    "notes": "Notas",
+    "date": "Fecha",
+    "from": "Desde",
+    "to": "Hasta",
+    "today": "Hoy",
+    "yesterday": "Ayer",
+    "vehicle": "Vehículo",
+    "vehicles": "Vehículos",
+    "group": "Grupo",
+    "groups": "Grupos",
+    "myVehicles": "Mis vehículos",
+    "error": "Algo falló. Inténtalo de nuevo."
+  }
+}

@@ -1,0 +1,154 @@
+{
+  "noData": "No data for this period.",
+  "report": "Report",
+  "period": {
+    "label": "Period",
+    "days7": "7 days",
+    "days30": "30 days",
+    "month": "This month",
+    "lastMonth": "Last month",
+    "custom": "Custom"
+  },
+  "custom": {
+    "bothDates": "Enter both dates.",
+    "endBeforeStart": "The end date can't be before the start date.",
+    "tooLong": "The period can't be longer than {{days}} days.",
+    "notStarted": "That period hasn't started yet."
+  },
+  "scope": {
+    "all": "All vehicles",
+    "group": "A group",
+    "picked_one": "{{count}} vehicle",
+    "picked_other": "{{count}} vehicles selected",
+    "change": "Change vehicles…",
+    "pick": "Choose vehicles…"
+  },
+  "picker": {
+    "title": "Choose vehicles",
+    "search": "Search by name or plate",
+    "searchLabel": "Search vehicles",
+    "noMatch": "No vehicle matches.",
+    "none": "None selected",
+    "chosen_one": "{{count}} selected",
+    "chosen_other": "{{count}} selected"
+  },
+  "dashboard": {
+    "defaultName": "General",
+    "boards": "Dashboard",
+    "new": "New dashboard",
+    "customize": "Customize",
+    "vehicles_one": "{{count}} vehicle",
+    "vehicles_other": "{{count}} vehicles",
+    "seeReport": "View report",
+    "change": {
+      "nothingBefore": "None before",
+      "same": "Same as before",
+      "more": "{{percent}} % more than before",
+      "less": "{{percent}} % less than before"
+    },
+    "tile": {
+      "distance": "Distance",
+      "trips": "Trips",
+      "drivingTime": "Time on trips",
+      "idle": "Idling",
+      "alerts": "Alerts",
+      "vehiclesUsed": "Vehicles used",
+      "usedOf": "{{used}} of {{total}}",
+      "before": "{{n}} before"
+    },
+    "series": {
+      "distance": "Distance",
+      "moving": "Moving",
+      "idle": "Idling",
+      "alerts": "Alerts"
+    },
+    "empty": {
+      "topDistance": "No vehicle made trips in this period.",
+      "leastUsed": "There are no vehicles on this dashboard.",
+      "alerts": "No alerts in this period.",
+      "drivers": "No driver drove in this period."
+    },
+    "dialog": {
+      "newTitle": "New dashboard",
+      "editTitle": "Customize dashboard",
+      "widgets": "Indicators, in the order they appear",
+      "moveUp": "Move {{name}} up",
+      "moveDown": "Move {{name}} down",
+      "delete": "Delete dashboard"
+    }
+  },
+  "view": {
+    "nav": "Reports",
+    "schedule": "Schedule",
+    "speedLimit": "Limit (km/h)",
+    "minStop": "Minimum (min)"
+  },
+  "table": {
+    "rows_one": "{{n}} row",
+    "rows_other": "{{n}} rows",
+    "shown": "showing {{n}}",
+    "sort": "Sort",
+    "more": "Show more rows ({{n}} not shown)"
+  },
+  "schedules": {
+    "title": "Scheduled reports",
+    "lead": "A report that is generated on its own and arrives by email, as a file, to the people in your account you choose.",
+    "full": "An account can have up to {{max}} scheduled reports",
+    "new": "Schedule a report",
+    "empty": {
+      "title": "No scheduled reports yet",
+      "lead": "For example, yesterday's mileage every morning, or the week's alarms every Monday."
+    },
+    "sent_one": "Done: \"{{name}}\" was emailed to {{count}} person.",
+    "sent_other": "Done: \"{{name}}\" was emailed to {{count}} people.",
+    "summary": "{{report}} as {{format}}",
+    "zone": "({{zone}} time)",
+    "sendNow": "Send now",
+    "pause": "Pause",
+    "resume": "Resume",
+    "delete": "Delete",
+    "recipients": "Recipients",
+    "noRecipients": "Nobody: they're no longer in the account",
+    "next": "Next delivery",
+    "paused": "Paused",
+    "last": "Last delivery",
+    "lastFailed": "Failed on {{when}}: {{error}}",
+    "noDetail": "no details",
+    "never": "None yet",
+    "remove": {
+      "title": "Delete scheduled report",
+      "confirm": "Delete",
+      "body": "\"{{name}}\" will stop being sent. Emails already sent don't change."
+    },
+    "when": {
+      "daily": "Every day at {{hour}}",
+      "weekly": "Every {{day}} at {{hour}}",
+      "monthly": "On day {{day}} of every month at {{hour}}"
+    },
+    "weekdayInSentence": {
+      "sunday": "Sunday",
+      "monday": "Monday",
+      "tuesday": "Tuesday",
+      "wednesday": "Wednesday",
+      "thursday": "Thursday",
+      "friday": "Friday",
+      "saturday": "Saturday"
+    },
+    "dialog": {
+      "editTitle": "Edit report",
+      "newTitle": "Schedule a report",
+      "nameHint": "This is the email subject.",
+      "speedLimit": "Speed limit (km/h)",
+      "minStop": "Stops of at least (minutes)",
+      "frequency": "How often",
+      "covers": "Each delivery covers {{period}}, in full.",
+      "weekday": "Day",
+      "monthDay": "Day of the month",
+      "time": "Time",
+      "file": "File",
+      "zone": "{{zone}} time.",
+      "recipients": "Who gets it",
+      "recipientsNote": "Only people in your account, up to {{max}}. To send it to someone else, invite them as a user first."
+    }
+  }
+}

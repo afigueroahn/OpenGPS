@@ -1,0 +1,109 @@
+{
+  "title": "Geocercas",
+  "new": "Nueva",
+  "empty": {
+    "title": "Dibuja tu primera geocerca",
+    "lead": "Marca en el mapa un patio, un cliente, una zona que no se debe pisar o una ruta. La plataforma anota cada entrada y salida, y avisa cuando algo se sale de lo previsto.",
+    "create": "Nueva geocerca",
+    "notAllowed": "Tu rol no permite crear geocercas."
+  },
+  "inside": "dentro",
+  "showEvents": "Ver entradas, salidas y avisos",
+  "summary": {
+    "corridor": "Ruta con tolerancia",
+    "inSchedule": "en horario",
+    "outOfSchedule": "fuera de horario",
+    "vehicles_one": "{{count}} vehículo",
+    "vehicles_other": "{{count}} vehículos",
+    "groups_one": "{{count}} grupo",
+    "groups_other": "{{count}} grupos",
+    "off": "apagada"
+  },
+  "shape": {
+    "circle": "Círculo",
+    "polygon": "Zona",
+    "corridor": "Ruta"
+  },
+  "hint": {
+    "circle": "Toca el mapa para colocar el centro. Arrastra el punto cuadrado para cambiar el tamaño.",
+    "polygon": "Toca el mapa para marcar cada esquina de la zona. Puedes arrastrar los puntos para ajustarla.",
+    "corridor": "Toca el mapa para marcar la ruta punto por punto. El ancho es el margen total: la mitad a cada lado de la línea."
+  },
+  "editor": {
+    "newTitle": "Nueva geocerca",
+    "editTitle": "Editar geocerca",
+    "shape": "Forma de la geocerca",
+    "radius": "Radio",
+    "width": "Ancho",
+    "points_one": "{{count}} punto",
+    "points_other": "{{count}} puntos",
+    "undoLast": "Quitar el último",
+    "clear": "Borrar trazo",
+    "namePlaceholder": "Patio, cliente, zona restringida…",
+    "kind": "Qué hace",
+    "corridorNote": "Avisa cuando un vehículo se sale de la ruta y anota cuando vuelve.",
+    "stay": "Permanencia (opcional)",
+    "stayLess": "Avisar si se queda menos de",
+    "stayMore": "Avisar si se queda más de",
+    "appliesTo": "A qué vehículos aplica",
+    "noGroups": "No hay grupos.",
+    "noVehicles": "No hay vehículos.",
+    "active": "Geocerca encendida",
+    "save": "Guardar cambios",
+    "create": "Crear geocerca",
+    "delete": "Eliminar geocerca",
+    "startDrawing": "Empieza marcando la geocerca en el mapa.",
+    "keepDrawing": "Sigue marcando puntos en el mapa.",
+    "needName": "Ponle un nombre."
+  },
+  "remove": {
+    "title": "Eliminar la geocerca",
+    "confirm": "Eliminar",
+    "body": "Se eliminará <b>{{name}}</b> y dejará de avisar. Los eventos que ya anotó se conservan."
+  },
+  "pickOne": "Elige al menos uno.",
+  "schedule": {
+    "title": "Cuándo vale",
+    "always": "Siempre",
+    "onSchedule": "En un horario",
+    "from": "{{day}}, desde",
+    "to": "{{day}}, hasta",
+    "until": "a",
+    "zoneNote": "Horas de {{zone}}. Si la hora final es anterior a la inicial, el tramo termina al día siguiente.",
+    "needDay": "Elige al menos un día."
+  },
+  "events": {
+    "title": "Eventos",
+    "filter": "Qué eventos se muestran",
+    "alertsOnly": "Solo avisos",
+    "noAlerts": "Ningún aviso todavía.",
+    "empty": "Aún no hay eventos. Aparecerán cuando un vehículo entre o salga de una geocerca.",
+    "alert": "Aviso",
+    "record": "Anotación",
+    "older": "Ver más antiguos",
+    "dismiss": "Cerrar el aviso",
+    "note": {
+      "routeDeviation": "Se apartó {{meters}} m del camino de su ruta",
+      "noDescription": "sin descripción",
+      "overrev": "Llegó a {{rpm}} rpm; el límite es {{limit}} rpm",
+      "overheat": "Llegó a {{temp}} °C; el límite es {{limit}} °C",
+      "batteryLow": "Está en {{volts}} V; el mínimo es {{limit}} V",
+      "fuelTheft": "Salieron {{liters}} L del tanque con el motor apagado",
+      "fuelDrain": "Salieron {{liters}} L del tanque estando detenido",
+      "fuelRefuel": "Entraron {{liters}} L al tanque",
+      "drivingDaily": "Lleva {{time}} al volante en la jornada; el máximo es {{max}}",
+      "drivingDailyDriver": "{{driver}} lleva {{time}} al volante en la jornada; el máximo es {{max}}",
+      "drivingNonstop": "Lleva {{time}} seguidos al volante; el máximo es {{max}}",
+      "drivingNonstopDriver": "{{driver}} lleva {{time}} seguidos al volante; el máximo es {{max}}",
+      "speeding": "Iba a {{speed}} km/h; el límite es {{limit}} km/h",
+      "signalLost": "Sin reportar desde hace {{time}}",
+      "unauthorizedMovement": "Se alejó {{meters}} m de donde quedó",
+      "tow": "Se mueve a {{speed}} km/h con el motor apagado",
+      "lessThanMinute": "menos de un minuto",
+      "stayShort": "Estuvo {{stayed}}; el mínimo es {{min}}",
+      "stayLong": "Lleva {{stayed}}; el máximo es {{max}}",
+      "bySchedule": "Empezó el horario de la geocerca",
+      "stayed": "Estuvo {{stayed}}"
+    }
+  }
+}

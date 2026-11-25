@@ -1,0 +1,86 @@
+{
+  "title": "Drivers",
+  "new": "New",
+  "allGroups": "All groups",
+  "events_one": "{{count}} event",
+  "events_other": "{{count}} events",
+  "scoreTitle": "Score from 0 to 100",
+  "noScoreTitle": "Under {{km}} km: no score",
+  "tabs": {
+    "ranking": "Ranking",
+    "profiles": "Profiles"
+  },
+  "ranking": {
+    "emptyNoDrivers": "Add your drivers and assign them their vehicle. Here you'll see who drives best.",
+    "empty": "Nobody drove in this period ({{period}}).",
+    "note": "Score from 0 to 100: it starts at 100 and drops with each event per 100 km driven. Tap a driver to see their details."
+  },
+  "list": {
+    "empty": "No drivers yet. Create a profile for each one and assign their vehicle from the vehicle's details.",
+    "hasKey": "Has an ID key",
+    "inactive": "Inactive",
+    "drives": "Drives {{vehicle}}",
+    "noVehicle": "No vehicle assigned"
+  },
+  "report": {
+    "noScore": "no score: under {{km}} km",
+    "outOf": "out of 100",
+    "distance": "Distance",
+    "driving": "Behind the wheel",
+    "longest": "Longest stretch without a rest",
+    "max": "max {{duration}}",
+    "daysOver": "Shifts over the limit",
+    "maxPerDay": "max {{duration}} per shift",
+    "deductions": "What costs points",
+    "penalty": "−{{points}} pts",
+    "days": "Shifts",
+    "noDays": "Didn't drive in this period.",
+    "stretch": "{{duration}} straight",
+    "rests_one": "{{count}} rest",
+    "rests_other": "{{count}} rests",
+    "events": "Events"
+  },
+  "dialog": {
+    "keyProblem": "Only digits and letters A to F, no spaces",
+    "editTitle": "Edit driver",
+    "newTitle": "New driver",
+    "deleteBody": "The profile of <b>{{name}}</b> will be deleted. What they drove stays in the reports, but as driven with no driver assigned. If they just stopped working here, it's better to mark them inactive.",
+    "deleteConfirm": "Delete the profile",
+    "license": "License (optional)",
+    "phone": "Phone (optional)",
+    "key": "ID key (optional)",
+    "keyHint": "The code of their key or card. If the GPS device has a reader, using it makes them the driver of that vehicle.",
+    "notes": "Notes (optional)",
+    "inactive": "Inactive: no longer assigned to vehicles",
+    "delete": "Delete profile"
+  },
+  "settings": {
+    "title": "How driving is measured",
+    "speedLimit": "Top speed",
+    "speedingSeconds": "Counts as speeding if it lasts",
+    "speedingHint": "With 0, it counts as soon as the limit is passed.",
+    "maxContinuous": "Continuous driving, at most",
+    "minRest": "A break counts as a rest from",
+    "maxDaily": "Driving per shift, at most",
+    "unit": {
+      "kmh": "km/h",
+      "seconds": "seconds",
+      "minutes": "minutes"
+    },
+    "range": "{{label}}: between {{min}} and {{max}} {{unit}}.",
+    "asHours": "That's {{duration}}.",
+    "scoreLead": "Each driver starts at 100 and loses points per 100 km driven: {{events}}. Under {{km}} km there's no score. A shift ends with a rest of {{hours}} hours or more."
+  },
+  "card": {
+    "none": "No driver assigned",
+    "since": "Started driving {{when}}.",
+    "sinceKey": "Started driving {{when}} · identified with their key.",
+    "noneNote": "What it drives won't count for any driver.",
+    "select": "Vehicle's driver",
+    "noDriver": "No driver",
+    "noDrivers": "Add your drivers in Drivers to assign them.",
+    "unknownKey": "Unregistered key",
+    "unknownKeyBody": "The device read the key <id>{{key}}</id> {{when}}, and it doesn't belong to any driver.",
+    "register": "Add the driver of this key"
+  }
+}

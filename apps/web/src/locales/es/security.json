@@ -1,0 +1,89 @@
+{
+  "lock": {
+    "locked": "Arranque bloqueado",
+    "unlocked": "Arranque sin bloqueo",
+    "lockStart": "Bloquear el arranque",
+    "unlockStart": "Desbloquear el arranque",
+    "unsupported": "Este equipo GPS no admite el bloqueo a distancia.",
+    "supportUnknown": "Cuando el equipo reporte se sabrá si admite el bloqueo a distancia."
+  },
+  "note": {
+    "never": "Nunca se ha enviado una orden de bloqueo a este vehículo.",
+    "lockConfirmed": "El equipo confirmó el corte {{when}}.",
+    "lockSent": "La orden salió {{when}}; el equipo no informa si la aplicó.",
+    "unlockConfirmed": "El equipo confirmó que devolvió el arranque {{when}}.",
+    "unlockSent": "La orden de desbloqueo salió {{when}}; el equipo no informa si la aplicó."
+  },
+  "pending": {
+    "lock": "Bloqueo: {{status}}",
+    "unlock": "Desbloqueo: {{status}}",
+    "waiting": "Esperando",
+    "expires": "{{note}}. Si no se puede enviar, vence en {{minutes}} min.",
+    "sent": "Esperando a que el equipo confirme que la aplicó.",
+    "cancel": "Cancelar la orden"
+  },
+  "lastFailed": {
+    "lock": "La última orden de bloqueo no se completó: {{status}}.",
+    "lockNote": "La última orden de bloqueo no se completó: {{status}} ({{note}}).",
+    "unlock": "La última orden de desbloqueo no se completó: {{status}}.",
+    "unlockNote": "La última orden de desbloqueo no se completó: {{status}} ({{note}})."
+  },
+  "recovery": {
+    "title": "Modo recuperación",
+    "active": "Activo {{since}}. El enlace para autoridades sigue vigente.",
+    "inactive": "Si lo robaron: reporte más seguido y un enlace para la policía.",
+    "linkTitle": "Modo recuperación activado",
+    "linkBody": "Este enlace muestra en vivo dónde está <b>{{name}}</b>, sin necesidad de cuenta. Entrégalo a la policía o a quien vaya a recuperarlo. Vale 72 horas, o hasta que apagues el modo recuperación.",
+    "linkLabel": "Enlace para autoridades",
+    "copyNow": "Cópialo ahora: por seguridad no se vuelve a mostrar. El caso quedó abierto en Incidentes.",
+    "offTitle": "Apagar el modo recuperación",
+    "offBody": "El enlace para autoridades dejará de funcionar y el equipo volverá a su ritmo normal de reporte.",
+    "off": "Apagar"
+  },
+  "dialog": {
+    "lockBody": "Vas a cortar el arranque de <b>{{name}}</b>. Por seguridad, la orden solo sale cuando el vehículo va a menos de {{speed}} km/h: nunca se corta el motor de un vehículo en marcha.",
+    "unlockBody": "Vas a devolverle el arranque a <b>{{name}}</b>.",
+    "speedNow": "Velocidad ahora",
+    "lastFix": "Última posición",
+    "noFix": "sin posición",
+    "fixAge": "hace {{duration}}",
+    "safeNow": "El vehículo está detenido o va despacio: la orden se enviará de inmediato.",
+    "notSafe": "Ahora no es seguro cortar el arranque. La orden quedará en espera y saldrá sola en cuanto el vehículo baje de {{speed}} km/h. Si en {{minutes}} minutos no ocurre, se cancela.",
+    "typeWord": "Para confirmar, escribe {{word}}",
+    "recheck": "Volver a comprobar",
+    "lock": "Bloquear",
+    "unlock": "Desbloquear",
+    "logged": "Queda anotado quién dio la orden y cuándo ({{when}})."
+  },
+  "incidents": {
+    "title": "Incidentes",
+    "report": "Reportar",
+    "open": "Abiertos",
+    "emptyOpen": "No hay incidentes abiertos. Aquí aparece un botón de pánico, un remolque, una manipulación del equipo o un vehículo estacionado que se mueve.",
+    "emptyAll": "Todavía no ha habido ningún incidente.",
+    "statusPriority": "{{status}} · prioritario",
+    "opened": "Abierto {{when}}",
+    "openedAttended": "Abierto {{when}} · lo atiende {{name}}",
+    "attend": "Atender",
+    "showOnMap": "Ver en el mapa",
+    "close": "Cerrar incidente",
+    "timeline": "Línea de tiempo",
+    "addNote": "Agregar una nota",
+    "notePlaceholder": "Qué se hizo, con quién se habló…",
+    "saveNote": "Guardar nota",
+    "attach": "Adjuntar evidencia",
+    "attachHint": "Fotos (JPG, PNG, WebP) o PDF, de hasta 8 MB: la denuncia, una foto del lugar…",
+    "platform": "La plataforma"
+  },
+  "close": {
+    "title": "Cerrar el incidente",
+    "how": "¿Cómo terminó?",
+    "note": "Nota de cierre (opcional)",
+    "lead": "Un incidente cerrado ya no admite notas ni evidencias. Si vuelve a pasar algo con el vehículo, se abre uno nuevo."
+  },
+  "report": {
+    "title": "Reportar un incidente",
+    "lead": "Para lo que el equipo GPS no avisa solo: un robo que te cuentan por teléfono, un choque, una retención.",
+    "what": "¿Qué pasó?"
+  }
+}
