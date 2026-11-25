@@ -6,6 +6,12 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Sin publicar]
 
+### Cambiado
+
+- El icono de la web ya no lleva el cuadro oscuro de fondo: en la pestaña del navegador y
+  en el logo de todas las pantallas queda solo el marcador con su órbita. El icono al
+  guardarla en la pantalla de inicio de un iPhone no cambia (#68).
+
 ## [0.5.0] - 2026-11-25
 
 ### Cambiado
