@@ -63,7 +63,8 @@ Closes #42
 - La imagen de la plataforma se construye en varias etapas y corre sin root. El
   ayudante corre como root porque maneja Docker.
 - Los healthchecks van en los compose, no en los Dockerfile: `postgres`, `traccar` y
-  `opengps` tienen el suyo, y los servicios que dependen de ellos esperan a que estén sanos.
+  `opengps` tienen el suyo. Lo que depende de `postgres` espera a que esté sano; a
+  `traccar` y a `opengps` se les espera arrancados.
 - Versiones de herramientas fijadas en el `package.json` raíz (`packageManager`,
   `engines`). Lockfiles commiteados. `.editorconfig` para el formato.
 - `deploy/.env.example` (instalación) y `apps/server/.env.example` (desarrollo),
@@ -78,8 +79,11 @@ Closes #42
 Checks requeridos para mergear desde el primer PR, aunque haya un solo contributor:
 `lint` · `typecheck estricto` · `unit` · `integration` · `build` (código e imágenes) ·
 `auditoría de dependencias` · `scripts de shell` · `archivos de instalación` ·
-`escaneo de secretos` · `actualización de punta a punta` (cuando cambia `deploy/`)
+`escaneo de secretos`
 
+- La `actualización de punta a punta` corre cuando cambia `deploy/` o el código de
+  actualizar y restaurar. La protección de `main` no la exige, porque dejaría esperando
+  a los PR que no la disparan: en los que sí, se mergea con ella en verde.
 - Branch protection en `main`: PR obligatorio, checks obligatorios, historia lineal.
 - **Prohibido modificar, saltar o silenciar un test para que pase.** Si falla, se
   arregla el código o se discute el test en el issue.

@@ -12,6 +12,14 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/).
   en la pestaña del navegador, en el logo de todas las pantallas y al guardarla en la
   pantalla de inicio de un iPhone (#72).
 
+### Corregido
+
+- La documentación vuelve a decir lo que hace la plataforma: el simulador no tiene tope
+  de equipos, `build.yml` vale con las formas de Docker Compose, las copias y las
+  actualizaciones están en Administración → Sistema, y `SECURITY.md` dice qué versión
+  tiene soporte. `AGENTS.md` y los ADR 0004, 0005 y 0008 recogen lo que cambió con
+  ADR-0009 (#74).
+
 ## [0.5.1] - 2026-11-25
 
 ### Cambiado

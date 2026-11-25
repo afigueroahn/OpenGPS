@@ -1,6 +1,6 @@
 # ADR-0004: Actualizar desde la consola
 
-- **Estado:** Aceptada. Superseded by ADR-0008 en un punto: la versión va en el compose, ya no en `.env`
+- **Estado:** Aceptada. Superseded by ADR-0008 en un punto: la versión va en el compose, ya no en `.env`. Superseded by ADR-0009 en otro: la copia sacada antes la restaura la plataforma, no el ayudante
 - **Fecha:** 2026-11-24
 - **Decide:** Angel Figueroa (@afigueroahn)
 

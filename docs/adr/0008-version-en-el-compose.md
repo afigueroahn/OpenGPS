@@ -1,6 +1,6 @@
 # ADR-0008: La versión de una instalación va en su compose
 
-- **Estado:** Aceptada
+- **Estado:** Aceptada. Superseded by ADR-0009 en un punto: Dokploy y Coolify no llevan `helper`, y sus compose tienen dos imágenes
 - **Fecha:** 2026-11-25
 - **Decide:** Angel Figueroa (@afigueroahn)
 
