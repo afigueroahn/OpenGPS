@@ -1,0 +1,1029 @@
+{
+  "theme": {
+    "label": "Theme",
+    "system": "Device",
+    "light": "Light",
+    "dark": "Dark"
+  },
+  "language": {
+    "label": "Language"
+  },
+  "combobox": {
+    "empty": "Nothing matches what you typed"
+  },
+  "format": {
+    "noData": "no data",
+    "now": "now",
+    "compass": {
+      "n": "north",
+      "ne": "northeast",
+      "e": "east",
+      "se": "southeast",
+      "s": "south",
+      "sw": "southwest",
+      "w": "west",
+      "nw": "northwest"
+    }
+  },
+  "admin": {
+    "title": "Administration",
+    "back": "My vehicles",
+    "groups": {
+      "general": "General",
+      "modules": "Modules",
+      "account": "My account",
+      "system": "System"
+    },
+    "nav": {
+      "overview": "Overview",
+      "fleet": "Fleet",
+      "maintenance": "Maintenance",
+      "routes": "Routes",
+      "reports": "Reports",
+      "integrations": "Integrations",
+      "users": "Users",
+      "roles": "Roles and permissions",
+      "vehicleGroups": "Groups",
+      "activity": "Activity",
+      "profile": "Profile",
+      "accounts": "Accounts",
+      "settings": "Settings",
+      "signIn": "Sign-in",
+      "storage": "Storage",
+      "backups": "Backups",
+      "simulator": "Simulator",
+      "logs": "Logs and metrics",
+      "notifications": "Notifications",
+      "channels": "Notification channels",
+      "systemNotifications": "System notifications"
+    },
+    "lead": {
+      "overview": "See how your account is doing at a glance and get to its settings.",
+      "fleet": "Your vehicle inventory, how much each one is used, what they cost and the group tree.",
+      "maintenance": "What needs attention, work orders, service plans and the catalogs of workshops and parts.",
+      "routes": "Today's dispatch, planned routes and the places your vehicles visit.",
+      "reports": "The indicator dashboard, reports and the ones sent on a schedule.",
+      "integrations": "The API, webhooks, automations, sensors and data exchange in files.",
+      "users": "Who gets into the account, with which role and which vehicles they see.",
+      "roles": "The account's roles and what each one allows.",
+      "vehicleGroups": "Group your vehicles by branch, route or whatever works for you, and filter the list and the map by group.",
+      "activity": "Who did what and when in this account.",
+      "profile": "Your details, how you see the platform and your privacy.",
+      "accounts": "Every account on the platform, with its status, quotas and modules.",
+      "settings": "Sign-up, quotas for new accounts, map, addresses and passwords.",
+      "signIn": "Which other services people can sign in and create their account with, besides their email and password.",
+      "storage": "The external storage where backups are also kept.",
+      "backups": "When backups are made, which ones exist and how to download or restore them.",
+      "simulator": "Simulated GPS devices that connect like a real one, to test the platform without hardware.",
+      "logs": "The platform's numbers right now and what its administration did.",
+      "notifications": "Who is told about each alert, and through which channel.",
+      "channels": "The channels the platform notifies through. They are connected once, here, and every account uses them.",
+      "systemNotifications": "Who the platform tells about what happens to it: backups, disk, channels and new accounts."
+    },
+    "menu": {
+      "open": "Open the menu",
+      "close": "Close the menu",
+      "collapse": "Collapse the menu",
+      "expand": "Expand the menu",
+      "sections": "Administration sections",
+      "tabs": "{{section}} tabs"
+    },
+    "themeToggle": {
+      "toDark": "Switch to dark mode",
+      "toLight": "Switch to light mode"
+    },
+    "user": {
+      "menu": "Your account",
+      "signOut": "Sign out"
+    },
+    "overview": {
+      "workspace": "Workspace",
+      "stats": {
+        "vehicles": "Vehicles",
+        "vehiclesNote_one": "{{count}} reporting now",
+        "vehiclesNote_other": "{{count}} reporting now",
+        "users": "Users",
+        "usersNote": "in this account",
+        "events": "Events (24 h)",
+        "eventsNote": "alerts and notices of the last day",
+        "modules": "Active modules",
+        "modulesNote": "of {{total}} available"
+      },
+      "shortcuts": {
+        "title": "Settings",
+        "lead": "Quick access to each section"
+      },
+      "activity": {
+        "title": "Recent activity",
+        "lead": "Latest changes in the account",
+        "all": "See all"
+      },
+      "platform": {
+        "title": "Platform",
+        "lead": "The numbers of the whole installation"
+      }
+    },
+    "profile": {
+      "identity": "Your details",
+      "photo": {
+        "change": "Change photo",
+        "remove": "Remove photo",
+        "failed": "We couldn't save the photo. Try again.",
+        "unreadable": "We couldn't open that image. Try a JPG, PNG or WebP photo."
+      },
+      "name": {
+        "person": "Your name",
+        "account": "Name of the account",
+        "edit": "Change: {{what}}",
+        "save": "Save",
+        "cancel": "Cancel"
+      },
+      "account": "Account",
+      "role": "Role",
+      "appearance": "Appearance",
+      "appearanceLead": "Light or dark mode is saved with your user and follows you to other devices.",
+      "language": "Language",
+      "languageLead": "The language you see the platform in and get your emails and notifications in.",
+      "privacy": "Privacy",
+      "terms": "Terms of use",
+      "privacyPolicy": "Privacy policy",
+      "delete": "Delete my account",
+      "deleteLead": "Deletes your user and, if you are the owner, the account with all its data.",
+      "session": "Session",
+      "leave": "Leave this account",
+      "leaveLead": "You stop seeing this account's vehicles. Your own account stays intact.",
+      "contact": {
+        "title": "Phone",
+        "lead": "To get by SMS the notifications that include you.",
+        "none": "You don't have a phone yet.",
+        "add": "Add phone",
+        "edit": "Edit",
+        "remove": "Delete",
+        "save": "Save",
+        "cancel": "Cancel",
+        "phone": "Phone",
+        "phoneNote": "With its country code, for example +50499887766."
+      }
+    },
+    "roles": {
+      "note": "Every role sees the vehicles in its scope. A custom role adds only the permissions you tick.",
+      "included": "Built-in",
+      "own": "Custom",
+      "viewOnly": "View only",
+      "delete": "Delete the role {{name}}",
+      "new": "New role",
+      "name": "Name",
+      "namePlaceholder": "Supervisor",
+      "allows": "What it allows",
+      "create": "Create role",
+      "edit": "Edit the role {{name}}",
+      "editTitle": "Edit the role {{name}}",
+      "save": "Save changes",
+      "cancel": "Cancel"
+    },
+    "users": {
+      "scope": {
+        "legend": "Vehicles they can see",
+        "sees": "Sees:",
+        "all": "All vehicles",
+        "some": "Only some:",
+        "groups": "Groups",
+        "vehicles": "Single vehicles",
+        "noVehicles": "None chosen",
+        "vehiclesCount_one": "{{count}} single vehicle",
+        "vehiclesCount_other": "{{count}} single vehicles",
+        "none": "No vehicles",
+        "unknownGroup": "group",
+        "pick": "Choose vehicles…",
+        "change": "Change the vehicles…"
+      },
+      "invitations": {
+        "title": "Pending invitations",
+        "line_one": "{{role}} · {{scope}} · expires in {{count}} day",
+        "line_other": "{{role}} · {{scope}} · expires in {{count}} days",
+        "cancel": "Withdraw"
+      },
+      "you": "(you)",
+      "blocked": "Blocked",
+      "roleOf": "Role of {{name}}",
+      "block": "Block {{name}}",
+      "unblock": "Unblock {{name}}",
+      "remove": "Remove {{name}} from the account",
+      "invite": {
+        "title": "Invite someone",
+        "email": "Email",
+        "emailPlaceholder": "person@company.com",
+        "role": "Role",
+        "send": "Send invitation",
+        "sent": "Invitation sent to {{email}}. It expires in 7 days."
+      }
+    },
+    "notify": {
+      "channel": {
+        "email": "Email",
+        "sms": "Twilio",
+        "webhook": "Custom",
+        "push": "Push"
+      },
+      "status": {
+        "ok": "Sent",
+        "pending": "Pending",
+        "failed": "Not sent"
+      },
+      "source": {
+        "test": "test",
+        "automation": "automation"
+      },
+      "log": {
+        "title": "Delivery log",
+        "lead": "The latest messages: where each one went and how it ended. What does not go out is retried several times, waiting longer each time.",
+        "empty": "No message has been sent yet.",
+        "retryAt": "Retries on {{when}}"
+      },
+      "channelNote": {
+        "email": "To each person's email",
+        "sms": "Text messages (SMS) to the phone",
+        "webhook": "To another system connected to the platform",
+        "push": "To each person's mobile app"
+      },
+      "headers": {
+        "title": "Headers",
+        "note": "Optional. Headers of your own that every delivery carries, such as the key the other system asks for (Authorization).",
+        "add": "Add header",
+        "name": "Name of header {{n}}",
+        "value": "Value of header {{n}}",
+        "remove": "Remove header {{n}}",
+        "kept": "Carries: {{names}}. Their values are not shown.",
+        "none": "It carries none.",
+        "change": "Change the headers"
+      },
+      "unavailable": "Needs to be connected in Notification channels"
+    },
+    "notifications": {
+      "new": "New notification",
+      "test": "Test",
+      "tested": "Test result",
+      "active": "Notification {{name}} active",
+      "edit": "Edit the notification {{name}}",
+      "delete": "Delete the notification {{name}}",
+      "channelOff": "This channel is off on the platform: the notification sends nothing until it is turned back on or you choose another.",
+      "list": {
+        "title": "Account notifications",
+        "note": "Each notification says who is told, about what and through which channel. A person only receives what is about vehicles they can see."
+      },
+      "empty": {
+        "title": "No notifications yet",
+        "lead": "Alerts show on the platform, but nobody receives a message outside it until you create a notification."
+      },
+      "starter": {
+        "name": "Email to everyone",
+        "action": "Email everyone about every alert"
+      },
+      "usage": {
+        "capped": "{{sent}} of {{cap}} this month",
+        "open": "{{sent}} this month"
+      },
+      "who": {
+        "everyone": "Everyone",
+        "people_one": "{{count}} person",
+        "people_other": "{{count}} people",
+        "addresses_one": "{{count}} address",
+        "addresses_other": "{{count}} addresses"
+      },
+      "what": {
+        "all": "Every alert",
+        "types_one": "{{count}} alert type",
+        "types_other": "{{count}} alert types",
+        "rules_one": "{{count}} alert",
+        "rules_other": "{{count}} alerts"
+      },
+      "where": {
+        "all": "All vehicles",
+        "groups_one": "{{count}} group",
+        "groups_other": "{{count}} groups",
+        "vehicles_one": "{{count}} vehicle",
+        "vehicles_other": "{{count}} vehicles"
+      },
+      "remove": {
+        "title": "Delete the notification",
+        "confirm": "Delete",
+        "body": "The notification “{{name}}” stops sending messages. Its log is kept."
+      },
+      "editor": {
+        "newTitle": "New notification",
+        "editTitle": "Edit the notification",
+        "name": "Name",
+        "namePlaceholder": "Email to the fleet manager",
+        "channel": "Through which channel",
+        "who": "To whom",
+        "everyone": "Everyone in the account",
+        "roles": "These roles",
+        "people": "These people",
+        "noPhone": "no phone",
+        "scopeNote": "Each person receives only what is about vehicles they can see.",
+        "personNote": {
+          "sms": "It reaches whoever has their phone in their profile, and only about vehicles they can see.",
+          "push": "It reaches whoever has the platform's mobile app and is signed in on it, and only about vehicles they can see. The app is not available yet: the notification is ready for when they install it.",
+          "webhook": "Each person chosen fills the variables of whoever receives it: they get a message of their own, and only about vehicles they can see.",
+          "webhookOnce": "Custom does not use each person's details: a single message is sent per notification, if any of the people chosen can see the vehicle."
+        },
+        "otherAddresses": "And also these addresses",
+        "addressesNote": "One per line. They receive everything the notification covers, whoever reads them.",
+        "addressHint": {
+          "email": "supervisor@company.com",
+          "sms": "+50499887766"
+        },
+        "noAddresses": "Addresses written by hand are only changed by whoever sees the whole account.",
+        "what": "About what",
+        "allEvents": "Every alert",
+        "someEvents": "Only these types",
+        "byRule": "Only what these alerts raise",
+        "where": "About which vehicles",
+        "allVehicles": "All",
+        "groups": "Groups",
+        "vehicles": "Vehicles",
+        "active": "Active",
+        "cancel": "Cancel",
+        "save": "Save",
+        "needName": "Give the notification a name.",
+        "needWho": "Choose whom to tell.",
+        "needEvents": "Choose at least one alert type.",
+        "needRules": "Choose at least one alert.",
+        "needGroups": "Choose at least one group.",
+        "needVehicles": "Choose at least one vehicle.",
+        "noApp": "no app"
+      }
+    },
+    "signIn": {
+      "configure": "Configure {{name}}",
+      "on": "On",
+      "off": "Off",
+      "note": "Each service turned on shows as a button on the sign-in page and on “Create your account”. Whoever has no account creates one by continuing with the service, accepting the terms shown next to the button; whoever already has an account signs in with the service if it confirms the email is theirs.",
+      "steps": "Where to get the details",
+      "back": "Return address: copy it into the service",
+      "enable": "On",
+      "enableNote": "Off, its button does not show and nobody signs in with it.",
+      "secretNote": "It is stored encrypted and never shown again. Leave it empty to keep the one already saved.",
+      "secretKept": "Saved · type to change it",
+      "secretEmpty": "Secret",
+      "save": "Save",
+      "saved": "Saved. It is in use now.",
+      "unsaved": "There are unsaved changes.",
+      "google": {
+        "lead": "Let people sign in and sign up with their Google account.",
+        "steps": "At console.cloud.google.com, under “APIs & Services”, set up the consent screen and, under “Credentials”, create an “OAuth client ID” of type “Web application”. Paste the return address into “Authorized redirect URIs”.",
+        "clientId": "Client ID",
+        "clientIdNote": "It ends in .apps.googleusercontent.com.",
+        "secret": "Client secret"
+      },
+      "github": {
+        "lead": "Let people sign in and sign up with their GitHub account.",
+        "steps": "At github.com/settings/developers create an “OAuth App”. Paste the return address into “Authorization callback URL” and, once saved, generate a client secret.",
+        "clientId": "Client ID",
+        "clientIdNote": "The one GitHub shows when the app is created.",
+        "secret": "Client secret"
+      },
+      "facebook": {
+        "lead": "Let people sign in and sign up with their Facebook account.",
+        "steps": "At developers.facebook.com create an app with “Facebook Login” and ask for the email permission. In its settings, paste the return address into “Valid OAuth Redirect URIs”. The details are under “App settings” → “Basic”.",
+        "clientId": "App ID",
+        "clientIdNote": "Meta's “App ID”.",
+        "secret": "App secret"
+      },
+      "apple": {
+        "lead": "Let people sign in and sign up with their Apple ID.",
+        "steps": "At developer.apple.com, under “Certificates, IDs & Profiles”, create a “Services ID” with “Sign in with Apple”, register your domain and paste the return address into “Return URLs”. Then create a “Key” with “Sign in with Apple” and download its .p8 file: it can only be downloaded once.",
+        "clientId": "Services ID",
+        "clientIdNote": "The identifier of the service, for example com.company.web.",
+        "teamId": "Team ID",
+        "teamIdNote": "The 10 characters of your team, top right on Apple's page.",
+        "keyId": "Key ID",
+        "keyIdNote": "The 10 characters of the key you created.",
+        "secret": "Private key (.p8)"
+      },
+      "custom": {
+        "title": "Other",
+        "lead": "Any other service that speaks OpenID Connect: Microsoft, Keycloak, Auth0, Okta or your company's.",
+        "steps": "In the service, register a web application with the return address. It will give you a client ID, a secret and the address of its issuer.",
+        "name": "Button name",
+        "nameNote": "How people see it: “Continue with…”.",
+        "namePlaceholder": "My company",
+        "issuer": "Issuer address",
+        "issuerNote": "The OpenID Connect “issuer”. The platform reads the rest from there.",
+        "clientId": "Client ID",
+        "clientIdNote": "The one the service gave you.",
+        "secret": "Client secret",
+        "scopes": "Scopes it asks for",
+        "scopesNote": "Separated by spaces. openid and email are needed."
+      }
+    },
+    "channels": {
+      "save": "Save",
+      "saved": "Saved. It is already in use.",
+      "unsaved": "There are unsaved changes.",
+      "key": {
+        "title": "Access key",
+        "note": "It is stored encrypted and is never shown again. Leave it empty to keep the one already there.",
+        "kept": "Key saved · type to change it",
+        "empty": "Key"
+      },
+      "cap": {
+        "title": "Monthly cap per account",
+        "note": "How many messages each account can send per month through this channel. Empty means no cap. What goes over the cap is not sent and stays in the account's log.",
+        "none": "No cap"
+      },
+      "test": {
+        "label": "Send a test message to",
+        "send": "Send test",
+        "saveFirst": "Save before testing",
+        "sent": "The test message went out to {{to}}.",
+        "failed": "It did not go out: {{reason}}",
+        "placeholder": {
+          "email": "you@email.com",
+          "sms": "+50499887766",
+          "webhook": "Email or phone (optional)"
+        }
+      },
+      "email": {
+        "lead": "Sent through the platform's mail server: account confirmations, invitations, alerts and reports."
+      },
+      "sms": {
+        "lead": "Text messages (SMS) through Twilio.",
+        "account": "Account",
+        "accountNote": "Twilio's “Account SID”.",
+        "from": "Sender",
+        "fromNote": "The Twilio number that sends, with its country code, or the identifier of a messaging service (it starts with MG)."
+      },
+      "webhook": {
+        "lead": "Calls another system, for example an SMS or WhatsApp gateway: you write the address, the headers and the body, with variables each notification fills.",
+        "address": "Address it sends to",
+        "method": "Method",
+        "addressNote": "Variables go in the path or the parameters, not in the server. Their values are written the way a web address needs them.",
+        "body": "Body",
+        "bodyNote": "Optional. If empty, every variable is sent as JSON. In JSON, each value comes ready to go between quotes; with a form Content-Type header, as in a web address.",
+        "variables": "Variables",
+        "variablesNote": "Tap one to put it where the cursor was, in the address or the body. They also work in the value of the headers.",
+        "insert": "Insert {{name}}",
+        "perPerson": "The green ones are about whoever receives the notification: if you use any, one message is sent per person of the notification; otherwise, a single one for everyone.",
+        "variable": {
+          "type": "What happened, as data: speeding, sos, backup_failed, test",
+          "event": "What happened, in words: Speeding",
+          "title": "The first line: Truck 1: speeding",
+          "body": "The details of the notification",
+          "message": "The title and the details in a single line, for an SMS or a chat",
+          "vehicle": "The name of the vehicle",
+          "time": "When it happened, in ISO 8601 format",
+          "latitude": "Latitude",
+          "longitude": "Longitude",
+          "speed": "Speed, in km/h",
+          "link": "The link to the platform",
+          "app": "The name of the platform",
+          "name": "The name of whoever receives the notification",
+          "email": "Their email",
+          "phone": "Their phone, with its country code: +50499887766",
+          "phone_digits": "Their phone, only the digits: 50499887766",
+          "language": "Their language: es or en"
+        }
+      },
+      "status": {
+        "on": "On",
+        "off": "Off",
+        "missing": "Not connected"
+      },
+      "configure": "Set up {{channel}}",
+      "close": "Close",
+      "enableRow": "Channel on",
+      "enableNote": "When it is off, accounts cannot use it.",
+      "push": {
+        "lead": "Notifications in the mobile app.",
+        "note": "They reach whoever has the platform's mobile app and is signed in on it. The app is not available yet: notifications through this channel are ready and will start arriving once each person installs it."
+      }
+    },
+    "system": {
+      "list": {
+        "title": "System notifications",
+        "note": "Each one is a destination and the things it wants to hear about. While there is none, problems reach the notifications email in the settings."
+      },
+      "empty": "There are no system notifications yet. Create one to hear about a backup that fails, a disk filling up or a channel that stops delivering.",
+      "things_one": "tells about {{count}} thing",
+      "things_other": "tells about {{count}} things",
+      "logLead": "The platform's latest messages: where each one went and how it ended.",
+      "event": {
+        "backup_ok": "A backup finished well",
+        "backup_failed": "A backup failed",
+        "restore_done": "A restore finished",
+        "disk_high": "The server's disk is filling up",
+        "ingest_stalled": "Positions from the GPS devices stopped arriving",
+        "channel_failing": "A notification channel is failing",
+        "account_created": "A new account was created"
+      },
+      "editor": {
+        "namePlaceholder": "On-call by email",
+        "target": "Where to",
+        "targetOptional": "For whom (optional)",
+        "targetNote": "An email or a phone: it fills the variables of whoever receives it in Custom.",
+        "events": "What it tells about",
+        "needEvents": "Choose at least one thing to tell about."
+      }
+    },
+    "settings": {
+      "saved": "Saved. It is already in use.",
+      "unsaved": "There are unsaved changes.",
+      "noLimit": "No limit",
+      "reset": {
+        "action": "Reset",
+        "title": "Reset to factory values"
+      },
+      "general": {
+        "signup": "Sign-up and new accounts",
+        "registrationOpen": "Open sign-up",
+        "registrationOpenNote": "Anyone can create an account. When it is off, only people who got an invitation by email can sign up.",
+        "quotas": "Quotas for new accounts",
+        "quotasNote": "How many vehicles and users each account created from now on can have. Empty means no limit. Existing accounts do not change.",
+        "quotaUsers": "Users",
+        "modules": "Modules for new accounts",
+        "modulesNote": "The optional modules each account starts with. Afterwards they are changed account by account.",
+        "map": "Map and addresses",
+        "mapStyle": "Map style",
+        "mapStyleNote": "Address of the map style the web and the apps use.",
+        "geocoder": "Address service",
+        "geocoderNote": "Turns coordinates into an approximate address. It starts with OpenStreetMap's free public service. Another service must be compatible with Nominatim and end in /reverse. Empty turns it off.",
+        "geocoderOff": "Off",
+        "geocoderAgent": "Identification to the service",
+        "geocoderAgentNote": "How the platform introduces itself when asking for addresses. OpenStreetMap's public service asks to say who it is and how to reach them. Empty goes back to the automatic one.",
+        "geocoderAgentAuto": "Automatic: the platform's name and address",
+        "geocoderInterval": "Wait between requests",
+        "geocoderIntervalNote": "Milliseconds between two requests to the service. OpenStreetMap's public one allows one per second: 1100.",
+        "routing": "Routing service",
+        "routingNote": "Traces the simulator's routes along streets. Out of the box it is OSRM's public service over OpenStreetMap data, free and with one query per second. Another service must speak OSRM's API. Empty turns it off.",
+        "routingOff": "Off",
+        "data": "Devices and data",
+        "claimWindow": "Time for the first report",
+        "claimWindowNote": "Minutes a newly added GPS device has to send its first report. If it does not arrive, the identifier is freed.",
+        "maxPending": "GPS waiting for their first report",
+        "maxPendingNote": "How many newly added GPS, still without their first report, an account can have at once.",
+        "history": "Position history",
+        "historyNote": "Days of trips that are kept. Empty means no limit; with a limit, at least {{min}} days. Whatever is older is deleted and cannot be recovered.",
+        "traccarRetention": "Device receiver memory",
+        "traccarRetentionNote": "Days the receiver keeps its own copies of positions already read. It does not affect the history.",
+        "maxUpload": "Maximum file size",
+        "maxUploadNote": "In MB, for what users upload, such as the evidence of an incident. Up to {{max}}.",
+        "operations": "Operations notifications",
+        "alertEmail": "Notifications email",
+        "alertEmailNote": "Receives the platform's problems while there is no notification in “System notifications”: a nearly full disk, a backup that fails. Once system notifications exist, they take over.",
+        "alertEmailNone": "No notifications email",
+        "disk": "Disk warning",
+        "diskNote": "Percentage of disk used from which a warning is sent.",
+        "alertEmailsPerHour": "Alert emails per hour",
+        "alertEmailsPerHourNote": "Maximum alert emails a single account can generate in an hour. It protects mailboxes from a badly tuned alert.",
+        "legal": "Legal details",
+        "legalNote": "Shown in the terms of use and the privacy policy.",
+        "legalContact": "Contact email",
+        "legalContactNote": "For privacy requests and complaints.",
+        "legalContactNone": "Not set",
+        "reset": "The settings above go back to what the server ships with: open sign-up, new accounts without quotas or modules, and the map, address service, time limits, notifications and legal details from its variables. Passwords do not change.",
+        "shortenTitle": "Shorten the history",
+        "shortenBody": "You are going to keep only {{days}} days of trips. Older positions of <strong>every account</strong> are deleted and cannot be recovered.",
+        "shortenConfirm": "Yes, shorten",
+        "language": "Language",
+        "defaultLanguage": "Default language",
+        "defaultLanguageNote": "For whoever has not chosen theirs yet, and for the emails and notifications that go to addresses written by hand and the platform's own."
+      },
+      "passwords": {
+        "title": "Passwords",
+        "note": "Applies to passwords created or changed from now on. Existing ones keep working.",
+        "minLength": "Minimum length",
+        "minLengthNote": "Between {{min}} and 64 characters.",
+        "rules": "What it must include",
+        "rulesNote": "This is how it is explained to whoever signs up: \"{{hint}}\"",
+        "number": "At least one number",
+        "symbol": "At least one symbol",
+        "lowercase": "At least one lowercase letter",
+        "uppercase": "At least one uppercase letter",
+        "reset": "The password policy goes back to a minimum of 8 characters, with no other requirements."
+      },
+      "mail": {
+        "title": "Mail server",
+        "note": "The platform's emails go out through here: account confirmation, password change, invitations, alerts and reports.",
+        "custom": "Use your own mail server",
+        "customOn": "The platform sends with the details below.",
+        "customOff": "When it is off, the server's own is used.",
+        "customOffHost": "When it is off, the server's own is used: {{host}}.",
+        "customOffNone": "When it is off, the server's own is used, and it has none configured.",
+        "server": "Server and port",
+        "serverNote": "Your email provider gives them. The usual choice is port 587 with STARTTLS.",
+        "hostPlaceholder": "smtp.example.com",
+        "port": "Port",
+        "security": "Encryption",
+        "credentials": "User and password",
+        "credentialsNote": "The password is stored encrypted and is never shown again. Leave it empty to keep the one already there.",
+        "user": "User",
+        "passwordKept": "Password saved · type to change it",
+        "password": "Password",
+        "from": "Sender",
+        "fromNote": "Who appears as the author of the emails. The domain must be authorized with your provider.",
+        "fromPlaceholder": "OpenGPS <alerts@example.com>",
+        "saveFirst": "Save before testing",
+        "test": "Send a test email",
+        "reset": "Your own mail server stops being used and its details and saved password are deleted. The server's own is used again.",
+        "testSent": "The mail server accepted the message to {{to}}. Check that mailbox.",
+        "testNote": "The test goes to your email, {{email}}, with what is saved."
+      },
+      "mailTemplates": {
+        "title": "Email templates",
+        "note": "The emails the platform writes. You can change their words in each language; what you leave untouched goes out as it comes.",
+        "custom": "Customized",
+        "edit": "Edit the {{name}} template",
+        "language": "Language",
+        "customLanguage": "{{language}}, customized",
+        "subject": "Subject",
+        "heading": "Heading",
+        "body": "Text",
+        "bodyNote": "Line breaks are kept in the email.",
+        "action": "Button text",
+        "actionNote": "The button leads to the right link. The platform adds the address.",
+        "variables": "Variables",
+        "variablesNote": "Click one to put it where the cursor is. The platform fills it in when it sends.",
+        "preview": "Preview",
+        "restore": "Back to the original",
+        "restoreNote": "Goes back to the text the platform comes with, in {{language}}. It applies when you save.",
+        "saved": "Saved. The next emails go out like this.",
+        "problemIn": "{{language}}: {{problem}}",
+        "items": {
+          "verifyEmail": {
+            "name": "Email confirmation",
+            "note": "Sent when an account is created, with the link to confirm the email."
+          },
+          "resetPassword": {
+            "name": "Password change",
+            "note": "Sent when someone asks for a new password, with the link to create it."
+          },
+          "existingAccount": {
+            "name": "Existing account",
+            "note": "Sent to whoever tries to sign up with an email that already has an account."
+          },
+          "invitation": {
+            "name": "Account invitation",
+            "note": "Sent to whoever is invited to see an account's vehicles."
+          },
+          "panic": {
+            "name": "Panic button",
+            "note": "Sent to the account's administrators when someone presses a vehicle's panic button."
+          },
+          "panicUnattended": {
+            "name": "Unattended panic button",
+            "note": "Sent again when nobody attends to the panic button in time."
+          },
+          "scheduledReport": {
+            "name": "Scheduled report",
+            "note": "Carries a scheduled report as an attachment, every day, week or month."
+          },
+          "mailTest": {
+            "name": "Test email",
+            "note": "Sent with the “Send a test email” button to check the mail server."
+          }
+        },
+        "variable": {
+          "app": "Platform name",
+          "inviter": "Who invites",
+          "account": "Account name",
+          "role": "Role they will have",
+          "days": "Days the invitation lasts",
+          "vehicle": "Vehicle name",
+          "minutes": "Minutes unattended",
+          "schedule": "Scheduled report name",
+          "headline": "First sentence of the summary",
+          "title": "Report type",
+          "summary": "Summary of the period",
+          "every": "How often it arrives",
+          "who": "Who scheduled it",
+          "host": "Mail server"
+        }
+      },
+      "storage": {
+        "missing": "Fill in the storage details first",
+        "fixFlags": "Fix the arguments first",
+        "unreadableSecret": "The saved secret key cannot be read on this server: it comes from another one, for example from a restored backup. Type it again and save.",
+        "title": "External storage",
+        "note": "A space outside the server, compatible with S3, where the platform keeps files. Backups use it today.",
+        "enabled": "Use external storage",
+        "enabledNote": "When it is off, everything stays only on the server.",
+        "provider": "Provider",
+        "providerNote": "Who provides the service. If yours is not on the list, leave “Any other S3-compatible service”.",
+        "accessKey": "Access key",
+        "accessKeyNote": "The key's identifier, “Access Key ID”.",
+        "secret": "Secret key",
+        "secretNote": "It is stored encrypted and is never shown again. Leave it empty to keep the one already there.",
+        "secretKept": "Saved · type to change it",
+        "bucket": "Bucket",
+        "bucketNote": "It must already exist. The key needs permission to read, write and delete in it.",
+        "bucketPlaceholder": "bucket-name",
+        "region": "Region",
+        "regionNote": "If your provider does not use regions, leave it empty: us-east-1 is used.",
+        "endpoint": "Service address",
+        "endpointNote": "The S3 service's address, with https; not its admin panel's. For example, https://s3.example.com.",
+        "endpointNoteAws": "With Amazon it can stay empty: it comes from the region.",
+        "prefix": "Folder",
+        "prefixNote": "Inside the bucket, where the platform keeps its things. Empty is the root.",
+        "flags": "Additional arguments",
+        "flagsNote": "Optional. Files are moved by rclone, and these are the arguments passed to it, one per line, as in other tools that use it. S3 ones, which start with <code>--s3-</code>, are accepted, plus some general ones, such as <code>--header</code> or <code>--no-check-certificate</code>.",
+        "flagsList": "See the list",
+        "flag": "Argument {{n}}",
+        "removeFlag": "Remove argument {{n}}",
+        "addFlag": "Add argument",
+        "test": "Test the connection",
+        "reset": "External storage is turned off and its details, arguments and saved key are deleted. What is already stored there is not touched.",
+        "testOk": "The connection works with what is written: a test file was written, read and deleted.",
+        "testOkUnsaved": "The connection works with what is written: a test file was written, read and deleted. It still needs saving."
+      }
+    },
+    "backups": {
+      "kind": {
+        "scheduled": "Scheduled",
+        "manual": "On demand",
+        "pre_restore": "Before restoring",
+        "imported": "Found in storage"
+      },
+      "signedOut": "The platform went back to how it was in the backup and your session is no longer valid. <login>Sign in again</login> to see how it ended.",
+      "unavailable": "This server has no access to the databases to make backups. Check its connection variables.",
+      "noDetail": "no detail",
+      "restore": "Restore",
+      "banner": {
+        "running": "Restoring",
+        "runningTo": "Restoring to the backup of {{date}}",
+        "down": "The platform is stopped while the server swaps the databases. This page catches up on its own in a few minutes.",
+        "steps": "First a backup of how everything is now is saved. Then, in less than a minute, the server stops the platform for a few minutes to swap the databases.",
+        "done": "Restore finished on {{at}}: the platform went back.",
+        "doneTo": "Restore finished on {{at}}: the platform went back to the backup of {{date}}.",
+        "failed": "The restore did not happen: {{reason}}. The platform keeps the data it had.",
+        "failedTo": "The restore to the backup of {{date}} did not happen: {{reason}}. The platform keeps the data it had."
+      },
+      "schedule": {
+        "title": "Scheduled backups",
+        "note": "Each backup includes the platform's database, the device receiver's database and the files users upload.",
+        "scheduled": "Make backups automatically",
+        "scheduledNote": "When it is off, there are backups only when someone asks for one here.",
+        "frequency": "Frequency",
+        "frequencyNote": "When scheduled backups run. Times are in UTC.",
+        "cron": "Schedule, as a cron expression",
+        "upcoming": "Next backups, in your time: {{times}}.",
+        "upcomingOff": "With backups turned on, they would run, in your time: {{times}}.",
+        "cronHelp": "Five fields: minute, hour, day of the month, month and day of the week (0 is Sunday). An asterisk means all, and <num>*/6</num> means every 6. For example, <num>30 3 * * 1</num> is every Monday at 03:30 UTC.",
+        "retention": "Retention",
+        "retentionNote": "How long scheduled backups are kept before being deleted. Manual backups are never deleted automatically.",
+        "days": "{{days}} days",
+        "upload": "Also send to external storage",
+        "uploadNote": "Besides staying on the server, each backup is uploaded to the bucket {{bucket}}. If the server is lost, the backup is still there.",
+        "uploadSetup": "To keep backups outside the server, first set up the <storage>external storage</storage>.",
+        "reset": "Backup scheduling goes back to the default: a daily backup at 00:00 UTC, kept for 7 days and not sent to external storage."
+      },
+      "where": {
+        "both": "Server and external storage",
+        "remote": "External storage",
+        "local": "Server",
+        "gone": "Its files are gone"
+      },
+      "list": {
+        "title": "Backups",
+        "noteRestore": "Each backup can be downloaded or restored: restoring takes the platform back to how it was at that moment.",
+        "noteDownload": "From here you can download their files. To restore one, the restore helper (the restorer service) has to be running on the server.",
+        "copying": "Backing up…",
+        "now": "Back up now",
+        "empty": "There are no backups in the list yet.",
+        "failed": "Failed: {{reason}}",
+        "remoteFailed": "Did not reach external storage: {{reason}}",
+        "delete": "Delete this backup",
+        "deleteShort": "Delete"
+      },
+      "discover": {
+        "prompt": "Are there backups in external storage that do not show here, such as another installation's? Look for them to be able to download or restore them.",
+        "setup": "To bring in backups from another installation, first set up the <storage>external storage</storage> and look for them here.",
+        "search": "Search storage",
+        "none": "There is no complete backup in the storage's “backups” folder.",
+        "known_one": "Storage has {{count}} backup, and it was already in the list.",
+        "known_other": "Storage has {{count}} backups, and they were already in the list.",
+        "added_one": "{{count}} backup was added to the list.",
+        "added_other": "{{count}} backups were added to the list.",
+        "addedSome_one": "{{count}} backup was added to the list; the others in storage were already there.",
+        "addedSome_other": "{{count}} backups were added to the list; the others in storage were already there."
+      },
+      "remove": {
+        "title": "Delete the backup",
+        "confirm": "Delete",
+        "body": "The backup of {{date}} is deleted. This cannot be undone.",
+        "bodyRemote": "The backup of {{date}} is deleted, from external storage too. This cannot be undone."
+      },
+      "restoreDialog": {
+        "title": "Restore this backup",
+        "lead": "The platform will go back to how it was on <strong>{{date}}</strong>.",
+        "lose": "Everything after that backup is lost, in <strong>every account</strong>: trips, vehicles, users, alerts and settings.",
+        "undo": "A backup of how everything is now is saved first. With it you can undo this restore.",
+        "stop": "The platform stops for a few minutes. GPS devices that report in the meantime lose that data, unless the device stores and resends it.",
+        "passwords": "Anyone who created or changed their password after that backup signs in with the old one, and you may have to sign in again.",
+        "type": "Type <word>{{word}}</word> to confirm"
+      }
+    },
+    "accounts": {
+      "failed": "We couldn't complete the action. Try again.",
+      "title": "Accounts",
+      "searchPlaceholder": "Search by account or owner's email",
+      "searchLabel": "Search accounts",
+      "empty": "No account matches the search.",
+      "columns": {
+        "account": "Account",
+        "users": "Users",
+        "vehicles": "Vehicles",
+        "lastSeen": "Last report",
+        "lastAccess": "Last access",
+        "created": "Created",
+        "status": "Status"
+      },
+      "stats": {
+        "label": "Platform overview",
+        "accounts": "Accounts",
+        "suspended_one": "{{count}} suspended",
+        "suspended_other": "{{count}} suspended",
+        "users": "Users",
+        "vehicles": "Vehicles",
+        "devices": "Active devices",
+        "pending": "{{n}} waiting for signal",
+        "reporting": "Reporting now",
+        "reportingNote": "last 10 min",
+        "positions": "Positions today",
+        "disk": "Disk used"
+      },
+      "status": {
+        "suspended": "Suspended",
+        "active": "Active"
+      },
+      "noOwner": "no owner",
+      "signIn": {
+        "email": "Signs in with email",
+        "google": "Signs in with Google",
+        "github": "Signs in with GitHub",
+        "facebook": "Signs in with Facebook",
+        "apple": "Signs in with Apple",
+        "other": "Signs in with another service"
+      },
+      "dialog": {
+        "title": "Account",
+        "users_one": "{{count}} user",
+        "users_other": "{{count}} users",
+        "vehicles_one": "{{count}} vehicle",
+        "vehicles_other": "{{count}} vehicles",
+        "devices_one": "{{count}} active device",
+        "devices_other": "{{count}} active devices",
+        "created": "Created on {{date}}",
+        "members": "Users",
+        "userSuspended": "Suspended",
+        "reactivateUser": "Reactivate",
+        "suspendUser": "Suspend user",
+        "suspendUserNote": "Suspending a user closes their sessions and keeps them out of every account until you reactivate them; their accounts stay as they are. Deleting them erases them for good, together with the accounts they own.",
+        "platformOwner": "Platform owner",
+        "lastAccess": "Last access: {{when}}",
+        "neverAccessed": "No access yet",
+        "deleteUser": "Delete {{name}}",
+        "deleteUserTitle": "Delete {{name}}",
+        "deleteUserBody": "The person {{email}} is erased for good and, with them, the accounts they own, with all their vehicles, devices, history and files. From other accounts they only leave. This cannot be undone."
+      },
+      "suspension": {
+        "suspended": "Account suspended",
+        "reason": "Reason: {{reason}} Its users cannot use it.",
+        "noReason": "No reason noted. Its users cannot use it.",
+        "reactivate": "Reactivate the account",
+        "title": "Suspend the account",
+        "note": "Nobody can use it while it is suspended: its users see it blocked and can switch to other accounts they have. The devices keep storing data, in case it is reactivated.",
+        "reasonPlaceholder": "Reason (kept in the log)",
+        "reasonLabel": "Reason for the suspension",
+        "submit": "Suspend"
+      },
+      "limits": {
+        "title": "Quotas",
+        "vehicles": "Vehicles, maximum",
+        "users": "Users, maximum",
+        "none": "No limit",
+        "save": "Save quotas",
+        "note": "Leave a field empty for no limit. A quota does not delete what the account already has."
+      },
+      "modules": {
+        "title": "Optional modules",
+        "note": "Which modules each account has is recorded; they are turned on as they are built."
+      },
+      "delete": {
+        "title": "Delete the account",
+        "note": "Its vehicles, GPS devices, history, files and activity log are erased for good. Its users are not deleted: they only leave it, and whoever has no other account gets an empty one when they sign in again. This cannot be undone.",
+        "ownerNote": "It is the account of the platform's owner: it cannot be deleted.",
+        "action": "Delete the account",
+        "confirmTitle": "Delete the account “{{name}}”",
+        "word": "Type {{word}} to confirm",
+        "confirm": "Delete for good"
+      }
+    },
+    "vehicleGroups": {
+      "name": "Group name",
+      "saveName": "Save name",
+      "vehicles_one": "{{count}} vehicle",
+      "vehicles_other": "{{count}} vehicles",
+      "rename": "Rename {{name}}",
+      "delete": "Delete {{name}}",
+      "new": "New group",
+      "placeholder": "North deliveries",
+      "note": "Deleting a group does not delete its vehicles: they are left without a group."
+    },
+    "modules": {
+      "loadGroupsFailed": "We couldn't load your groups. Check your connection and try again.",
+      "loadVehiclesFailed": "We couldn't load your vehicles. Check your connection and try again.",
+      "fleet": {
+        "tabs": {
+          "vehicles": "Vehicles",
+          "usage": "Usage",
+          "expenses": "Expenses",
+          "groups": "Groups"
+        }
+      },
+      "maintenance": {
+        "tabs": {
+          "pending": "Pending",
+          "orders": "Work orders",
+          "plans": "Plans",
+          "catalogs": "Catalogs"
+        }
+      },
+      "routes": {
+        "tabs": {
+          "dispatch": "Dispatch",
+          "routes": "Routes",
+          "places": "Places"
+        }
+      },
+      "reports": {
+        "tabs": {
+          "dashboard": "Dashboard",
+          "reports": "Reports",
+          "scheduled": "Scheduled"
+        }
+      },
+      "integrations": {
+        "tabs": {
+          "api": "API",
+          "webhooks": "Webhooks",
+          "webhooksShort": "Hooks",
+          "automations": "Automations",
+          "automationsShort": "Rules",
+          "sensors": "Sensors",
+          "data": "Data"
+        }
+      }
+    }
+  },
+  "gps": {
+    "find": {
+      "label": "Brand or model of your GPS",
+      "placeholder": "Type to search: FMC920, ST-901, GT06N…",
+      "hint": "{{models}} models in {{families}} families. If yours is not there, choose “another model” of its brand.",
+      "empty": "We did not find that model. Type the brand and choose “another model” of it.",
+      "other": "Another model by {{family}}",
+      "needed": "Choose the brand or the model of your GPS.",
+      "chosen": "{{family}} · port {{port}}"
+    }
+  },
+  "common": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "close": "Close",
+    "delete": "Delete",
+    "remove": "Remove",
+    "edit": "Edit",
+    "add": "Add",
+    "create": "Create",
+    "back": "Back",
+    "continue": "Continue",
+    "done": "Done",
+    "ok": "Got it",
+    "yes": "Yes",
+    "no": "No",
+    "search": "Search",
+    "all": "All",
+    "none": "None",
+    "optional": "optional",
+    "loading": "Loading…",
+    "version": "Version {{version}}",
+    "retry": "Retry",
+    "download": "Download",
+    "copy": "Copy",
+    "copied": "Copied",
+    "name": "Name",
+    "notes": "Notes",
+    "date": "Date",
+    "from": "From",
+    "to": "To",
+    "today": "Today",
+    "yesterday": "Yesterday",
+    "vehicle": "Vehicle",
+    "vehicles": "Vehicles",
+    "group": "Group",
+    "groups": "Groups",
+    "myVehicles": "My vehicles",
+    "error": "Something went wrong. Try again."
+  }
+}

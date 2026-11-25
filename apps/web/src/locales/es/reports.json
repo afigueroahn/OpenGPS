@@ -1,0 +1,154 @@
+{
+  "noData": "Sin datos en este periodo.",
+  "report": "Reporte",
+  "period": {
+    "label": "Periodo",
+    "days7": "7 días",
+    "days30": "30 días",
+    "month": "Este mes",
+    "lastMonth": "Mes pasado",
+    "custom": "Otro"
+  },
+  "custom": {
+    "bothDates": "Escribe las dos fechas.",
+    "endBeforeStart": "La fecha final no puede ser anterior a la inicial.",
+    "tooLong": "El periodo no puede pasar de {{days}} días.",
+    "notStarted": "Ese periodo aún no empieza."
+  },
+  "scope": {
+    "all": "Todos los vehículos",
+    "group": "Un grupo",
+    "picked_one": "{{count}} vehículo",
+    "picked_other": "{{count}} vehículos elegidos",
+    "change": "Cambiar los vehículos…",
+    "pick": "Elegir vehículos…"
+  },
+  "picker": {
+    "title": "Elegir vehículos",
+    "search": "Buscar por nombre o placa",
+    "searchLabel": "Buscar vehículo",
+    "noMatch": "Ningún vehículo coincide.",
+    "none": "Ninguno elegido",
+    "chosen_one": "{{count}} elegido",
+    "chosen_other": "{{count}} elegidos"
+  },
+  "dashboard": {
+    "defaultName": "General",
+    "boards": "Tablero",
+    "new": "Nuevo tablero",
+    "customize": "Personalizar",
+    "vehicles_one": "{{count}} vehículo",
+    "vehicles_other": "{{count}} vehículos",
+    "seeReport": "Ver reporte",
+    "change": {
+      "nothingBefore": "Antes, nada",
+      "same": "Igual que antes",
+      "more": "{{percent}} % más que antes",
+      "less": "{{percent}} % menos que antes"
+    },
+    "tile": {
+      "distance": "Distancia",
+      "trips": "Viajes",
+      "drivingTime": "Tiempo en viaje",
+      "idle": "Ralentí",
+      "alerts": "Alertas",
+      "vehiclesUsed": "Vehículos usados",
+      "usedOf": "{{used}} de {{total}}",
+      "before": "{{n}} antes"
+    },
+    "series": {
+      "distance": "Distancia",
+      "moving": "En movimiento",
+      "idle": "Ralentí",
+      "alerts": "Alertas"
+    },
+    "empty": {
+      "topDistance": "Ningún vehículo hizo viajes en este periodo.",
+      "leastUsed": "No hay vehículos en este tablero.",
+      "alerts": "Sin alertas en este periodo.",
+      "drivers": "Ningún conductor condujo en este periodo."
+    },
+    "dialog": {
+      "newTitle": "Nuevo tablero",
+      "editTitle": "Personalizar el tablero",
+      "widgets": "Indicadores, en el orden en que se ven",
+      "moveUp": "Subir {{name}}",
+      "moveDown": "Bajar {{name}}",
+      "delete": "Eliminar tablero"
+    }
+  },
+  "view": {
+    "nav": "Reportes",
+    "schedule": "Programar",
+    "speedLimit": "Límite (km/h)",
+    "minStop": "Mínimo (min)"
+  },
+  "table": {
+    "rows_one": "{{n}} fila",
+    "rows_other": "{{n}} filas",
+    "shown": "se muestran {{n}}",
+    "sort": "Ordenar",
+    "more": "Mostrar más filas ({{n}} sin mostrar)"
+  },
+  "schedules": {
+    "title": "Informes programados",
+    "lead": "Un reporte que se genera solo y llega por correo, como archivo, a las personas de tu cuenta que elijas.",
+    "full": "Una cuenta puede tener hasta {{max}} informes programados",
+    "new": "Programar un informe",
+    "empty": {
+      "title": "Aún no hay informes programados",
+      "lead": "Por ejemplo, el kilometraje de ayer cada mañana, o las alarmas de la semana cada lunes."
+    },
+    "sent_one": "Listo: \"{{name}}\" salió por correo a {{count}} persona.",
+    "sent_other": "Listo: \"{{name}}\" salió por correo a {{count}} personas.",
+    "summary": "{{report}} en {{format}}",
+    "zone": "(hora de {{zone}})",
+    "sendNow": "Enviar ahora",
+    "pause": "Pausar",
+    "resume": "Reanudar",
+    "delete": "Eliminar",
+    "recipients": "Lo reciben",
+    "noRecipients": "Nadie: ya no están en la cuenta",
+    "next": "Próximo envío",
+    "paused": "En pausa",
+    "last": "Último envío",
+    "lastFailed": "Falló el {{when}}: {{error}}",
+    "noDetail": "sin detalle",
+    "never": "Todavía ninguno",
+    "remove": {
+      "title": "Eliminar el informe programado",
+      "confirm": "Eliminar",
+      "body": "\"{{name}}\" dejará de enviarse. Los correos que ya salieron no cambian."
+    },
+    "when": {
+      "daily": "Cada día a las {{hour}}",
+      "weekly": "Cada {{day}} a las {{hour}}",
+      "monthly": "El día {{day}} de cada mes a las {{hour}}"
+    },
+    "weekdayInSentence": {
+      "sunday": "domingo",
+      "monday": "lunes",
+      "tuesday": "martes",
+      "wednesday": "miércoles",
+      "thursday": "jueves",
+      "friday": "viernes",
+      "saturday": "sábado"
+    },
+    "dialog": {
+      "editTitle": "Editar el informe",
+      "newTitle": "Programar un informe",
+      "nameHint": "Así llega en el asunto del correo.",
+      "speedLimit": "Límite de velocidad (km/h)",
+      "minStop": "Paradas de al menos (minutos)",
+      "frequency": "Cada cuánto",
+      "covers": "Cada envío cubre {{period}}, completo.",
+      "weekday": "Día",
+      "monthDay": "Día del mes",
+      "time": "Hora",
+      "file": "Archivo",
+      "zone": "Hora de {{zone}}.",
+      "recipients": "Quién lo recibe",
+      "recipientsNote": "Solo personas de tu cuenta, hasta {{max}}. Para enviarlo a alguien más, invítalo antes como usuario."
+    }
+  }
+}

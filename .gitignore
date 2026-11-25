@@ -1,13 +1,40 @@
-# Secretos y configuración local. `.env.example` sí se versiona.
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Build output
+dist/
+build/
+*.tsbuildinfo
+
+# Environment and secrets
 .env
 .env.*
 !.env.example
+!.env.*.example
 
-# Sistema operativo
+# Expo / React Native
+.expo/
+apps/mobile/ios/
+apps/mobile/android/
+
+# OS and editors
 .DS_Store
 Thumbs.db
-
-# Editores
 *.swp
 *~
+*.log
 .idea/
+.vscode/*
+!.vscode/extensions.json
+
+# Local data
+*.pmtiles
+coverage/
+
+# Local settings of the development tools
+.mcp.json
+.claude/
+
+# Variables of a Docker Compose installation, with its secrets.
+deploy/docker-compose/.env

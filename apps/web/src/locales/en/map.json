@@ -1,0 +1,240 @@
+{
+  "errors": {
+    "network": "Couldn't complete the action. Check your connection and try again.",
+    "action": "Couldn't complete the action. Try again.",
+    "server": "Couldn't reach the server. Check your internet connection.",
+    "evidenceFile": "Only photos (JPG, PNG, WebP) and PDF documents up to 8 MB are accepted.",
+    "documentFile": "Only photos (JPG, PNG, WebP) and PDF documents are accepted.",
+    "imageNetwork": "Couldn't send the image. Check your connection and try again.",
+    "imageSave": "Couldn't save the image."
+  },
+  "files": {
+    "trip": "trip.{{format}}",
+    "report": "report.{{format}}"
+  },
+  "auth": {
+    "wrongCredentials": "The email or password is incorrect.",
+    "emailNotVerified": "You haven't confirmed your email yet. We just sent you the link again.",
+    "invalidEmail": "Enter a valid email.",
+    "passwordTooShort": "The password must be at least 8 characters long.",
+    "passwordTooLong": "The password is too long.",
+    "emailTaken": "There's already an account with that email. Sign in.",
+    "legalNotAccepted": "To create your account you need to accept the terms of use and the privacy policy.",
+    "wrongPassword": "The password is incorrect.",
+    "invalidLink": "This link is no longer valid. Request a new one.",
+    "banned": "This account is suspended. Write to us if you think it's a mistake.",
+    "tooManyAttempts": "Too many attempts. Wait a moment and try again.",
+    "sessionOld": "For your safety, sign in again and do it right away."
+  },
+  "ui": {
+    "loading": "Loading"
+  },
+  "shell": {
+    "events": "Events",
+    "eventsUnseen_one": "Events: {{count}} new alert",
+    "eventsUnseen_other": "Events: {{count}} new alerts",
+    "mapLabel": "Vehicle map"
+  },
+  "tools": {
+    "geofences": "Geofences",
+    "alerts": "Alerts",
+    "incidents": "Incidents",
+    "drivers": "Drivers",
+    "fleet": "Fleet",
+    "maintenance": "Maintenance",
+    "routes": "Routes",
+    "reports": "Reports",
+    "integrations": "Integrations",
+    "groups": "Groups"
+  },
+  "live": {
+    "online": "Live",
+    "offline": "Reconnecting",
+    "onlineNote": "Receiving live positions",
+    "offlineNote": "No connection to the server; retrying"
+  },
+  "account": {
+    "menu": "Your account",
+    "account": "Account",
+    "switchTo": "Switch to {{name}}",
+    "signOut": "Sign out"
+  },
+  "suspended": {
+    "title": "This account is suspended",
+    "body": "The account <b>{{name}}</b> can't be used for now. If you think this is a mistake, write to us and we'll look into it.",
+    "goTo": "Go to {{name}}",
+    "admin": "Manage the platform"
+  },
+  "vehicle": {
+    "plateOptional": "Plate (optional)",
+    "noGroup": "No group"
+  },
+  "list": {
+    "addGps": "Add GPS",
+    "filtered": "{{shown}} of {{total}}",
+    "count_one": "{{count}} vehicle",
+    "count_other": "{{count}} vehicles",
+    "moving": "{{n}} moving",
+    "sections": "Sections",
+    "toolPending": "{{label}}: {{n}} unattended",
+    "searchPlaceholder": "Search by name or plate",
+    "searchLabel": "Search vehicle",
+    "groupFilter": "Filter by group",
+    "allGroups": "All groups",
+    "statusFilter": "Filter by status",
+    "status": {
+      "moving": "Moving",
+      "idle": "Idling",
+      "stopped": "Stopped",
+      "offline": "Offline",
+      "pending": "Waiting for signal",
+      "no_device": "No GPS"
+    },
+    "failed": "Couldn't load your vehicles. Retrying…",
+    "noMatch": "No vehicle matches the filter.",
+    "clearFilters": "Clear filters",
+    "nothing": {
+      "title": "No vehicles for you yet",
+      "body": "When the account has vehicles within your scope, they'll show up here and on the map."
+    },
+    "empty": {
+      "title": "Add your first GPS",
+      "body": "You need the device, a SIM with data and two minutes. We'll tell you what to set up and you'll see it appear on the map.",
+      "add": "Add my GPS"
+    }
+  },
+  "detail": {
+    "edit": "Edit vehicle",
+    "noDevice": {
+      "title": "No GPS connected",
+      "connect": "Connect a GPS",
+      "body": "This vehicle has no device. Connect one to see it on the map."
+    },
+    "pending": {
+      "title": "Waiting for the first signal",
+      "instructions": "See instructions",
+      "body": "Set up the device so it reports to the platform.",
+      "bodyMinutes": "Set up the device so it reports to the platform. {{n}} min left."
+    },
+    "lastReport": "Last report",
+    "course": "Heading",
+    "engine": "Engine",
+    "engineOn": "On",
+    "engineOff": "Off",
+    "engineEstimated": "estimated from voltage",
+    "fixTaken": "Position taken",
+    "noFix": "no position",
+    "vehicleBattery": "Vehicle battery",
+    "deviceBattery": "Device battery",
+    "satellites": "GPS satellites",
+    "cellSignal": "Cell signal",
+    "signalBars": "Signal: {{bars}} of 4",
+    "coordinates": "Coordinates",
+    "history": "View trip history",
+    "share": "Share location",
+    "device": "GPS device",
+    "removeDevice": "Remove GPS",
+    "delete": "Delete vehicle",
+    "unplug": {
+      "title": "Remove the GPS",
+      "confirm": "Remove GPS",
+      "body": "The device <b>{{id}}</b> will stop reporting to your account and this vehicle's trip history will be deleted. You can connect another GPS later."
+    },
+    "remove": {
+      "title": "Delete the vehicle",
+      "confirm": "Delete",
+      "body": "<b>{{name}}</b>, its GPS and all its trip history will be deleted. This can't be undone."
+    },
+    "parked": {
+      "title": "Parked mode",
+      "on": "Turned on {{since}}. Alerts you if it moves from here.",
+      "off": "Alerts you if the vehicle moves from where it is."
+    },
+    "near": "Near"
+  },
+  "share": {
+    "title": "Share location",
+    "intro": "Create a link so someone without an account can see where <b>{{name}}</b> is. It stops working when it expires, or when you revoke it.",
+    "created": "Link created. Copy it now: for security it won't be shown again.",
+    "link": "Link",
+    "shareTitle": "Location of {{name}}",
+    "send": "Send",
+    "another": "Create another",
+    "warning": "Anyone with this link will see the live location. Send it only to whoever should see it.",
+    "duration": "Available for",
+    "hours_one": "{{count}} hour",
+    "hours_other": "{{count}} hours",
+    "days_one": "{{count}} day",
+    "days_other": "{{count}} days",
+    "note": "Who it's for (optional)",
+    "noteHint": "Only you see this, to recognize the link later.",
+    "create": "Create link",
+    "alive": "Links still working",
+    "none": "None. No one outside can see this vehicle.",
+    "noNote": "No note",
+    "revoke": "Revoke",
+    "expiresOn": "Expires {{date}}",
+    "expiresIn": "Expires in {{duration}}",
+    "notOpened": "not opened",
+    "opened_one": "opened {{count}} time",
+    "opened_other": "opened {{count}} times"
+  },
+  "privacy": {
+    "consent": {
+      "title": "Terms and privacy",
+      "body": "To keep using the platform we need you to accept the <terms>terms of use</terms> and the <privacy>privacy policy</privacy>. They explain what can be done with the service and how we handle your data.",
+      "failed": "Couldn't save your answer. Try again.",
+      "decline": "Not now, sign out",
+      "accept": "I accept"
+    },
+    "delete": {
+      "title": "Delete my account",
+      "intro": "Your user <b>{{email}}</b> will be deleted and, with it, the accounts you own:",
+      "vehicles": "Their vehicles, GPS devices and all trip history.",
+      "people": "Their groups, invited users and activity log.",
+      "final": "The devices will stop reporting to the platform. This can't be undone.",
+      "password": "Your password, to confirm",
+      "typeWord": "Type {{word}} to confirm",
+      "noPassword": "You sign in with another service and have no password. If your session is not recent, sign in again and delete it right away.",
+      "confirm": "Delete permanently"
+    }
+  },
+  "wizard": {
+    "addFailed": "Couldn't add the GPS. Try again.",
+    "needName": "Give it a name to recognize it on the map.",
+    "badId": "Type the {{idLabel}} exactly as it appears on the device: letters and numbers only, no spaces.",
+    "title": {
+      "connected": "GPS connected",
+      "setup": "Set up your GPS",
+      "connect": "Connect a GPS",
+      "add": "Add my GPS"
+    },
+    "name": "Vehicle name",
+    "namePlaceholder": "White van",
+    "deviceId": "Device {{idLabel}}",
+    "deviceIdGeneric": "Device identifier",
+    "imeiHint": "15 digits. It's on the device label or its box.",
+    "idHint": "It's on the device label. Usually 10 to 12 digits long.",
+    "submit": "Add GPS",
+    "reporting": "{{name}} is reporting",
+    "firstSignal": "We received its first signal. From now on you'll see it move on the map.",
+    "showOnMap": "View on the map",
+    "expired": "Time ran out without a signal from this GPS, so it was released. Check the setup and add it again.",
+    "server": "Server",
+    "port": "Port",
+    "commandsNote": "These are the usual {{brand}} commands. If your model uses others, look in its manual for how to change the server and port.",
+    "later": "I'll set it up later",
+    "steps": {
+      "vehicle": "Your vehicle",
+      "device": "Your GPS",
+      "setup": "Connection"
+    },
+    "waiting": {
+      "title": "Waiting for the first signal…",
+      "resumed": "We're still watching.",
+      "registered": "Your GPS is registered.",
+      "updates": "This window updates on its own when it reports.",
+      "updatesMinutes": "This window updates on its own when it reports; you have {{n}} min to connect it."
+    }
+  }
+}

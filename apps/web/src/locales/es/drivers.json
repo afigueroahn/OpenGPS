@@ -1,0 +1,86 @@
+{
+  "title": "Conductores",
+  "new": "Nuevo",
+  "allGroups": "Todos los grupos",
+  "events_one": "{{count}} evento",
+  "events_other": "{{count}} eventos",
+  "scoreTitle": "Puntaje de 0 a 100",
+  "noScoreTitle": "Menos de {{km}} km: sin puntaje",
+  "tabs": {
+    "ranking": "Clasificación",
+    "profiles": "Fichas"
+  },
+  "ranking": {
+    "emptyNoDrivers": "Da de alta a tus conductores y asígnales su vehículo. Aquí verás quién conduce mejor.",
+    "empty": "Nadie condujo en este periodo ({{period}}).",
+    "note": "Puntaje de 0 a 100: empieza en 100 y baja con cada evento por cada 100 km recorridos. Toca un conductor para ver su detalle."
+  },
+  "list": {
+    "empty": "No hay conductores. Crea la ficha de cada uno y asígnale su vehículo desde el detalle del vehículo.",
+    "hasKey": "Tiene llave de identificación",
+    "inactive": "Dado de baja",
+    "drives": "Conduce {{vehicle}}",
+    "noVehicle": "Sin vehículo asignado"
+  },
+  "report": {
+    "noScore": "sin puntaje: menos de {{km}} km",
+    "outOf": "de 100",
+    "distance": "Distancia",
+    "driving": "Al volante",
+    "longest": "Tramo más largo sin descanso",
+    "max": "máximo {{duration}}",
+    "daysOver": "Jornadas sobre el máximo",
+    "maxPerDay": "máximo {{duration}} por jornada",
+    "deductions": "Lo que le resta puntos",
+    "penalty": "−{{points}} pts",
+    "days": "Jornadas",
+    "noDays": "No condujo en este periodo.",
+    "stretch": "seguido {{duration}}",
+    "rests_one": "{{count}} descanso",
+    "rests_other": "{{count}} descansos",
+    "events": "Eventos"
+  },
+  "dialog": {
+    "keyProblem": "Solo números y letras de la A a la F, sin espacios",
+    "editTitle": "Editar conductor",
+    "newTitle": "Nuevo conductor",
+    "deleteBody": "Se borrará la ficha de <b>{{name}}</b>. Lo que condujo seguirá en los reportes, pero como conducido sin conductor asignado. Si solo dejó de trabajar aquí, es mejor darlo de baja.",
+    "deleteConfirm": "Borrar la ficha",
+    "license": "Licencia (opcional)",
+    "phone": "Teléfono (opcional)",
+    "key": "Llave de identificación (opcional)",
+    "keyHint": "El código de su llave o tarjeta. Si el equipo GPS tiene lector, al usarla queda como conductor de ese vehículo.",
+    "notes": "Notas (opcional)",
+    "inactive": "Dado de baja: ya no se le asignan vehículos",
+    "delete": "Borrar ficha"
+  },
+  "settings": {
+    "title": "Cómo se mide la conducción",
+    "speedLimit": "Velocidad máxima",
+    "speedingSeconds": "Cuenta como exceso si dura",
+    "speedingHint": "Con 0, cuenta en cuanto pasa el límite.",
+    "maxContinuous": "Conducción seguida, como mucho",
+    "minRest": "Una pausa cuenta como descanso desde",
+    "maxDaily": "Conducción por jornada, como mucho",
+    "unit": {
+      "kmh": "km/h",
+      "seconds": "segundos",
+      "minutes": "minutos"
+    },
+    "range": "{{label}}: entre {{min}} y {{max}} {{unit}}.",
+    "asHours": "Son {{duration}}.",
+    "scoreLead": "Cada conductor empieza en 100 y pierde puntos por cada 100 km recorridos: {{events}}. Con menos de {{km}} km no hay puntaje. Una jornada termina con un descanso de {{hours}} horas o más."
+  },
+  "card": {
+    "none": "Sin conductor asignado",
+    "since": "Conduce desde {{when}}.",
+    "sinceKey": "Conduce desde {{when}} · se identificó con su llave.",
+    "noneNote": "Lo que recorra no contará para ningún conductor.",
+    "select": "Conductor del vehículo",
+    "noDriver": "Sin conductor",
+    "noDrivers": "Da de alta a tus conductores en Conductores para poder asignarlos.",
+    "unknownKey": "Llave sin registrar",
+    "unknownKeyBody": "El equipo leyó la llave <id>{{key}}</id> {{when}}, y no es de ningún conductor.",
+    "register": "Dar de alta al conductor de esta llave"
+  }
+}

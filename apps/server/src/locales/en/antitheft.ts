@@ -1,0 +1,63 @@
+// Texts of the backend in English: antitheft.
+import type { SameShape } from "@opengps/shared";
+import type es from "../es/antitheft";
+
+const en: SameShape<typeof es> = {
+  errors: {
+    fileType: "Only photos (JPG, PNG, WebP) and PDF documents are accepted",
+    incidentNotFound: "That incident does not exist",
+    incidentClosed: "That incident is already closed",
+    fileTooBig: "The file is larger than {{mb}} MB",
+    tooManyFiles: "An incident accepts up to {{max}} files",
+    fileNotFound: "That file does not exist",
+    fileGone: "That file is no longer available",
+    noGps: "This vehicle has no GPS device reporting",
+    lockUnsupported: "This vehicle's GPS device does not support remote locking",
+    confirmExpired: "The confirmation expired. Start again.",
+    nothingWaiting: "No command is waiting: the last one was already sent",
+    recoveryAlreadyOn: "Recovery mode is already on",
+    recoveryAlreadyOff: "Recovery mode is already off",
+  },
+  mail: {
+    openPlatform: "Open the platform",
+    vehicle: "vehicle",
+    sosSubject: "Panic button: {{vehicle}}",
+    sosBody: "Someone pressed the panic button of this vehicle. Open the platform to see where it is and attend to the incident.",
+    unattendedSubject: "UNATTENDED · Panic button: {{vehicle}}",
+    unattendedBody: "The panic button of this vehicle has gone {{minutes}} minutes without anyone attending to it. Open the platform now.",
+  },
+  entry: {
+    attending: "Started attending to the incident",
+    closed: "Closed the incident: {{resolution}}",
+    closedWithNote: "Closed the incident: {{resolution}}. {{note}}",
+    attached: "Attached {{name}}",
+    escalated: "Still unattended after {{minutes}} minutes: the account's administrators were notified again",
+    lockRequested: "Requested to lock the engine",
+    unlockRequested: "Requested to unlock the engine",
+    sendFailed: "The command could not be sent to the device",
+    lockSent: "The command to lock the engine was sent to the device",
+    unlockSent: "The command to unlock the engine was sent to the device",
+    lockConfirmed: "The device confirmed that the engine is locked",
+    unlockConfirmed: "The device confirmed that the engine is unlocked",
+    commandExpired: "The command expired without being sent",
+    recoveryStarted: "Recovery mode was turned on",
+    recoveryOnFaster: "Recovery mode on: link for the authorities valid for {{hours}} hours, reporting every {{seconds}} seconds",
+    recoveryOnNotSent: "Recovery mode on: link for the authorities valid for {{hours}} hours; the device did not receive the order to report more often",
+    recoveryOnFixedRate: "Recovery mode on: link for the authorities valid for {{hours}} hours; this device cannot change its reporting rate remotely",
+    recoveryOff: "Recovery mode off: the link for the authorities stopped working",
+  },
+  command: {
+    waitingFix: "Waiting for the device to report its position",
+    waitingSlower: "Waiting for it to slow down below {{kmh}} km/h",
+    waitingRecentFix: "Waiting for a recent position from the device",
+    replaced: "Replaced by another command",
+    cancelled: "Cancelled before being sent",
+    retrying: "{{error}}; retrying",
+    noFeedback: "This device does not report whether it applied the command",
+    noSafeMoment: "The safe moment to send it never came",
+    unconfirmed: "The device did not confirm the command",
+  },
+  evidence: { unnamed: "file" },
+  recovery: { shareNote: "Recovery" },
+};
+export default en;

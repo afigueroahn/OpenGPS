@@ -1,0 +1,118 @@
+{
+  "title": "History",
+  "compare": "Compare",
+  "start": "Start",
+  "end": "End",
+  "noData": {
+    "title": "No movement in this period",
+    "lead": "The device sent no positions on these dates. Try another period."
+  },
+  "tabs": {
+    "label": "History detail",
+    "trips": "Trips",
+    "stops": "Stops",
+    "positions": "Positions"
+  },
+  "presets": {
+    "today": "Today",
+    "yesterday": "Yesterday",
+    "7d": "7 days",
+    "30d": "30 days",
+    "custom": "Other"
+  },
+  "range": {
+    "apply": "Show this period",
+    "previous": "Previous period",
+    "next": "Next period",
+    "label": "Period",
+    "needDates": "Enter both dates.",
+    "endBeforeStart": "The end date must be after the start date.",
+    "tooLong": "The period can't be longer than {{days}} days."
+  },
+  "summary": {
+    "tripAt": "Trip at {{time}}",
+    "wholePeriod": "Show the whole period",
+    "duration": "Duration",
+    "idle": "Idling",
+    "maxSpeed": "Top speed",
+    "avgSpeed": "Average speed",
+    "moving": "Moving",
+    "stopped": "Stopped",
+    "engineOn": "Engine on"
+  },
+  "trips": {
+    "empty": "No trips in this period. The vehicle didn't move.",
+    "max": "max {{speed}} km/h",
+    "idle": "idling {{time}}"
+  },
+  "stops": {
+    "empty": "No stops longer than three minutes in this period.",
+    "engineOn": "engine on {{time}}"
+  },
+  "positions": {
+    "time": "Time",
+    "engine": "Engine",
+    "on": "On",
+    "off": "Off",
+    "partial": "Showing {{shown}} of {{total}} positions: repeated ones at each stop are summarized. The exported file has them all."
+  },
+  "export": {
+    "button": "Export",
+    "trip": "Export this trip",
+    "period": "Export the period",
+    "note": {
+      "xlsx": "Totals, trips, stops and positions",
+      "pdf": "Report with the route, trips and stops",
+      "csv": "All positions",
+      "gpx": "For navigation devices and other GPS apps",
+      "kml": "For Google Earth"
+    }
+  },
+  "comparison": {
+    "title": "Compare with",
+    "previous": "Previous period",
+    "weekBefore": "A week earlier",
+    "samePeriod": "Same period",
+    "custom": "Other",
+    "otherName": "Compared",
+    "vehicle": "Vehicle to compare with",
+    "thisVehicle": "{{name}} (this vehicle)",
+    "period": "Period to compare with",
+    "difference": "Difference",
+    "equal": "same",
+    "noPositions": "The trip you're comparing with has no positions in that period.",
+    "rows": {
+      "distance": "Distance",
+      "moving": "Moving",
+      "idle": "Idling",
+      "stopped": "Stopped",
+      "maxSpeed": "Top speed",
+      "avgSpeed": "Avg. speed",
+      "trips": "Trips",
+      "stops": "Stops"
+    }
+  },
+  "verdict": {
+    "same": "Both trips follow the same road",
+    "shared": "They share {{percent}}% of the road",
+    "noneApart": "Neither goes anywhere the other doesn't.",
+    "otherLeaves_one": "The compared trip leaves the main one in one stretch, up to {{far}} away.",
+    "otherLeaves_other": "The compared trip leaves the main one in {{count}} stretches, up to {{far}} away.",
+    "mainLeaves_one": "The main trip covers one stretch the compared one doesn't, up to {{far}} away.",
+    "mainLeaves_other": "The main trip covers {{count}} stretches the compared one doesn't, up to {{far}} away.",
+    "highlighted": "Those stretches are highlighted on the map."
+  },
+  "player": {
+    "pause": "Pause",
+    "play": "Play the trip",
+    "engineOn": "Engine on",
+    "engineOff": "Engine off",
+    "rate": "Playback speed",
+    "moment": "Point in the trip",
+    "momentValue": "{{time}}, {{speed}} kilometers per hour",
+    "chart": "Speed along the trip",
+    "inStop": "at a stop",
+    "legend": "Speed in km/h · max <b>{{max}}</b> · average <b>{{avg}}</b>",
+    "stops": "Stops"
+  }
+}

@@ -1,0 +1,240 @@
+{
+  "period": "Period",
+  "giveName": "Give it a name.",
+  "secret": {
+    "copied": "Copied",
+    "note": "Copy it now and keep it somewhere safe: it won't be shown again. If you lose it, create another one."
+  },
+  "eventPicker": {
+    "label": "Events",
+    "alert": "alert"
+  },
+  "api": {
+    "endpoint": {
+      "vehicles": "Vehicles, with their last position, odometer and engine hours",
+      "positions": "Positions over a period",
+      "trips": "Trips over a period",
+      "events": "Events and alerts; with “after” you get only the new ones",
+      "geofences": "Geofences and groups",
+      "modules": "Data from the modules the account has",
+      "dispatch": "Create a dispatch (key that can write)",
+      "fill": "Log a fill-up (key that can write)"
+    },
+    "keys": {
+      "title": "API keys",
+      "note": "Each system that queries your account gets its own: that way you can remove one without touching the others",
+      "new": "New key",
+      "fresh": "Key “{{name}}”",
+      "empty": "No keys yet. Create one so your accounting system, your CRM or a tool like n8n or Make can query your vehicles.",
+      "readWrite": "reads and writes",
+      "readOnly": "read only",
+      "usedAt": "used {{when}}",
+      "unused": "not used yet",
+      "remove": "Remove key {{name}}"
+    },
+    "usage": {
+      "title": "How to use it",
+      "note": "Each key allows {{n}} requests per minute",
+      "lead": "Each request carries the key in a header. For example, to get the vehicles with their position:",
+      "openapi": "Full description, in OpenAPI format",
+      "openapiNote": "Postman, n8n, Make and code generators read that file and build the requests on their own."
+    },
+    "remove": {
+      "title": "Remove key",
+      "body": "The key “{{name}}” stops working right away. The system using it won't be able to query your account until you give it another one."
+    },
+    "dialog": {
+      "title": "New API key",
+      "name": "Which system it's for",
+      "namePlaceholder": "Accounting system, sales CRM, n8n…",
+      "canWrite": "Can also write",
+      "canWriteNote": "Create dispatches and log fill-ups. Unchecked, the key can only read."
+    }
+  },
+  "webhooks": {
+    "title": "Webhooks",
+    "note": "When something happens in your account, the address you give is notified right away",
+    "new": "New webhook",
+    "secretTitle": "Secret for “{{name}}”",
+    "secretNote": "Every notification is signed with it. Your system uses it to check that the notification comes from us and not from someone else.",
+    "empty": "No webhooks yet. They let another system receive your alerts without having to ask: an ERP, a CRM, or a tool like n8n, Make or Zapier.",
+    "off": "off",
+    "allEvents": "All events",
+    "events_one": "{{count}} event",
+    "events_other": "{{count}} events",
+    "noDeliveries": "nothing sent",
+    "payload": {
+      "title": "What your system receives",
+      "note": "A POST with the event as JSON and a signature",
+      "delivery": "If your system answers with a 2xx code, the notification counts as delivered. If not, it's retried after a minute, after 5 and 30 minutes, and after 2 and 6 hours. Each delivery carries the headers <h>X-OpenGPS-Event</h>, <h>X-OpenGPS-Timestamp</h> and <h>X-OpenGPS-Signature</h>.",
+      "verify": "How your system checks the notification comes from us (Node.js)",
+      "sample": {
+        "label": "Speeding",
+        "vehicle": "Truck 12",
+        "summary": "was going 112 km/h with a 90 km/h limit"
+      }
+    },
+    "dialog": {
+      "namePlaceholder": "ERP: alerts, n8n, CRM…",
+      "url": "Address to notify",
+      "urlHint": "The one the other system gives you to receive notifications.",
+      "events": "Events it's interested in",
+      "someEvents": "Only some",
+      "headers": "Custom headers <note>· optional: the key the other system asks for</note>",
+      "headersKept": "Sends: {{names}}. Their values aren't shown.",
+      "headersNone": "Sends none.",
+      "headersChange": "Change them",
+      "headerName": "Name of header {{n}}",
+      "headerValue": "Value of header {{n}}",
+      "headerRemove": "Remove header {{n}}",
+      "addHeader": "Add header",
+      "headersReplace": "When you save, these replace the previous ones.",
+      "active": "On",
+      "log": "Latest deliveries",
+      "test": "Send a test",
+      "rotateTitle": "The previous secret stops working",
+      "rotate": "New secret",
+      "logEmpty": "Nothing has been sent to it yet.",
+      "testTopic": "Test notification",
+      "attempts": "{{n}} attempts",
+      "retry": "retries {{when}}",
+      "confirmDelete": "The webhook is deleted with its log. It will stop receiving notifications.",
+      "urlStart": "The address starts with https://",
+      "needEvents": "Choose at least one event, or mark that it wants all of them.",
+      "badHeader": "Each header needs its name (letters, numbers and hyphens) and its value."
+    }
+  },
+  "automations": {
+    "title": "Automations",
+    "note": "When this happens, on these vehicles and at these times, do this",
+    "new": "New automation",
+    "empty": "No automations yet. For example: when an engine fault code appears, open a work order; or when a truck enters a forbidden zone at night, email the supervisor.",
+    "off": "off",
+    "runs_one": "{{count}} time",
+    "runs_other": "{{count}} times",
+    "triggersMore": "{{first}} and {{n}} more",
+    "action": {
+      "notify_one": "{{channel}} notification to one destination",
+      "notify_other": "{{channel}} notification to {{count}} destinations",
+      "webhook": "notification to a webhook",
+      "order": "work order"
+    },
+    "address": {
+      "email": {
+        "label": "To which email addresses",
+        "placeholder": "supervisor@company.com, shop@company.com"
+      },
+      "sms": {
+        "label": "To which phone numbers",
+        "placeholder": "+50499887766"
+      },
+      "webhook": {
+        "label": "For whom (optional)",
+        "placeholder": "+50499887766, supervisor@company.com"
+      }
+    },
+    "dialog": {
+      "new": "New automation",
+      "namePlaceholder": "Engine fault → work order",
+      "when": "1 · When any of these events happens",
+      "where": "2 · On these vehicles",
+      "whereLabel": "Which vehicles it applies to",
+      "allVehicles": "All vehicles",
+      "groupOption": "Those in a group, with its subgroups",
+      "vehiclesOption": "Some vehicles I choose",
+      "timed": "Only on certain days and times",
+      "overnight": "Goes past midnight: ends the next day.",
+      "localTime": "Your clock's time.",
+      "do": "3 · Do this",
+      "doLabel": "What to do",
+      "channel": "Which channel",
+      "addressesHint": "Up to five, separated by commas. The channel must be connected on the platform.",
+      "customHint": "Up to five emails or phones, separated by commas: each one fills the variables of whoever receives it in Custom. If empty, it is sent once.",
+      "noWebhooks": "First create a webhook in its tab: here you choose which one is notified.",
+      "webhook": "Webhook to notify",
+      "orderTitle": "Work order task (optional)",
+      "orderPlaceholder": "Check the engine",
+      "orderHint": "Empty: the event's name. The order stays open, as corrective, in Maintenance.",
+      "cooldown": "Wait before repeating, in minutes",
+      "cooldownHint": "For the same vehicle. 0: acts every time.",
+      "active": "On",
+      "runs": "Latest times it acted",
+      "runsEmpty": "It hasn't triggered yet.",
+      "needTrigger": "Choose at least one event to trigger it.",
+      "needGroup": "Choose the group.",
+      "needVehicle": "Choose at least one vehicle.",
+      "needDay": "Mark at least one day.",
+      "cooldownRange": "The wait goes from 0 to 1,440 minutes.",
+      "needAddresses": "Enter one to five destinations, separated by commas.",
+      "needWebhook": "First create a webhook in its tab."
+    }
+  },
+  "sensors": {
+    "title": "Sensors",
+    "note": "Temperature probes, doors, scales and other devices that send their readings over the internet",
+    "new": "New sensor",
+    "keyTitle": "Key for sensor “{{name}}”",
+    "keyNote": "The sensor, or the device that reads it, sends each reading like this:",
+    "empty": "No sensors yet.",
+    "emptyHint": "Add one, set its range and, if it's on a vehicle, its out-of-range readings will show up as alerts for that vehicle.",
+    "noReadings": "No readings",
+    "outOfRange": "Out of range",
+    "inRange": "In range",
+    "dialog": {
+      "namePlaceholder": "Cold box probe",
+      "kind": "What it measures",
+      "vehicle": "Installed on this vehicle",
+      "noVehicle": "None: it's at a fixed place",
+      "vehicleNote": "If it's on a vehicle, when a reading leaves its range it becomes an alert for that vehicle, and it can trigger an automation.",
+      "min": "Minimum",
+      "max": "Maximum",
+      "unit": "Unit",
+      "keyPrefix": "Its key starts with <k>{{prefix}}</k>",
+      "rotateTitle": "The previous key stops working",
+      "rotate": "New key",
+      "deleteTitle": "Deleted with all its readings",
+      "needName": "Give the sensor a name.",
+      "notNumbers": "The minimum and maximum must be numbers.",
+      "minBelowMax": "The minimum must be less than the maximum."
+    },
+    "chart": {
+      "span": {
+        "h24": "24 hours",
+        "d7": "7 days",
+        "d30": "30 days"
+      },
+      "last": "Last reading:",
+      "never": "It hasn't sent any readings yet.",
+      "empty": "No readings in this period.",
+      "label": "Readings of {{name}}: from {{min}} to {{max}}",
+      "now": "now",
+      "limitNote": "The dotted red line is the limit of the range."
+    }
+  },
+  "data": {
+    "export": {
+      "title": "Export",
+      "note": "To open in Excel or move to another system"
+    },
+    "import": {
+      "title": "Import",
+      "note": "From a CSV file: the first line holds the column titles",
+      "what": "What you're loading",
+      "columns": "Columns: <c>{{columns}}</c>.",
+      "vehiclesNote": "“model” is the GPS device's, as it appears when you add one. Each vehicle waits for the first report from its device.",
+      "geofencesNote": "A circle has lat, lon and radius; a polygon, its points as “lat lon”, separated by semicolons.",
+      "driversNote": "Only the name is required.",
+      "existing": "Anything that already exists is left as it is.",
+      "easiest": "The easiest way: export first, fill in the file in the same format and save it as CSV.",
+      "file": "CSV file to import",
+      "choose": "Choose file",
+      "loaded_one": "{{count}} row loaded",
+      "loaded_other": "{{count}} rows loaded",
+      "skipped_one": "{{count}} already existed",
+      "skipped_other": "{{count}} already existed",
+      "failed": "{{n}} with problems",
+      "row": "Row {{row}}",
+      "noPermission": "Importing data requires the permission to manage integrations."
+    }
+  }
+}

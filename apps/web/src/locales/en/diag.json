@@ -1,0 +1,91 @@
+{
+  "card": {
+    "title": "Diagnostics",
+    "faults_one": "{{count}} active fault code",
+    "faults_other": "{{count}} active fault codes",
+    "noData": "This device hasn't sent engine data yet.",
+    "engineHours": "{{hours}} engine hours",
+    "engineHoursRead": "{{hours}} engine hours · read {{when}}",
+    "open": "View diagnostics"
+  },
+  "source": {
+    "ecu": "read from the vehicle",
+    "gps": "added up by the platform from the distance driven",
+    "ignition": "added up by the platform from engine-on time"
+  },
+  "tabs": {
+    "now": "Now",
+    "chart": "Charts",
+    "faults": "Faults",
+    "meters": "Odometer",
+    "limits": "Alerts"
+  },
+  "dialog": {
+    "title": "{{name}} diagnostics"
+  },
+  "now": {
+    "empty": "This device hasn't sent vehicle data in the last seven days. Reading it takes a device with an OBD reader or connected to the vehicle's network (CAN).",
+    "note": "Only what this device reads from the vehicle shows up. Each value shows its latest reading.",
+    "others": "Other data the device sends ({{n}})",
+    "othersNote": "They arrive without a name: the platform doesn't know what they measure. They're shown as they come in case they help you identify a sensor."
+  },
+  "chart": {
+    "param": "Value to chart",
+    "delta": "Change in the period",
+    "start": "At the start",
+    "end": "At the end",
+    "min": "Minimum",
+    "avg": "Average",
+    "max": "Maximum",
+    "empty": "The device didn't send that value in this period.",
+    "aria": "{{label}}: from {{from}} to {{to}} {{unit}}",
+    "limit": "alert limit"
+  },
+  "faults": {
+    "empty": "This vehicle hasn't reported fault codes. They show up here, with their explanation, when the device reads them from the vehicle's computer.",
+    "active": "Active",
+    "none": "None: the vehicle reports no faults now.",
+    "solved": "Resolved",
+    "cleared": "{{system}} · from <num>{{from}}</num> to <num>{{to}}</num>",
+    "seen": "{{system}} · since <num>{{from}}</num> · last seen <num>{{last}}</num>"
+  },
+  "meters": {
+    "needValue": "Enter what the dashboard shows: the odometer, the hours, or both.",
+    "notNumber": "They're numbers, no letters.",
+    "odometer": "Odometer",
+    "hours": "Engine hours",
+    "lead": "If the device reads them from the vehicle's computer, those count. If not, the platform adds them up since <num>{{since}}</num>: that's why it's worth adjusting them once to what the dashboard shows.",
+    "adjustTitle": "Adjust to what the dashboard shows",
+    "odometerKm": "Odometer, in km",
+    "saved": "Adjusted. They keep adding up from here.",
+    "adjust": "Adjust"
+  },
+  "limits": {
+    "rpmMax": {
+      "label": "Engine speed",
+      "note": "Alerts if the engine goes above this for a few seconds."
+    },
+    "tempMaxC": {
+      "label": "Engine temperature",
+      "note": "Alerts if it goes above this for half a minute."
+    },
+    "voltageMinV": {
+      "label": "Vehicle battery",
+      "note": "Alerts if it drops below this for several minutes. It's for 12 V: on a 24 V vehicle it counts double."
+    },
+    "needOwn": "Enter the {{label}} limit for this vehicle.",
+    "modeAria": "{{label}} alert",
+    "account": "The account's",
+    "accountOff": "The account's: no alert",
+    "accountValue": "The account's: {{value}} {{unit}}",
+    "own": "Its own for this vehicle",
+    "off": "No alert on this vehicle",
+    "ownAria": "{{label}} limit for this vehicle, in {{unit}}",
+    "saved": "Saved. It applies from the next position.",
+    "accountTitle": "Account diagnostic alerts",
+    "note": "A new fault code always alerts. Alerts show up among the platform's alerts.",
+    "accountLead": "They apply to every vehicle without its own limit. Leave one empty to turn off that alert for the account.",
+    "whoNote": "Who gets alerted about faults, overheating, engine speed and low battery is set in Administration → Notifications.",
+    "saveAccount": "Save the account's"
+  }
+}

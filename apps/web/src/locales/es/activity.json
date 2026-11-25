@@ -1,0 +1,249 @@
+{
+  "empty": "Todavía no hay actividad registrada.",
+  "immutable": "Cada cambio queda registrado y no se puede editar ni borrar.",
+  "byPlatform": "La plataforma",
+  "deletedUser": "Un usuario eliminado",
+  "more": "Ver más",
+  "actions": {
+    "vehicle": {
+      "create": "agregó el vehículo {{name}} con el GPS {{uniqueId}}",
+      "update": "editó un vehículo",
+      "update_name": "editó un vehículo: {{name}}",
+      "delete": "eliminó el vehículo {{name}}",
+      "park": "dejó {{name}} en modo estacionado",
+      "unpark": "quitó el modo estacionado de {{name}}"
+    },
+    "history": {
+      "export": "exportó el historial de {{name}} en {{format}}"
+    },
+    "share": {
+      "create": "creó un enlace para compartir la ubicación de {{name}}",
+      "create_note": "creó un enlace para compartir la ubicación de {{name}} ({{note}})",
+      "revoke": "revocó un enlace de ubicación de {{name}}"
+    },
+    "alert": {
+      "create": "creó la alerta {{name}}",
+      "update": "cambió la alerta {{name}}",
+      "delete": "borró la alerta {{name}}"
+    },
+    "geofence": {
+      "create": "creó la geocerca {{name}}",
+      "update": "cambió la geocerca {{name}}",
+      "delete": "borró la geocerca {{name}}"
+    },
+    "device": {
+      "attach": "conectó el GPS {{uniqueId}}",
+      "remove": "quitó el GPS {{uniqueId}}",
+      "claim_expired": "liberó el GPS {{uniqueId}} porque no reportó a tiempo"
+    },
+    "group": {
+      "create": "creó el grupo {{name}}",
+      "rename": "renombró un grupo a {{name}}",
+      "delete": "borró un grupo",
+      "move": "puso el grupo {{name}} dentro de {{parent}}",
+      "move_top": "sacó el grupo {{name}} al primer nivel"
+    },
+    "account": {
+      "rename": "cambió el nombre de la cuenta de «{{before}}» a «{{name}}»"
+    },
+    "member": {
+      "invite": "invitó a {{email}} como {{role}}",
+      "invite_cancel": "retiró la invitación de {{email}}",
+      "join": "se unió a la cuenta ({{email}})",
+      "update": "cambió el acceso de {{email}}",
+      "update_role": "cambió el acceso de {{email}} a {{role}}",
+      "block": "bloqueó a {{email}}",
+      "unblock": "desbloqueó a {{email}}",
+      "remove": "quitó a {{email}} de la cuenta",
+      "leave": "salió de la cuenta ({{email}})"
+    },
+    "role": {
+      "create": "creó el rol {{name}}",
+      "update": "cambió el rol {{name}}",
+      "delete": "borró el rol {{name}}"
+    },
+    "command": {
+      "lock": "ordenó bloquear el arranque de {{name}}",
+      "unlock": "ordenó desbloquear el arranque de {{name}}",
+      "cancel": "canceló una orden de bloqueo de {{name}}"
+    },
+    "recovery": {
+      "on": "activó el modo recuperación de {{name}}",
+      "off": "apagó el modo recuperación de {{name}}"
+    },
+    "incident": {
+      "report": "reportó un incidente de {{name}}",
+      "attend": "empezó a atender un incidente de {{name}}",
+      "close": "cerró un incidente de {{name}}",
+      "evidence": "adjuntó una evidencia a un incidente de {{name}}"
+    },
+    "driver": {
+      "create": "dio de alta al conductor {{name}}",
+      "update": "cambió la ficha del conductor {{name}}",
+      "delete": "borró la ficha del conductor {{name}}",
+      "assign": "puso a {{driver}} como conductor de {{vehicle}}",
+      "unassign": "dejó {{vehicle}} sin conductor",
+      "settings": "cambió cómo se mide la conducción"
+    },
+    "fuel": {
+      "configure": "configuró el combustible de {{name}}",
+      "remove": "quitó la configuración de combustible de {{name}}",
+      "fill": {
+        "create": "anotó un abastecimiento de {{liters}} L en {{name}}",
+        "update": "cambió un abastecimiento de {{liters}} L",
+        "delete": "borró un abastecimiento de {{liters}} L",
+        "import": "importó {{imported}} abastecimientos"
+      },
+      "settings": "cambió los ajustes de combustible de la cuenta"
+    },
+    "report": {
+      "export": "exportó un reporte de {{report}} en {{format}}",
+      "export_data": "exportó un reporte de datos en {{format}}",
+      "schedule": {
+        "create": "programó el informe {{name}}",
+        "update": "cambió el informe programado {{name}}",
+        "delete": "borró el informe programado {{name}}",
+        "send": "envió ahora el informe programado {{name}}"
+      }
+    },
+    "admin": {
+      "account_delete": "eliminó la cuenta «{{name}}»",
+      "account_suspend": "suspendió la cuenta",
+      "account_suspend_reason": "suspendió la cuenta: {{suspendedReason}}",
+      "account_unsuspend": "reactivó la cuenta",
+      "account_update": "cambió las cuotas o los módulos de la cuenta",
+      "backup": "hizo una copia de seguridad",
+      "backup_delete": "borró una copia de seguridad",
+      "backup_restore": "pidió restaurar una copia de seguridad",
+      "backup_restored": "restauró una copia de seguridad",
+      "backup_discover": "buscó copias en el almacenamiento externo: encontró {{found}} y agregó {{added}}",
+      "backup_download": "descargó el archivo {{name}} de una copia de seguridad",
+      "backup_failed": "intentó una copia de seguridad, que falló",
+      "notification": {
+        "create": "creó el aviso del sistema {{name}}",
+        "update": "cambió el aviso del sistema {{name}}",
+        "delete": "borró el aviso del sistema {{name}}"
+      },
+      "settings": "cambió los ajustes de la plataforma ({{section}})",
+      "settings_reset": "devolvió a su valor inicial los ajustes de la plataforma ({{section}})",
+      "simulator": {
+        "create": "creó el equipo simulado «{{name}}»",
+        "update": "cambió el equipo simulado «{{name}}»",
+        "delete": "borró el equipo simulado «{{name}}»",
+        "start": "inició el equipo simulado «{{name}}»",
+        "stop": "detuvo el equipo simulado «{{name}}»",
+        "route": {
+          "create": "creó la ruta del simulador «{{name}}»",
+          "update": "cambió la ruta del simulador «{{name}}»",
+          "delete": "borró la ruta del simulador «{{name}}»"
+        }
+      },
+      "user_ban": "suspendió al usuario {{email}}",
+      "user_delete": "eliminó al usuario {{email}}",
+      "user_unban": "reactivó al usuario {{email}}"
+    },
+    "notification": {
+      "create": "creó el aviso {{name}}",
+      "update": "cambió el aviso {{name}}",
+      "delete": "borró el aviso {{name}}"
+    },
+    "diag": {
+      "limits": "cambió los límites de diagnóstico de {{name}}",
+      "settings": "cambió los ajustes de diagnóstico de la cuenta"
+    },
+    "fleet": {
+      "assign": "asignó {{name}} a {{person}}",
+      "unassign": "quitó la asignación de {{person}}",
+      "document": {
+        "add": "subió el documento {{file}} de {{name}}",
+        "delete": "borró el documento {{file}}"
+      },
+      "expense": {
+        "create": "anotó un gasto de {{amount}} {{currency}} en {{name}}",
+        "update": "cambió un gasto de {{name}}",
+        "delete": "borró un gasto de {{amount}}"
+      },
+      "profile": "cambió la ficha de {{name}}",
+      "status": "cambió la disponibilidad de {{name}}",
+      "state": "cambió la situación de {{name}}"
+    },
+    "integrations": {
+      "automation": {
+        "create": "creó la automatización {{name}}",
+        "update": "cambió la automatización {{name}}",
+        "delete": "borró la automatización {{name}}"
+      },
+      "key": {
+        "create": "creó la clave de la API {{name}}",
+        "revoke": "anuló la clave de la API {{name}}"
+      },
+      "sensor": {
+        "create": "agregó el sensor {{name}}",
+        "update": "cambió el sensor {{name}}",
+        "delete": "borró el sensor {{name}}",
+        "key": "cambió la clave del sensor {{name}}"
+      },
+      "webhook": {
+        "create": "creó el webhook {{name}}",
+        "update": "cambió el webhook {{name}}",
+        "delete": "borró el webhook {{name}}",
+        "secret": "cambió el secreto del webhook {{name}}"
+      }
+    },
+    "maintenance": {
+      "baseline": "anotó cuándo se hizo por última vez {{plan}}",
+      "baseline_noPlan": "anotó cuándo se hizo por última vez un servicio",
+      "expiry": {
+        "create": "anotó un vencimiento de {{name}}",
+        "update": "cambió un vencimiento de {{name}}",
+        "delete": "borró un vencimiento"
+      },
+      "part": {
+        "update": "cambió el repuesto {{name}}",
+        "create": "agregó el repuesto {{name}}",
+        "delete": "borró el repuesto {{name}}"
+      },
+      "workshop": {
+        "update": "cambió el taller {{name}}",
+        "create": "agregó el taller {{name}}",
+        "delete": "borró el taller {{name}}"
+      },
+      "order": {
+        "create": "abrió la orden de trabajo n.º {{number}} de {{name}}",
+        "update": "cambió la orden de trabajo n.º {{number}}",
+        "delete": "borró la orden de trabajo n.º {{number}}",
+        "file": "adjuntó {{file}} a la orden de trabajo n.º {{number}}"
+      },
+      "plan": {
+        "create": "creó el plan de mantenimiento {{name}}",
+        "update": "cambió el plan de mantenimiento {{name}}",
+        "delete": "borró el plan de mantenimiento {{name}}"
+      },
+      "settings": "cambió los ajustes de mantenimiento de la cuenta"
+    },
+    "routes": {
+      "plan": {
+        "update": "cambió la ruta {{name}}",
+        "create": "creó la ruta {{name}}",
+        "delete": "borró la ruta {{name}}"
+      },
+      "poi": {
+        "update": "cambió el lugar {{name}}",
+        "create": "agregó el lugar {{name}}",
+        "delete": "borró el lugar {{name}}"
+      },
+      "stop": {
+        "link": "creó el enlace de seguimiento de {{stop}} ({{trip}})"
+      },
+      "trip": {
+        "create": "despachó {{trip}} con {{name}}",
+        "delete": "borró el despacho {{trip}}",
+        "link": "creó el enlace del conductor de {{trip}}",
+        "status": "cambió el estado del despacho {{trip}}"
+      }
+    },
+    "meters": {
+      "adjust": "ajustó el odómetro o las horas de motor de un vehículo"
+    }
+  }
+}

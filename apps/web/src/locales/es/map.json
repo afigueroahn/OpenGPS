@@ -1,0 +1,240 @@
+{
+  "errors": {
+    "network": "No pudimos completar la acción. Revisa tu conexión e inténtalo de nuevo.",
+    "action": "No pudimos completar la acción. Inténtalo de nuevo.",
+    "server": "No logramos conectar con el servidor. Revisa tu conexión a internet.",
+    "evidenceFile": "Solo se admiten fotos (JPG, PNG, WebP) y documentos PDF de hasta 8 MB.",
+    "documentFile": "Solo se admiten fotos (JPG, PNG, WebP) y documentos PDF.",
+    "imageNetwork": "No pudimos enviar la imagen. Revisa tu conexión e inténtalo de nuevo.",
+    "imageSave": "No pudimos guardar la imagen."
+  },
+  "files": {
+    "trip": "recorrido.{{format}}",
+    "report": "reporte.{{format}}"
+  },
+  "auth": {
+    "wrongCredentials": "El correo o la contraseña no coinciden.",
+    "emailNotVerified": "Todavía no confirmas tu correo. Te acabamos de enviar el enlace otra vez.",
+    "invalidEmail": "Escribe un correo válido.",
+    "passwordTooShort": "La contraseña debe tener al menos 8 caracteres.",
+    "passwordTooLong": "La contraseña es demasiado larga.",
+    "emailTaken": "Ya hay una cuenta con ese correo. Inicia sesión.",
+    "legalNotAccepted": "Para crear tu cuenta tienes que aceptar los términos de uso y la política de privacidad.",
+    "wrongPassword": "La contraseña no coincide.",
+    "invalidLink": "El enlace ya no es válido. Pide uno nuevo.",
+    "banned": "Esta cuenta está suspendida. Escríbenos si crees que es un error.",
+    "tooManyAttempts": "Demasiados intentos. Espera un momento y vuelve a probar.",
+    "sessionOld": "Por seguridad, vuelve a entrar y hazlo enseguida."
+  },
+  "ui": {
+    "loading": "Cargando"
+  },
+  "shell": {
+    "events": "Eventos",
+    "eventsUnseen_one": "Eventos: {{count}} aviso nuevo",
+    "eventsUnseen_other": "Eventos: {{count}} avisos nuevos",
+    "mapLabel": "Mapa de vehículos"
+  },
+  "tools": {
+    "geofences": "Geocercas",
+    "alerts": "Alertas",
+    "incidents": "Incidentes",
+    "drivers": "Conductores",
+    "fleet": "Flota",
+    "maintenance": "Mantenimiento",
+    "routes": "Rutas",
+    "reports": "Reportes",
+    "integrations": "Integraciones",
+    "groups": "Grupos"
+  },
+  "live": {
+    "online": "En vivo",
+    "offline": "Reconectando",
+    "onlineNote": "Recibiendo posiciones en vivo",
+    "offlineNote": "Sin conexión con el servidor; reintentando"
+  },
+  "account": {
+    "menu": "Tu cuenta",
+    "account": "Cuenta",
+    "switchTo": "Cambiar a {{name}}",
+    "signOut": "Cerrar sesión"
+  },
+  "suspended": {
+    "title": "Esta cuenta está suspendida",
+    "body": "La cuenta <b>{{name}}</b> no se puede usar por ahora. Si crees que es un error, escríbenos y lo revisamos.",
+    "goTo": "Ir a {{name}}",
+    "admin": "Administrar la plataforma"
+  },
+  "vehicle": {
+    "plateOptional": "Placa (opcional)",
+    "noGroup": "Sin grupo"
+  },
+  "list": {
+    "addGps": "Agregar GPS",
+    "filtered": "{{shown}} de {{total}}",
+    "count_one": "{{count}} vehículo",
+    "count_other": "{{count}} vehículos",
+    "moving": "{{n}} en movimiento",
+    "sections": "Secciones",
+    "toolPending": "{{label}}: {{n}} sin atender",
+    "searchPlaceholder": "Buscar por nombre o placa",
+    "searchLabel": "Buscar vehículo",
+    "groupFilter": "Filtrar por grupo",
+    "allGroups": "Todos los grupos",
+    "statusFilter": "Filtrar por estado",
+    "status": {
+      "moving": "En movimiento",
+      "idle": "Ralentí",
+      "stopped": "Detenidos",
+      "offline": "Sin conexión",
+      "pending": "Esperando señal",
+      "no_device": "Sin GPS"
+    },
+    "failed": "No pudimos cargar tus vehículos. Reintentando…",
+    "noMatch": "Ningún vehículo coincide con el filtro.",
+    "clearFilters": "Quitar filtros",
+    "nothing": {
+      "title": "Aún no hay vehículos para ti",
+      "body": "Cuando la cuenta tenga vehículos dentro de tu alcance, aparecerán aquí y en el mapa."
+    },
+    "empty": {
+      "title": "Agrega tu primer GPS",
+      "body": "Necesitas el equipo, una SIM con datos y dos minutos. Te decimos qué configurar y lo verás aparecer en el mapa.",
+      "add": "Agregar mi GPS"
+    }
+  },
+  "detail": {
+    "edit": "Editar vehículo",
+    "noDevice": {
+      "title": "Sin GPS conectado",
+      "connect": "Conectar un GPS",
+      "body": "Este vehículo no tiene equipo. Conéctale uno para verlo en el mapa."
+    },
+    "pending": {
+      "title": "Esperando la primera señal",
+      "instructions": "Ver instrucciones",
+      "body": "Configura el equipo para que reporte a la plataforma.",
+      "bodyMinutes": "Configura el equipo para que reporte a la plataforma. Quedan {{n}} min."
+    },
+    "lastReport": "Último reporte",
+    "course": "Rumbo",
+    "engine": "Motor",
+    "engineOn": "Encendido",
+    "engineOff": "Apagado",
+    "engineEstimated": "estimado por voltaje",
+    "fixTaken": "Posición tomada",
+    "noFix": "sin posición",
+    "vehicleBattery": "Batería del vehículo",
+    "deviceBattery": "Batería del equipo",
+    "satellites": "Satélites GPS",
+    "cellSignal": "Señal celular",
+    "signalBars": "Señal: {{bars}} de 4",
+    "coordinates": "Coordenadas",
+    "history": "Ver historial de recorridos",
+    "share": "Compartir ubicación",
+    "device": "Equipo GPS",
+    "removeDevice": "Quitar GPS",
+    "delete": "Eliminar vehículo",
+    "unplug": {
+      "title": "Quitar el GPS",
+      "confirm": "Quitar GPS",
+      "body": "El equipo <b>{{id}}</b> dejará de reportar a tu cuenta y se borrará el historial de recorridos de este vehículo. Podrás conectar otro GPS después."
+    },
+    "remove": {
+      "title": "Eliminar el vehículo",
+      "confirm": "Eliminar",
+      "body": "Se eliminarán <b>{{name}}</b>, su GPS y todo su historial de recorridos. No se puede deshacer."
+    },
+    "parked": {
+      "title": "Modo estacionado",
+      "on": "Activo {{since}}. Avisa si se mueve de aquí.",
+      "off": "Avisa si el vehículo se mueve de donde está."
+    },
+    "near": "Cerca de"
+  },
+  "share": {
+    "title": "Compartir ubicación",
+    "intro": "Crea un enlace para que alguien sin cuenta vea dónde está <b>{{name}}</b>. Deja de funcionar solo al vencer, o cuando lo revoques.",
+    "created": "Enlace creado. Cópialo ahora: por seguridad no se vuelve a mostrar.",
+    "link": "Enlace",
+    "shareTitle": "Ubicación de {{name}}",
+    "send": "Enviar",
+    "another": "Crear otro",
+    "warning": "Cualquiera que tenga este enlace verá la ubicación en vivo. Envíalo solo a quien deba verla.",
+    "duration": "Disponible durante",
+    "hours_one": "{{count}} hora",
+    "hours_other": "{{count}} horas",
+    "days_one": "{{count}} día",
+    "days_other": "{{count}} días",
+    "note": "Para quién es (opcional)",
+    "noteHint": "Solo lo ves tú, para reconocer el enlace después.",
+    "create": "Crear enlace",
+    "alive": "Enlaces que siguen funcionando",
+    "none": "Ninguno. Nadie de fuera puede ver este vehículo.",
+    "noNote": "Sin nota",
+    "revoke": "Revocar",
+    "expiresOn": "Vence el {{date}}",
+    "expiresIn": "Vence en {{duration}}",
+    "notOpened": "sin abrir",
+    "opened_one": "abierto {{count}} vez",
+    "opened_other": "abierto {{count}} veces"
+  },
+  "privacy": {
+    "consent": {
+      "title": "Términos y privacidad",
+      "body": "Para seguir usando la plataforma necesitamos que aceptes los <terms>términos de uso</terms> y la <privacy>política de privacidad</privacy>. Explican qué se puede hacer con el servicio y cómo tratamos tus datos.",
+      "failed": "No pudimos guardar tu respuesta. Inténtalo de nuevo.",
+      "decline": "Ahora no, cerrar sesión",
+      "accept": "Acepto"
+    },
+    "delete": {
+      "title": "Eliminar mi cuenta",
+      "intro": "Se eliminará tu usuario <b>{{email}}</b> y, con él, las cuentas de las que eres dueño:",
+      "vehicles": "Sus vehículos, equipos GPS y todo el historial de recorridos.",
+      "people": "Sus grupos, sus usuarios invitados y su registro de actividad.",
+      "final": "Los equipos dejarán de reportar a la plataforma. No se puede deshacer.",
+      "password": "Tu contraseña, para confirmar",
+      "typeWord": "Escribe {{word}} para confirmar",
+      "noPassword": "Entras con otro servicio y no tienes contraseña. Si tu sesión no es reciente, vuelve a entrar y bórrala enseguida.",
+      "confirm": "Eliminar definitivamente"
+    }
+  },
+  "wizard": {
+    "addFailed": "No pudimos agregar el GPS. Inténtalo de nuevo.",
+    "needName": "Ponle un nombre para reconocerlo en el mapa.",
+    "badId": "Escribe el {{idLabel}} tal como aparece en el equipo: solo letras y números, sin espacios.",
+    "title": {
+      "connected": "GPS conectado",
+      "setup": "Configura tu GPS",
+      "connect": "Conectar un GPS",
+      "add": "Agregar mi GPS"
+    },
+    "name": "Nombre del vehículo",
+    "namePlaceholder": "Camioneta blanca",
+    "deviceId": "{{idLabel}} del equipo",
+    "deviceIdGeneric": "Identificador del equipo",
+    "imeiHint": "15 dígitos. Está en la etiqueta del equipo o en su caja.",
+    "idHint": "Está en la etiqueta del equipo. Suele tener entre 10 y 12 dígitos.",
+    "submit": "Agregar GPS",
+    "reporting": "{{name}} ya está reportando",
+    "firstSignal": "Recibimos su primera señal. Desde ahora lo verás moverse en el mapa.",
+    "showOnMap": "Ver en el mapa",
+    "expired": "Se acabó el tiempo sin recibir señal de este GPS, así que quedó libre. Revisa la configuración y vuelve a agregarlo.",
+    "server": "Servidor",
+    "port": "Puerto",
+    "commandsNote": "Los comandos son los habituales de {{brand}}. Si tu modelo usa otros, en su manual busca cómo cambiar el servidor y el puerto.",
+    "later": "Lo configuro después",
+    "steps": {
+      "vehicle": "Tu vehículo",
+      "device": "Tu GPS",
+      "setup": "Conexión"
+    },
+    "waiting": {
+      "title": "Esperando la primera señal…",
+      "resumed": "Seguimos atentos.",
+      "registered": "Tu GPS quedó registrado.",
+      "updates": "Esta ventana se actualiza sola cuando reporte.",
+      "updatesMinutes": "Esta ventana se actualiza sola cuando reporte; tienes {{n}} min para conectarlo."
+    }
+  }
+}

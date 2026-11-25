@@ -1,0 +1,243 @@
+@import "tailwindcss";
+
+/* Brand colors and typefaces. Changing them here changes the whole web app. */
+@theme {
+  --font-sans: "Instrument Sans Variable", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "JetBrains Mono Variable", ui-monospace, "SF Mono", Menlo, monospace;
+
+  --color-ink: #101623;
+  --color-ink-2: #1a2233;
+  --color-ink-3: #283248;
+  --color-muted: #667186;
+  --color-faint: #98a2b3;
+  --color-line: #e2e6ee;
+  --color-canvas: #f4f6fa;
+  --color-surface: #ffffff;
+
+  --color-signal: #3ddc97;
+  --color-signal-ink: #0c7a4d;
+
+  --color-moving: #12a065;
+  --color-idle: #d08700;
+  --color-stopped: #3f7fd1;
+  --color-offline: #8a94a6;
+  --color-pending: #7c6cf0;
+  --color-danger: #cf3a32;
+
+  /* Buttons and selected items: dark on light here, light on dark in the dark mode. */
+  --color-primary: #101623;
+  --color-on-primary: #ffffff;
+  /* Surfaces that are dark in both modes: code blocks, tooltips, the sign-in page. */
+  --color-panel: #101623;
+  --color-panel-2: #1a2233;
+  --color-panel-3: #283248;
+  /* Soft accents drawn for dark surfaces: an error, a warning, the signal color under the pointer. */
+  --color-coral: #ff8f88;
+  --color-apricot: #ffb86b;
+  --color-mint: #5ae6ab;
+  --color-blush: #ffb3ad;
+
+  --radius-card: 14px;
+}
+
+/*
+ * Light and dark modes. The tokens above are the light palette; <html
+ * data-theme="dark"> replaces them with the dark one. public/theme.js sets the
+ * attribute before the first paint.
+ *
+ * Four scopes decide which palette applies:
+ * - the page, which follows the mode;
+ * - `.on-dark`, panels that are dark in both modes: everything inside them
+ *   was drawn for a dark background, so they keep the light palette's values;
+ * - `.side-panel`, the map's side panel: drawn like those, dark in the dark
+ *   mode, and turned light in the light mode by giving its dark surfaces, its
+ *   white text and its soft accents light-mode values;
+ * - dialogs and `.themed` floating surfaces, which follow the mode again even
+ *   when they are opened from inside one of those panels.
+ */
+:root {
+  color-scheme: light;
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+}
+
+/* Keep in sync with the @theme block above. */
+.on-dark,
+.side-panel,
+dialog.modal,
+.themed {
+  --color-ink: #101623;
+  --color-ink-2: #1a2233;
+  --color-ink-3: #283248;
+  --color-muted: #667186;
+  --color-faint: #98a2b3;
+  --color-line: #e2e6ee;
+  --color-canvas: #f4f6fa;
+  --color-surface: #ffffff;
+  --color-signal-ink: #0c7a4d;
+  --color-moving: #12a065;
+  --color-idle: #d08700;
+  --color-stopped: #3f7fd1;
+  --color-offline: #8a94a6;
+  --color-pending: #7c6cf0;
+  --color-danger: #cf3a32;
+  --color-primary: #101623;
+  --color-on-primary: #ffffff;
+}
+
+/* The side panel in the light mode: what was dark turns light, and what was white turns ink. */
+:root:not([data-theme="dark"]) .side-panel {
+  --color-ink: #ffffff;
+  --color-ink-2: #f1f4f8;
+  --color-ink-3: #e4e9f0;
+  --color-white: #101623;
+  --color-signal: #0c7a4d;
+  --color-coral: #cf3a32;
+  --color-apricot: #a85a00;
+  --color-mint: #0a6a43;
+  --color-blush: #a3261f;
+}
+/* Dialogs and menus opened from it have their own palette. */
+.side-panel dialog.modal,
+.side-panel .themed {
+  --color-white: #ffffff;
+  --color-signal: #3ddc97;
+  --color-coral: #ff8f88;
+  --color-apricot: #ffb86b;
+  --color-mint: #5ae6ab;
+  --color-blush: #ffb3ad;
+}
+
+:root[data-theme="dark"],
+:root[data-theme="dark"] dialog.modal,
+:root[data-theme="dark"] .themed {
+  --color-ink: #e9edf5;
+  --color-ink-2: #d4dae6;
+  --color-ink-3: #b4bdce;
+  --color-muted: #8d99ae;
+  --color-faint: #6c788e;
+  --color-line: #263044;
+  --color-canvas: #0b0f17;
+  --color-surface: #131a28;
+  --color-signal-ink: #3ddc97;
+  --color-moving: #2fc98a;
+  --color-idle: #f0b429;
+  --color-stopped: #6aa5f0;
+  --color-offline: #9aa5b8;
+  --color-pending: #a79bff;
+  --color-danger: #ff6f66;
+  --color-primary: #e9edf5;
+  --color-on-primary: #101623;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--color-canvas);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  font-size: 15px;
+  line-height: 1.45;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-signal-ink);
+  outline-offset: 2px;
+}
+
+.on-dark :focus-visible,
+.side-panel :focus-visible {
+  outline-color: var(--color-signal);
+}
+
+/* Aligned numbers for speeds, coordinates and identifiers. */
+.num {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
+}
+
+/* Modal windows on <dialog>. */
+dialog.modal {
+  border: 0;
+  outline: none;
+  padding: 0;
+  background: transparent;
+  max-width: none;
+  max-height: none;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  display: none;
+  align-items: flex-end;
+  justify-content: center;
+}
+dialog.modal[open] {
+  display: flex;
+}
+dialog.modal,
+.themed {
+  color: var(--color-ink);
+}
+dialog.modal::backdrop {
+  background: rgb(16 22 35 / 0.55);
+  backdrop-filter: blur(2px);
+}
+@media (min-width: 640px) {
+  dialog.modal {
+    align-items: center;
+    padding: 24px;
+  }
+}
+
+@keyframes pulse-ring {
+  0% {
+    transform: scale(0.6);
+    opacity: 0.9;
+  }
+  100% {
+    transform: scale(2.4);
+    opacity: 0;
+  }
+}
+.pulse-ring {
+  animation: pulse-ring 1.8s cubic-bezier(0.2, 0.6, 0.3, 1) infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Map: controls and attribution in the platform's style. */
+.maplibregl-map {
+  font-family: var(--font-sans);
+}
+.maplibregl-ctrl-group {
+  border-radius: 10px !important;
+  box-shadow: 0 1px 2px rgb(16 22 35 / 0.12), 0 4px 14px rgb(16 22 35 / 0.1) !important;
+  overflow: hidden;
+}
+.maplibregl-ctrl-attrib {
+  font-size: 11px;
+}

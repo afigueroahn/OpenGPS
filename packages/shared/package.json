@@ -1,0 +1,17 @@
+{
+  "name": "@opengps/shared",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Types, schemas and texts shared by the backend and the web app",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "lint": "oxlint src"
+  },
+  "dependencies": {
+    "zod": "^4.6.7"
+  }
+}

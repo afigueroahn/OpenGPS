@@ -1,0 +1,118 @@
+{
+  "title": "Historial",
+  "compare": "Comparar",
+  "start": "Inicio",
+  "end": "Fin",
+  "noData": {
+    "title": "Sin recorrido en este periodo",
+    "lead": "El equipo no envió posiciones en estas fechas. Prueba con otro periodo."
+  },
+  "tabs": {
+    "label": "Detalle del historial",
+    "trips": "Viajes",
+    "stops": "Paradas",
+    "positions": "Posiciones"
+  },
+  "presets": {
+    "today": "Hoy",
+    "yesterday": "Ayer",
+    "7d": "7 días",
+    "30d": "30 días",
+    "custom": "Otro"
+  },
+  "range": {
+    "apply": "Ver este periodo",
+    "previous": "Periodo anterior",
+    "next": "Periodo siguiente",
+    "label": "Periodo",
+    "needDates": "Escribe las dos fechas.",
+    "endBeforeStart": "La fecha final debe ser posterior a la inicial.",
+    "tooLong": "El periodo no puede pasar de {{days}} días."
+  },
+  "summary": {
+    "tripAt": "Viaje de las {{time}}",
+    "wholePeriod": "Ver todo el periodo",
+    "duration": "Duración",
+    "idle": "En ralentí",
+    "maxSpeed": "Velocidad máxima",
+    "avgSpeed": "Velocidad promedio",
+    "moving": "En movimiento",
+    "stopped": "Detenido",
+    "engineOn": "Motor encendido"
+  },
+  "trips": {
+    "empty": "Sin viajes en este periodo. El vehículo no se movió.",
+    "max": "máx. {{speed}} km/h",
+    "idle": "ralentí {{time}}"
+  },
+  "stops": {
+    "empty": "Sin paradas de más de tres minutos en este periodo.",
+    "engineOn": "motor encendido {{time}}"
+  },
+  "positions": {
+    "time": "Hora",
+    "engine": "Motor",
+    "on": "Encendido",
+    "off": "Apagado",
+    "partial": "Se muestran {{shown}} de {{total}} posiciones: las repetidas de cada parada se resumen. El archivo exportado las trae todas."
+  },
+  "export": {
+    "button": "Exportar",
+    "trip": "Exportar este viaje",
+    "period": "Exportar el periodo",
+    "note": {
+      "xlsx": "Totales, viajes, paradas y posiciones",
+      "pdf": "Informe con la ruta, viajes y paradas",
+      "csv": "Todas las posiciones",
+      "gpx": "Para navegadores y otras apps de GPS",
+      "kml": "Para Google Earth"
+    }
+  },
+  "comparison": {
+    "title": "Comparar con",
+    "previous": "Periodo anterior",
+    "weekBefore": "Una semana antes",
+    "samePeriod": "Mismo periodo",
+    "custom": "Otro",
+    "otherName": "Comparado",
+    "vehicle": "Vehículo con el que se compara",
+    "thisVehicle": "{{name}} (este vehículo)",
+    "period": "Periodo con el que se compara",
+    "difference": "Diferencia",
+    "equal": "igual",
+    "noPositions": "El recorrido con el que comparas no tiene posiciones en ese periodo.",
+    "rows": {
+      "distance": "Distancia",
+      "moving": "En movimiento",
+      "idle": "En ralentí",
+      "stopped": "Detenido",
+      "maxSpeed": "Vel. máxima",
+      "avgSpeed": "Vel. promedio",
+      "trips": "Viajes",
+      "stops": "Paradas"
+    }
+  },
+  "verdict": {
+    "same": "Los dos recorridos van por el mismo camino",
+    "shared": "Coinciden en el {{percent}} % del camino",
+    "noneApart": "Ninguno pasa por donde no pasa el otro.",
+    "otherLeaves_one": "El recorrido comparado se sale del principal en un tramo, hasta {{far}}.",
+    "otherLeaves_other": "El recorrido comparado se sale del principal en {{count}} tramos, hasta {{far}}.",
+    "mainLeaves_one": "El principal pasa por un tramo que el comparado no recorre, hasta {{far}}.",
+    "mainLeaves_other": "El principal pasa por {{count}} tramos que el comparado no recorre, hasta {{far}}.",
+    "highlighted": "Esos tramos van resaltados en el mapa."
+  },
+  "player": {
+    "pause": "Pausar",
+    "play": "Reproducir el recorrido",
+    "engineOn": "Motor encendido",
+    "engineOff": "Motor apagado",
+    "rate": "Velocidad de reproducción",
+    "moment": "Momento del recorrido",
+    "momentValue": "{{time}}, {{speed}} kilómetros por hora",
+    "chart": "Velocidad a lo largo del recorrido",
+    "inStop": "en parada",
+    "legend": "Velocidad en km/h · máxima <b>{{max}}</b> · promedio <b>{{avg}}</b>",
+    "stops": "Paradas"
+  }
+}

@@ -1,0 +1,249 @@
+{
+  "empty": "No activity recorded yet.",
+  "immutable": "Every change is recorded and can't be edited or deleted.",
+  "byPlatform": "The platform",
+  "deletedUser": "A deleted user",
+  "more": "Show more",
+  "actions": {
+    "vehicle": {
+      "create": "added the vehicle {{name}} with the GPS device {{uniqueId}}",
+      "update": "edited a vehicle",
+      "update_name": "edited a vehicle: {{name}}",
+      "delete": "deleted the vehicle {{name}}",
+      "park": "put {{name}} in parked mode",
+      "unpark": "took {{name}} out of parked mode"
+    },
+    "history": {
+      "export": "exported the history of {{name}} as {{format}}"
+    },
+    "share": {
+      "create": "created a link to share the location of {{name}}",
+      "create_note": "created a link to share the location of {{name}} ({{note}})",
+      "revoke": "revoked a location link for {{name}}"
+    },
+    "alert": {
+      "create": "created the alert {{name}}",
+      "update": "changed the alert {{name}}",
+      "delete": "deleted the alert {{name}}"
+    },
+    "geofence": {
+      "create": "created the geofence {{name}}",
+      "update": "changed the geofence {{name}}",
+      "delete": "deleted the geofence {{name}}"
+    },
+    "device": {
+      "attach": "connected the GPS device {{uniqueId}}",
+      "remove": "removed the GPS device {{uniqueId}}",
+      "claim_expired": "released the GPS device {{uniqueId}} because it didn't report in time"
+    },
+    "group": {
+      "create": "created the group {{name}}",
+      "rename": "renamed a group to {{name}}",
+      "delete": "deleted a group",
+      "move": "moved the group {{name}} into {{parent}}",
+      "move_top": "moved the group {{name}} to the top level"
+    },
+    "account": {
+      "rename": "renamed the account from “{{before}}” to “{{name}}”"
+    },
+    "member": {
+      "invite": "invited {{email}} as {{role}}",
+      "invite_cancel": "withdrew the invitation for {{email}}",
+      "join": "joined the account ({{email}})",
+      "update": "changed the access of {{email}}",
+      "update_role": "changed the access of {{email}} to {{role}}",
+      "block": "blocked {{email}}",
+      "unblock": "unblocked {{email}}",
+      "remove": "removed {{email}} from the account",
+      "leave": "left the account ({{email}})"
+    },
+    "role": {
+      "create": "created the role {{name}}",
+      "update": "changed the role {{name}}",
+      "delete": "deleted the role {{name}}"
+    },
+    "command": {
+      "lock": "ordered the ignition of {{name}} to be locked",
+      "unlock": "ordered the ignition of {{name}} to be unlocked",
+      "cancel": "cancelled a lock command for {{name}}"
+    },
+    "recovery": {
+      "on": "turned on recovery mode for {{name}}",
+      "off": "turned off recovery mode for {{name}}"
+    },
+    "incident": {
+      "report": "reported an incident with {{name}}",
+      "attend": "started handling an incident with {{name}}",
+      "close": "closed an incident with {{name}}",
+      "evidence": "attached evidence to an incident with {{name}}"
+    },
+    "driver": {
+      "create": "added the driver {{name}}",
+      "update": "changed the profile of the driver {{name}}",
+      "delete": "deleted the profile of the driver {{name}}",
+      "assign": "made {{driver}} the driver of {{vehicle}}",
+      "unassign": "left {{vehicle}} without a driver",
+      "settings": "changed how driving is scored"
+    },
+    "fuel": {
+      "configure": "set up the fuel of {{name}}",
+      "remove": "removed the fuel setup of {{name}}",
+      "fill": {
+        "create": "recorded a fill-up of {{liters}} L on {{name}}",
+        "update": "changed a fill-up of {{liters}} L",
+        "delete": "deleted a fill-up of {{liters}} L",
+        "import": "imported {{imported}} fill-ups"
+      },
+      "settings": "changed the account's fuel settings"
+    },
+    "report": {
+      "export": "exported a {{report}} report as {{format}}",
+      "export_data": "exported a data report as {{format}}",
+      "schedule": {
+        "create": "scheduled the report {{name}}",
+        "update": "changed the scheduled report {{name}}",
+        "delete": "deleted the scheduled report {{name}}",
+        "send": "sent the scheduled report {{name}} now"
+      }
+    },
+    "admin": {
+      "account_delete": "deleted the account “{{name}}”",
+      "account_suspend": "suspended the account",
+      "account_suspend_reason": "suspended the account: {{suspendedReason}}",
+      "account_unsuspend": "reactivated the account",
+      "account_update": "changed the account's quotas or modules",
+      "backup": "made a backup",
+      "backup_delete": "deleted a backup",
+      "backup_restore": "asked to restore a backup",
+      "backup_restored": "restored a backup",
+      "backup_discover": "searched the external storage for backups: found {{found}} and added {{added}}",
+      "backup_download": "downloaded the file {{name}} from a backup",
+      "backup_failed": "attempted a backup, which failed",
+      "notification": {
+        "create": "created the system notification {{name}}",
+        "update": "changed the system notification {{name}}",
+        "delete": "deleted the system notification {{name}}"
+      },
+      "settings": "changed the platform settings ({{section}})",
+      "settings_reset": "reset the platform settings to their defaults ({{section}})",
+      "simulator": {
+        "create": "created the simulated device “{{name}}”",
+        "update": "changed the simulated device “{{name}}”",
+        "delete": "deleted the simulated device “{{name}}”",
+        "start": "started the simulated device “{{name}}”",
+        "stop": "stopped the simulated device “{{name}}”",
+        "route": {
+          "create": "created the simulator route “{{name}}”",
+          "update": "changed the simulator route “{{name}}”",
+          "delete": "deleted the simulator route “{{name}}”"
+        }
+      },
+      "user_ban": "suspended the user {{email}}",
+      "user_delete": "deleted the user {{email}}",
+      "user_unban": "reactivated the user {{email}}"
+    },
+    "notification": {
+      "create": "created the notification {{name}}",
+      "update": "changed the notification {{name}}",
+      "delete": "deleted the notification {{name}}"
+    },
+    "diag": {
+      "limits": "changed the diagnostic limits of {{name}}",
+      "settings": "changed the account's diagnostic settings"
+    },
+    "fleet": {
+      "assign": "assigned {{name}} to {{person}}",
+      "unassign": "removed the assignment of {{person}}",
+      "document": {
+        "add": "uploaded the document {{file}} of {{name}}",
+        "delete": "deleted the document {{file}}"
+      },
+      "expense": {
+        "create": "recorded an expense of {{amount}} {{currency}} on {{name}}",
+        "update": "changed an expense of {{name}}",
+        "delete": "deleted an expense of {{amount}}"
+      },
+      "profile": "changed the profile of {{name}}",
+      "status": "changed the availability of {{name}}",
+      "state": "changed the status of {{name}}"
+    },
+    "integrations": {
+      "automation": {
+        "create": "created the automation {{name}}",
+        "update": "changed the automation {{name}}",
+        "delete": "deleted the automation {{name}}"
+      },
+      "key": {
+        "create": "created the API key {{name}}",
+        "revoke": "revoked the API key {{name}}"
+      },
+      "sensor": {
+        "create": "added the sensor {{name}}",
+        "update": "changed the sensor {{name}}",
+        "delete": "deleted the sensor {{name}}",
+        "key": "changed the key of the sensor {{name}}"
+      },
+      "webhook": {
+        "create": "created the webhook {{name}}",
+        "update": "changed the webhook {{name}}",
+        "delete": "deleted the webhook {{name}}",
+        "secret": "changed the secret of the webhook {{name}}"
+      }
+    },
+    "maintenance": {
+      "baseline": "recorded when {{plan}} was last done",
+      "baseline_noPlan": "recorded when a service was last done",
+      "expiry": {
+        "create": "recorded an expiry date for {{name}}",
+        "update": "changed an expiry date for {{name}}",
+        "delete": "deleted an expiry date"
+      },
+      "part": {
+        "update": "changed the part {{name}}",
+        "create": "added the part {{name}}",
+        "delete": "deleted the part {{name}}"
+      },
+      "workshop": {
+        "update": "changed the workshop {{name}}",
+        "create": "added the workshop {{name}}",
+        "delete": "deleted the workshop {{name}}"
+      },
+      "order": {
+        "create": "opened work order no. {{number}} for {{name}}",
+        "update": "changed work order no. {{number}}",
+        "delete": "deleted work order no. {{number}}",
+        "file": "attached {{file}} to work order no. {{number}}"
+      },
+      "plan": {
+        "create": "created the maintenance plan {{name}}",
+        "update": "changed the maintenance plan {{name}}",
+        "delete": "deleted the maintenance plan {{name}}"
+      },
+      "settings": "changed the account's maintenance settings"
+    },
+    "routes": {
+      "plan": {
+        "update": "changed the route {{name}}",
+        "create": "created the route {{name}}",
+        "delete": "deleted the route {{name}}"
+      },
+      "poi": {
+        "update": "changed the place {{name}}",
+        "create": "added the place {{name}}",
+        "delete": "deleted the place {{name}}"
+      },
+      "stop": {
+        "link": "created the tracking link for {{stop}} ({{trip}})"
+      },
+      "trip": {
+        "create": "dispatched {{trip}} with {{name}}",
+        "delete": "deleted the dispatch {{trip}}",
+        "link": "created the driver link for {{trip}}",
+        "status": "changed the status of the dispatch {{trip}}"
+      }
+    },
+    "meters": {
+      "adjust": "adjusted the odometer or engine hours of a vehicle"
+    }
+  }
+}
