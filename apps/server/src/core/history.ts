@@ -1,12 +1,12 @@
 // History of a vehicle over a period: positions, trips, stops and totals.
-import { HISTORY_MAX_DAYS, HISTORY_MAX_POINTS, type HistoryPoint, type HistorySummary, type Stop, type Trip, type Vehicle, type VehicleHistory } from "@opengps/shared";
+import { HISTORY_MAX_DAYS, HISTORY_MAX_POINTS, type HistoryPoint, type HistorySummary, type Stop, type Trip, type Vehicle, type VehicleHistory, metersBetween } from "@opengps/shared";
 import type { Queryable } from "../db";
 import { badRequest } from "../errors";
 import { say } from "../i18n";
 import { ignitionFromVoltage } from "../ingest/normalize";
 import type { Tenant } from "./access";
 import { knownAddresses } from "./geocode";
-import { type TrackSample, analyze, distanceM, thin } from "./trips";
+import { type TrackSample, analyze, thin } from "./trips";
 import { getVehicle } from "./vehicles";
 
 /** Maximum positions analyzed in one query. */
@@ -146,7 +146,7 @@ export function mapPoints(samples: HistorySample[], max = HISTORY_MAX_POINTS): H
       s.ignition === prev.ignition &&
       next.ignition === s.ignition &&
       s.t - prev.t < 300_000 &&
-      distanceM(prev.lat, prev.lon, s.lat, s.lon) < 30
+      metersBetween([prev.lon, prev.lat], [s.lon, s.lat]) < 30
     ) {
       continue;
     }

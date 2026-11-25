@@ -1,15 +1,5 @@
-// Calculations over the trip: distance, position at an instant and segments.
-import type { HistoryPoint } from "@opengps/shared";
-
-const R = 6_371_000;
-const rad = (d: number) => (d * Math.PI) / 180;
-
-export function distanceM(aLat: number, aLon: number, bLat: number, bLon: number): number {
-  const dLat = rad(bLat - aLat);
-  const dLon = rad(bLon - aLon);
-  const h = Math.sin(dLat / 2) ** 2 + Math.cos(rad(aLat)) * Math.cos(rad(bLat)) * Math.sin(dLon / 2) ** 2;
-  return 2 * R * Math.asin(Math.sqrt(h));
-}
+// Calculations over the trip: position at an instant and segments.
+import { type HistoryPoint, metersBetween } from "@opengps/shared";
 
 /** With no reports for longer than this, it is not known where the vehicle went. */
 export const GAP_S = 600;
@@ -62,5 +52,5 @@ export function between(points: HistoryPoint[], from: number, to: number): Histo
 export function isWait(a: HistoryPoint, b: HistoryPoint): boolean {
   const seconds = b.t - a.t;
   if (seconds > GAP_S) return true;
-  return seconds >= 60 && distanceM(a.lat, a.lon, b.lat, b.lon) < 30;
+  return seconds >= 60 && metersBetween([a.lon, a.lat], [b.lon, b.lat]) < 30;
 }

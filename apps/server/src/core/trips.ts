@@ -4,7 +4,7 @@
 // It is calculated at query time, from the stored positions. This way data
 // the device uploads late shows up in the next query on its own, with no
 // pending recalculations.
-import type { HistorySummary, Stop, Trip } from "@opengps/shared";
+import { type HistorySummary, type Stop, type Trip, metersBetween } from "@opengps/shared";
 
 /** Position as the engine needs it, sorted by time. */
 export interface TrackSample {
@@ -36,16 +36,6 @@ const MIN_ADVANCE_KMH = 2;
 const CLEAR_ADVANCE_KMH = 15;
 const CLEAR_ADVANCE_M = 50;
 
-const R = 6_371_000;
-const rad = (d: number) => (d * Math.PI) / 180;
-
-export function distanceM(aLat: number, aLon: number, bLat: number, bLon: number): number {
-  const dLat = rad(bLat - aLat);
-  const dLon = rad(bLon - aLon);
-  const h = Math.sin(dLat / 2) ** 2 + Math.cos(rad(aLat)) * Math.cos(rad(bLat)) * Math.sin(dLon / 2) ** 2;
-  return 2 * R * Math.asin(Math.sqrt(h));
-}
-
 export type Kind = "moving" | "idle" | "stopped";
 
 /** Segment between two consecutive positions. */
@@ -68,7 +58,7 @@ export function intervals(samples: TrackSample[]): Interval[] {
     const seconds = (b.t - a.t) / 1000;
     if (seconds <= 0) continue;
     const gap = seconds > MAX_GAP_S;
-    const raw = distanceM(a.lat, a.lon, b.lat, b.lon);
+    const raw = metersBetween([a.lon, a.lat], [b.lon, b.lat]);
     const impliedKmh = (raw / seconds) * 3.6;
     const plausible = impliedKmh <= MAX_PLAUSIBLE_KMH;
     const reported = Math.max(a.speedKmh, b.speedKmh) >= TRIP_MOVING_KMH;
