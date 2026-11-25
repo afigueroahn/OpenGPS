@@ -61,8 +61,8 @@ Las versiones anteriores a la 3 se retiraron sin convivencia, porque aún no hab
 
 | Ruta | Quién | Devuelve |
 |---|---|---|
-| `GET /api/health` | Pública | `{ ok, ingest, live }`; 503 si la base no responde |
-| `GET /api/config` | Pública | `PublicConfig`: nombre, mapa base, servidor de equipos, versión de los términos, los servicios con que se puede entrar (`signIn`, en el orden de sus botones) y `apiVersion` |
+| `GET /api/health` | Pública | `{ ok, version, ingest, live }`; 503 si la base no responde |
+| `GET /api/config` | Pública | `PublicConfig`: nombre, mapa base, servidor de equipos, versión de los términos, los servicios con que se puede entrar (`signIn`, en el orden de sus botones), `apiVersion` y `version`: la de la plataforma, la de su release (`0.1.0`) o la del repositorio con `-dev` si se construyó desde el código |
 
 ### Sesión y cuenta
 

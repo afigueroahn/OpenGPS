@@ -367,11 +367,12 @@ export async function buildApp(deps: AppDeps): Promise<App> {
     } catch {
       return reply.status(503).send({ ok: false });
     }
-    return { ok: true, ingest: deps.ingest?.status() ?? null, live: live.connections() };
+    return { ok: true, version: config.appVersion, ingest: deps.ingest?.status() ?? null, live: live.connections() };
   });
 
   app.get("/api/config", async (): Promise<PublicConfig> => ({
     apiVersion: API_VERSION,
+    version: config.appVersion,
     appName: config.appName,
     defaultLanguage: config.defaultLanguage,
     mapStyleUrl: config.mapStyleUrl,

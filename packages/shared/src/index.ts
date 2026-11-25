@@ -2655,6 +2655,8 @@ export const API_VERSION = 3;
 export interface PublicConfig {
   /** API contract version this server serves. */
   apiVersion: number;
+  /** The platform's version: the release's (0.1.0), or the repository's with "-dev" when built from the code. */
+  version: string;
   appName: string;
   /** Language of whoever has not chosen one. */
   defaultLanguage: Language;

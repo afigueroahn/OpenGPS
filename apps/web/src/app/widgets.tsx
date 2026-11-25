@@ -12,8 +12,8 @@ import { Button, Logo, Modal, Notice, Spinner } from "../components/ui";
 import { ApiRequestError, auth, setActiveAccount } from "../lib/api";
 import i18n, { adoptLanguage } from "../lib/i18n";
 import type { LiveStatus } from "../lib/live";
+import { useConfig } from "../lib/session";
 import { adoptMode } from "../lib/theme";
-import { APP_VERSION } from "../lib/version";
 
 export const errorText = (err: unknown) => (err instanceof ApiRequestError ? err.message : i18n.t("map.errors.action"));
 
@@ -69,6 +69,7 @@ export function AccountMenu({ me }: { me: Me }) {
   const [open, setOpen] = useState(false);
   const root = useRef<HTMLDivElement>(null);
   const { name, email } = me.user;
+  const version = useConfig().data?.version;
   useEffect(() => {
     if (!open) return;
     const close = (e: MouseEvent | KeyboardEvent) => {
@@ -134,7 +135,7 @@ export function AccountMenu({ me }: { me: Me }) {
           <button type="button" role="menuitem" onClick={signOut} className={item}>
             <LogOut size={16} /> {t("map.account.signOut")}
           </button>
-          <p className="num mt-1 border-t border-line px-3 pb-1 pt-2 text-[12px] text-faint">{t("common.version", { version: APP_VERSION })}</p>
+          {version && <p className="num mt-1 border-t border-line px-3 pb-1 pt-2 text-[12px] text-faint">{t("common.version", { version })}</p>}
         </div>
       )}
     </div>
