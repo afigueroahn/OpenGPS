@@ -35,7 +35,7 @@ import {
 } from "@opengps/shared";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { type S3Target, loadConfig } from "../src/config";
-import { RESTORE_REQUEST, RESTORE_RESULT, RESTORE_RUNNING, RUNNER_ALIVE } from "../src/core/backups";
+import { RESTORE_REQUEST, RESTORE_RESULT, RESTORE_RUNNING, HELPER_ALIVE } from "../src/core/backups";
 import { S3Error, deleteObject, getObject, keyOf, listObjects, putObject, rcloneVersion, removeEmptyFolder, testStorage, uploadFile } from "../src/core/s3";
 import { createVault } from "../src/core/secrets";
 import { createRouting } from "../src/simulator/routing";
@@ -699,7 +699,7 @@ describe("backups", () => {
     // Without the server helper there is nobody to restore, and without the word neither.
     expect(await info()).toMatchObject({ canRestore: false, restore: null });
     expect((await restore({ word: "RESTAURAR" })).status).toBe(400);
-    writeFileSync(join(dir, RUNNER_ALIVE), "");
+    writeFileSync(join(dir, HELPER_ALIVE), "");
     expect((await info()).canRestore).toBe(true);
     expect((await restore({ word: "restaurar" })).status).toBe(400);
     expect((await restore({})).status).toBe(400);
@@ -792,7 +792,7 @@ describe("backups", () => {
     expect((await info()).restore).toMatchObject({ state: "failed", backupId: safety.id });
     expect((await info()).restore?.error).toContain("ya no están en el servidor");
     expect(existsSync(join(dir, RESTORE_REQUEST))).toBe(false);
-    rmSync(join(dir, RUNNER_ALIVE));
+    rmSync(join(dir, HELPER_ALIVE));
     rmSync(join(dir, RESTORE_RESULT));
   });
 
@@ -875,7 +875,7 @@ describe("backups", () => {
     const file = await h.fastify.inject({ method: "GET", url: `/api/admin/backups/${copy.id}/files/${copy.files[0]?.name}`, headers: { cookie: boss.cookie } });
     expect(file.payload).toBe("copia de prueba de gps por reader");
     // …and on restoring it, the platform downloads its files, makes the prior backup and leaves the request for the server.
-    writeFileSync(join(dir, RUNNER_ALIVE), "");
+    writeFileSync(join(dir, HELPER_ALIVE), "");
     const asked = await admin("POST", `/api/admin/backups/${copy.id}/restore`, { word: "RESTAURAR" });
     expect(asked.status, JSON.stringify(asked.json)).toBe(202);
     await h.backups.idle();
@@ -921,6 +921,6 @@ describe("backups", () => {
     await testStorage(h.config.storage as S3Target);
 
     rmSync(join(dir, RESTORE_RUNNING));
-    rmSync(join(dir, RUNNER_ALIVE));
+    rmSync(join(dir, HELPER_ALIVE));
   }, 120_000);
 });

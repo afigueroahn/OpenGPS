@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-# Restores a backup when the platform's admin console asks for it.
+# The platform's helper, the only service with access to Docker. It restores
+# a backup when the platform's admin console asks for it.
 #
 # The platform cannot restore by itself: it would have to drop the database it
 # lives on and stop the device gateway. It leaves the request in the backups
@@ -10,7 +11,7 @@
 # platform does not start, it goes back to what there was.
 #
 # Files they talk through, in the backups folder, as "key=value" lines:
-#   restore-runner.alive   touched every 30 s: the console shows the button
+#   helper.alive           touched every 30 s: the console shows the button
 #   restore.request        written by the platform: which backup to restore
 #   restore.running        the same request, while it is handled
 #   restore.result         written here: how it ended (reason: a code the
@@ -27,7 +28,7 @@ WAIT_S=300
 REQUEST="$DIR/restore.request"
 RUNNING="$DIR/restore.running"
 RESULT="$DIR/restore.result"
-ALIVE="$DIR/restore-runner.alive"
+ALIVE="$DIR/helper.alive"
 # The backup's files are unpacked here first; what there was waits here until the end.
 FILES_NEW="$FILES/.restore-new"
 FILES_OLD="$FILES/.restore-previous"

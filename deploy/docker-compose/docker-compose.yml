@@ -158,12 +158,12 @@ services:
   # Restores a backup when the console asks for it: restores the databases
   # and the files aside, stops the platform and the gateway, swaps them and
   # brings them back, going back to what there was if the platform does not
-  # start (deploy/restorer.sh). It is the only service with access to Docker,
+  # start (deploy/helper.sh). It is the only service with access to Docker,
   # through its socket, and it opens no port.
-  restorer:
+  helper:
     build:
       context: ../..
-      dockerfile: deploy/restorer.Dockerfile
+      dockerfile: deploy/helper.Dockerfile
     restart: unless-stopped
     logging: *logging
     depends_on:
