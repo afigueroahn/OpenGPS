@@ -6,6 +6,8 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Sin publicar]
 
+## [0.5.1] - 2026-11-25
+
 ### Cambiado
 
 - El icono de la web ya no lleva el cuadro oscuro de fondo: en la pestaña del navegador y
