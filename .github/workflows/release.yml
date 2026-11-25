@@ -1,0 +1,156 @@
+# Publishes a release (ADR-0003). When main gets a root package.json version
+# with no tag yet and with its CHANGELOG.md section, it builds the three
+# images for amd64 and arm64, pushes them to ghcr.io tagged X.Y.Z, and only
+# then creates the tag vX.Y.Z and the GitHub release, with that section as
+# its notes. On a pull request that touches the images or this workflow, it
+# builds them without publishing anything.
+name: Release
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    paths:
+      - .github/workflows/release.yml
+      - .github/scripts/release-plan.sh
+      - deploy/*.Dockerfile
+  # To finish a release whose run failed halfway, once the cause is fixed.
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+env:
+  REGISTRY: ghcr.io/afigueroahn
+  SOURCE: https://github.com/afigueroahn/OpenGPS
+
+jobs:
+  plan:
+    name: Is a release due
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    outputs:
+      version: ${{ steps.plan.outputs.version }}
+      release: ${{ steps.plan.outputs.release }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - id: plan
+        name: Version, tag and changelog
+        run: |
+          .github/scripts/release-plan.sh "$RUNNER_TEMP/notes.md" > "$RUNNER_TEMP/plan"
+          cat "$RUNNER_TEMP/plan"
+          # Only this repository publishes: a fork's main never does.
+          if [ "$GITHUB_REPOSITORY" != "afigueroahn/OpenGPS" ] || [ "$GITHUB_EVENT_NAME" = "pull_request" ]; then
+            sed -i 's/^release=true$/release=false/' "$RUNNER_TEMP/plan"
+          fi
+          cat "$RUNNER_TEMP/plan" >> "$GITHUB_OUTPUT"
+      - if: steps.plan.outputs.release == 'true'
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: notes
+          path: ${{ runner.temp }}/notes.md
+
+  images:
+    name: Image ${{ matrix.image.name }} (${{ matrix.arch }})
+    needs: plan
+    if: github.event_name == 'pull_request' || needs.plan.outputs.release == 'true'
+    runs-on: ${{ matrix.arch == 'arm64' && 'ubuntu-24.04-arm' || 'ubuntu-24.04' }}
+    timeout-minutes: 40
+    permissions:
+      contents: read
+      packages: write
+    strategy:
+      fail-fast: true
+      matrix:
+        arch: [amd64, arm64]
+        image:
+          - { name: opengps, file: deploy/opengps.Dockerfile }
+          - { name: opengps-postgres, file: deploy/postgres.Dockerfile }
+          - { name: opengps-helper, file: deploy/restorer.Dockerfile }
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Builder that can push by digest
+        run: docker buildx create --use --driver docker-container
+      - if: github.event_name != 'pull_request'
+        name: Sign in to ghcr.io
+        run: echo "${{ github.token }}" | docker login ghcr.io --username "${{ github.actor }}" --password-stdin
+      - name: Build
+        env:
+          VERSION: ${{ needs.plan.outputs.version }}
+          NAME: ${{ matrix.image.name }}
+          FILE: ${{ matrix.image.file }}
+          ARCH: ${{ matrix.arch }}
+          PUSH: ${{ github.event_name != 'pull_request' }}
+        run: |
+          docker buildx build --platform "linux/$ARCH" --file "$FILE" \
+            --build-arg "APP_VERSION=$VERSION" --build-arg "REVISION=$GITHUB_SHA" \
+            --label "org.opencontainers.image.source=$SOURCE" \
+            --label "org.opencontainers.image.version=$VERSION" \
+            --label "org.opencontainers.image.revision=$GITHUB_SHA" \
+            --label "org.opencontainers.image.licenses=Apache-2.0" \
+            --output "type=image,name=$REGISTRY/$NAME,push-by-digest=true,name-canonical=true,push=$PUSH" \
+            --metadata-file "$RUNNER_TEMP/metadata.json" .
+          digest="$(jq -r '."containerimage.digest"' "$RUNNER_TEMP/metadata.json")"
+          echo "$NAME $ARCH $digest"
+          mkdir -p "$RUNNER_TEMP/digests"
+          touch "$RUNNER_TEMP/digests/${digest#sha256:}"
+      - if: github.event_name != 'pull_request'
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: digest-${{ matrix.image.name }}-${{ matrix.arch }}
+          path: ${{ runner.temp }}/digests/*
+
+  manifests:
+    name: Tag ${{ matrix.name }}
+    needs: [plan, images]
+    if: needs.plan.outputs.release == 'true'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      packages: write
+    strategy:
+      matrix:
+        name: [opengps, opengps-postgres, opengps-helper]
+    steps:
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          pattern: digest-${{ matrix.name }}-*
+          merge-multiple: true
+          path: ${{ runner.temp }}/digests
+      - name: Sign in to ghcr.io
+        run: echo "${{ github.token }}" | docker login ghcr.io --username "${{ github.actor }}" --password-stdin
+      - name: One tag for both architectures
+        env:
+          VERSION: ${{ needs.plan.outputs.version }}
+          NAME: ${{ matrix.name }}
+        working-directory: ${{ runner.temp }}/digests
+        run: |
+          [ "$(ls | wc -l)" -eq 2 ] || { echo "expected the amd64 and arm64 digests"; ls; exit 1; }
+          docker buildx imagetools create --tag "$REGISTRY/$NAME:$VERSION" $(printf "$REGISTRY/$NAME@sha256:%s " *)
+          docker buildx imagetools inspect "$REGISTRY/$NAME:$VERSION"
+
+  release:
+    name: Tag and release
+    needs: [plan, manifests]
+    if: needs.plan.outputs.release == 'true'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: notes
+          path: ${{ runner.temp }}
+      - name: GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VERSION: ${{ needs.plan.outputs.version }}
+        run: |
+          gh release create "v$VERSION" --repo "$GITHUB_REPOSITORY" --target "$GITHUB_SHA" \
+            --title "OpenGPS $VERSION" --notes-file "$RUNNER_TEMP/notes.md"

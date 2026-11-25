@@ -82,6 +82,23 @@ Hay un milestone por fase de arranque. Cada issue se asigna al de su fase.
 | Fase 4 — ADRs | Propuestas de stack, almacenamiento, tenancy y límites de capas. |
 | Fase 5 — MVP | Alcance cerrado definido por el mantenedor. |
 
+## Publicar una versión
+
+Las versiones siguen el versionado semántico y salen del `version` del `package.json`
+raíz (ADR-0003).
+
+1. Un PR `chore(release): vX.Y.Z` sube ese número y convierte la sección
+   `## [Sin publicar]` del `CHANGELOG.md` en `## [X.Y.Z] - AAAA-MM-DD`, con una
+   sección `## [Sin publicar]` nueva y vacía encima.
+2. Al hacer merge, el flujo `Release` arma las imágenes `opengps`, `opengps-postgres` y
+   `opengps-helper` para amd64 y arm64 y las sube a `ghcr.io/afigueroahn/` con el tag
+   `X.Y.Z`.
+3. Solo entonces crea el tag `vX.Y.Z` y la release de GitHub, con la sección del
+   CHANGELOG como notas.
+
+Si una corrida falla a la mitad, se arregla la causa y se vuelve a correr `Release`
+desde la pestaña *Actions*. Una versión ya publicada no se vuelve a publicar.
+
 ## Uso de IA
 
 Este proyecto se desarrolla con asistencia de IA y lo declara de forma explícita:
