@@ -16,6 +16,9 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/).
 - La plataforma: núcleo (mapa en vivo, historial, alertas, avisos, reportes, cuentas y
   administración), nueve módulos opcionales, simulador de equipos e instalación con
   Docker Compose o Dokploy, importada del repositorio donde se construyó (ADR-0002).
+- CI en GitHub Actions para cada PR y cada cambio en `main`: estilo, tipos,
+  compilación, auditoría de dependencias, pruebas contra PostgreSQL con TimescaleDB,
+  construcción de las imágenes de Docker y escaneo de secretos (#9).
 
 ### Cambiado
 

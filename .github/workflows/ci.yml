@@ -1,0 +1,96 @@
+# Checks every pull request and every change to main (AGENTS.md §6).
+# The tests need PostgreSQL with TimescaleDB at 127.0.0.1:5434, as on a
+# developer's machine (README.md): the job starts it the same way.
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  NODE_VERSION: "26"
+  PNPM_VERSION: "12.21.0"
+  TIMESCALEDB_IMAGE: timescale/timescaledb:2.32.1-pg18
+
+jobs:
+  checks:
+    name: Lint, types, build and audit
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+      - run: npm install --global pnpm@${{ env.PNPM_VERSION }}
+      - run: pnpm install --frozen-lockfile
+      - name: Lint
+        run: pnpm lint
+      - name: Types
+        run: pnpm typecheck
+      - name: Build
+        run: pnpm build
+      - name: Dependency audit
+        run: pnpm audit
+
+  test:
+    name: Unit and integration tests
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+      - run: npm install --global pnpm@${{ env.PNPM_VERSION }}
+      - run: pnpm install --frozen-lockfile
+      - name: Test database
+        run: |
+          docker run -d --name test-pg -p 127.0.0.1:5434:5432 \
+            -e POSTGRES_PASSWORD=postgres-local -e POSTGRES_DB=opengps \
+            -v "$PWD/deploy/postgres-init.sh:/docker-entrypoint-initdb.d/010-traccar.sh:ro" \
+            "$TIMESCALEDB_IMAGE"
+          # Ready when the gateway's database answers by network: during its
+          # first start Postgres only listens inside the container.
+          for try in $(seq 1 60); do
+            if docker exec test-pg psql -h 127.0.0.1 -U postgres -d traccar -c 'SELECT 1' > /dev/null 2>&1; then exit 0; fi
+            sleep 2
+          done
+          docker logs test-pg
+          exit 1
+      - name: Tests
+        run: |
+          cp apps/server/.env.example apps/server/.env.local
+          pnpm test
+
+  images:
+    name: Docker images
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        image: [opengps, postgres, restorer]
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Build ${{ matrix.image }}
+        run: docker build --file deploy/${{ matrix.image }}.Dockerfile .
+
+  secrets:
+    name: Secret scan
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: gitleaks
+        run: >
+          docker run --rm -v "$PWD:/repo:ro" ghcr.io/gitleaks/gitleaks:v8.30.1@sha256:c00b6bd0aeb3071cbcb79009cb16a60dd9e0a7c60e2be9ab65d25e6bc8abbb7f
+          dir /repo --no-banner --redact --exit-code 1

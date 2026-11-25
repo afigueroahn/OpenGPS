@@ -82,7 +82,7 @@ export function ApiTab() {
       <Card title={t("integrations.api.usage.title")} note={t("integrations.api.usage.note", { n: API_RATE_PER_MINUTE })}>
         <div className="space-y-3">
           <p className="text-[13.5px] leading-relaxed text-ink-3">{t("integrations.api.usage.lead")}</p>
-          <Code>{`curl ${base}/vehicles \\\n  -H "Authorization: Bearer TU_CLAVE"`}</Code>
+          <Code>{`curl ${base}/vehicles \\\n  -H "Authorization: Bearer TU_CLAVE"`}</Code>{/* gitleaks:allow (a placeholder) */}
           <ul className="divide-y divide-line rounded-[10px] border border-line text-[13px]">
             {ENDPOINTS.map(([route, what]) => (
               <li key={route} className="flex flex-col gap-0.5 px-3 py-2 sm:flex-row sm:items-baseline sm:gap-3">
