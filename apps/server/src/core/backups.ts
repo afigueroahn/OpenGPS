@@ -9,12 +9,13 @@
 // which restores aside, stops the platform, swaps the databases and brings it
 // back up. Before requesting it, a backup of the current state of everything is made.
 import { spawn } from "node:child_process";
+import { randomUUID } from "node:crypto";
 import { createReadStream, createWriteStream } from "node:fs";
 import { chmod, mkdir, readFile, readdir, rename, rm, stat, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import { Readable } from "node:stream";
 import { pipeline } from "node:stream/promises";
-import { type Backup, type BackupFile, type BackupPart, type BackupsInfo, type Language, type RestoreInfo, type TextParams, cronNext, isCron, parseCron } from "@opengps/shared";
+import { type Backup, type BackupFile, type BackupPart, type BackupsInfo, type Language, type RestoreInfo, type TextParams, type UpdateFailure, type UpdateInstall, cronNext, isCron, parseCron } from "@opengps/shared";
 import type { Bus } from "../bus";
 import type { Config } from "../config";
 import { type Db, withTransaction } from "../db";
@@ -47,6 +48,13 @@ export const RESTORE_REQUEST = "restore.request";
 export const RESTORE_RUNNING = "restore.running";
 /** How the last restore ended, written by the helper. */
 export const RESTORE_RESULT = "restore.result";
+/** The request to install a version, written by the backend (ADR-0004). */
+export const UPDATE_REQUEST = "update.request";
+/** The same request, while the helper handles it. */
+export const UPDATE_RUNNING = "update.running";
+/** How the last install ended, written by the helper. */
+export const UPDATE_RESULT = "update.result";
+const UPDATE_FAILURES: readonly UpdateFailure[] = ["backup", "invalid", "unsupported", "pull", "files", "env", "start", "rolled_back", "restored", "broken", "cut"];
 /**
  * The list of backups, which is also saved in the folder on every change. A
  * restored database comes back with the list from when its backup was made;
@@ -178,6 +186,16 @@ export interface Backups {
    * startup, before serving anyone.
    */
   reconcile(): Promise<void>;
+  /** Whether the helper is running, and whether it can install versions (it sees the installation's folder). */
+  helper(): Promise<{ alive: boolean; canUpdate: boolean }>;
+  /**
+   * Requests installing a version. First makes a backup of everything, like
+   * before restoring, and then leaves the request for the helper. Responds as
+   * soon as it checks it; the rest happens afterwards.
+   */
+  requestUpdate(version: string, from: string, actor: SettingsActor): Promise<void>;
+  /** The last install asked from the console, according to what is in the folder. */
+  lastUpdate(): Promise<UpdateInstall["last"]>;
 }
 
 /** With `tickEveryMs` null there is no clock: whoever creates it calls `tick` when it wants (tests). */
@@ -318,7 +336,7 @@ export function createBackups(deps: { db: Db; bus: Bus; config: Config; settings
       console.error(`[backups] backup ${id} failed:`, error);
       await deps.system?.notify("backup_failed", { title: tr(language, "core.backups.notify.failedTitle"), body: tr(language, "core.backups.notify.failedBody", { error }), path: "/admin/system/backups" });
     } else {
-      const body = kind === "manual" ? "core.backups.notify.doneManual" : kind === "pre_restore" ? "core.backups.notify.doneBeforeRestore" : "core.backups.notify.doneScheduled";
+      const body = kind === "manual" ? "core.backups.notify.doneManual" : kind === "pre_restore" ? "core.backups.notify.doneBeforeRestore" : kind === "pre_update" ? "core.backups.notify.doneBeforeUpdate" : "core.backups.notify.doneScheduled";
       await deps.system?.notify("backup_ok", { title: tr(language, "core.backups.notify.doneTitle"), body: tr(language, body), path: "/admin/system/backups" });
     }
     await prune(now).catch((err: Error) => console.error("[backups] could not remove the expired backups:", err.message));
@@ -363,6 +381,12 @@ export function createBackups(deps: { db: Db; bus: Bus; config: Config; settings
   const runnerAlive = async (now: number) => {
     const info = await stat(join(dir(), HELPER_ALIVE)).catch(() => null);
     return info !== null && now - info.mtimeMs < RUNNER_FRESH_MS;
+  };
+  /** The helper is running and says it can install versions (update=yes). */
+  const helperState = async (now: number) => {
+    const alive = await runnerAlive(now);
+    const note = alive ? await readNote(join(dir(), HELPER_ALIVE)) : null;
+    return { alive, canUpdate: note?.update === "yes" };
   };
 
   /** Why a restore failed, in words: from the helper's code, or as it wrote it. */
@@ -418,6 +442,33 @@ export function createBackups(deps: { db: Db; bus: Bus; config: Config; settings
     const note = [`id=${row.id}`, `backup=${row.started_at.toISOString()}`, `requested=${requestedAt}`, `gps=${part("gps")}`, `traccar=${part("traccar")}`, `files=${part("files")}`, ""].join("\n");
     await writeFile(join(dir(), `${RESTORE_REQUEST}.tmp`), note, { mode: 0o600 });
     await rename(join(dir(), `${RESTORE_REQUEST}.tmp`), join(dir(), RESTORE_REQUEST));
+  }
+
+  // ─── Updates (ADR-0004) ────────────────────────────────────────────────────
+
+  /** An install this backend is preparing (making the backup before it), or could not prepare. */
+  let updatePreparing: UpdateInstall["last"] = null;
+
+  async function lastUpdate(): Promise<UpdateInstall["last"]> {
+    if (updatePreparing) return updatePreparing;
+    const waiting = await readNote(join(dir(), UPDATE_REQUEST));
+    const working = waiting ? null : await readNote(join(dir(), UPDATE_RUNNING));
+    const note = waiting ?? working;
+    if (note?.version) return { state: waiting ? "requested" : "running", version: note.version, from: note.from || null, at: note.requested || new Date().toISOString(), reason: null };
+    const result = await readNote(join(dir(), UPDATE_RESULT));
+    if (!result?.version) return null;
+    const reason = UPDATE_FAILURES.find((r) => r === result.reason) ?? null;
+    return { state: result.status === "ok" ? "ok" : "failed", version: result.version, from: result.from || null, at: result.finished || result.requested || new Date().toISOString(), reason };
+  }
+
+  async function prepareUpdate(version: string, actor: SettingsActor, requestedAt: string): Promise<void> {
+    // Before installing, the current state of everything is saved: with that backup the update can be undone.
+    const safety = await runOnce("pre_update", actor);
+    if (safety.status !== "ok") throw new Error(safety.error ?? "the backup before updating failed");
+    const part = (name: BackupPart) => safety.files.find((f) => f.part === name)?.name ?? "";
+    const note = [`id=${randomUUID()}`, `version=${version}`, `requested=${requestedAt}`, `backup=${safety.id}`, `gps=${part("gps")}`, `traccar=${part("traccar")}`, `files=${part("files")}`, ""].join("\n");
+    await writeFile(join(dir(), `${UPDATE_REQUEST}.tmp`), note, { mode: 0o600 });
+    await rename(join(dir(), `${UPDATE_REQUEST}.tmp`), join(dir(), UPDATE_REQUEST));
   }
 
   /**
@@ -616,5 +667,31 @@ export function createBackups(deps: { db: Db; bus: Bus; config: Config; settings
     },
     discover,
     reconcile,
+    helper: () => helperState(Date.now()),
+    async requestUpdate(version, from, actor) {
+      const helper = await helperState(Date.now());
+      if (!helper.alive || !helper.canUpdate) throw badRequest(say("core.updates.noHelper"));
+      const restoring = await restoreInfo();
+      if (restoring && (restoring.state === "requested" || restoring.state === "running")) throw conflict("restore_running", say("core.backups.restoreRunning"));
+      const now = await lastUpdate();
+      if (now && (now.state === "preparing" || now.state === "requested" || now.state === "running")) throw conflict("update_running", say("core.updates.running"));
+      if (running) throw conflict("backup_running", say("core.backups.busy"));
+      const requestedAt = new Date().toISOString();
+      await audit(db.core, { orgId: null, userId: actor.userId, ip: actor.ip ?? null }, "admin.update_install", "update", version, { version, from, requestedAt });
+      updatePreparing = { state: "preparing", version, from, at: requestedAt, reason: null };
+      // The backup before it may take a while: it is made after responding.
+      queue = queue
+        .then(() => prepareUpdate(version, actor, requestedAt))
+        .then(
+          () => {
+            updatePreparing = null;
+          },
+          (err: Error) => {
+            console.error("[backups] could not prepare the update:", err.message);
+            updatePreparing = { state: "failed", version, from, at: new Date().toISOString(), reason: "backup" };
+          },
+        );
+    },
+    lastUpdate,
   };
 }

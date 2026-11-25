@@ -92,6 +92,7 @@ const ACTIONS: Record<string, (d: Detail) => string> = {
   "admin.backup_restored": () => i18n.t("activity.actions.admin.backup_restored"),
   "admin.backup_discover": (d) => i18n.t("activity.actions.admin.backup_discover", { found: text(d.found, "0"), added: text(d.added, "0") }),
   "admin.backup_download": (d) => i18n.t("activity.actions.admin.backup_download", { name: text(d.name) }),
+  "admin.update_install": (d) => i18n.t("activity.actions.admin.update_install", { version: text(d.version), from: text(d.from) }),
   "admin.notification.create": (d) => i18n.t("activity.actions.admin.notification.create", { name: text(d.name) }),
   "admin.notification.update": (d) => i18n.t("activity.actions.admin.notification.update", { name: text(d.name) }),
   "admin.notification.delete": (d) => i18n.t("activity.actions.admin.notification.delete", { name: text(d.name) }),

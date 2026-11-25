@@ -3,7 +3,7 @@
 // the result. It is looked for on a clock and when the owner opens the
 // platform, at most once an hour unless the owner asks; one answer serves
 // everyone, and a failed look says so instead of passing for "up to date".
-import { type UpdateCheckError, type UpdateStatus, compareVersions } from "@opengps/shared";
+import { type UpdateCheck, type UpdateCheckError, compareVersions } from "@opengps/shared";
 import type { Config } from "../config";
 
 type Fetch = (
@@ -21,9 +21,9 @@ interface GitHubRelease {
 
 export interface Updates {
   /** What is known now, without looking. */
-  status(): UpdateStatus;
+  status(): UpdateCheck;
   /** Looks, unless the last look is younger than `maxAgeMs`, and says what is known. Simultaneous calls share one look. */
-  check(opts?: { maxAgeMs?: number }): Promise<UpdateStatus>;
+  check(opts?: { maxAgeMs?: number }): Promise<UpdateCheck>;
   /** Looks every few hours while started. */
   start(): void;
   stop(): void;
@@ -40,14 +40,14 @@ export function createUpdates(deps: { config: Pick<Config, "appVersion" | "updat
   const now = deps.now ?? Date.now;
   const repository = /^[\w.-]+\/[\w.-]+$/.test(config.updateRepository) ? config.updateRepository : null;
 
-  let latest: UpdateStatus["latest"] = null;
+  let latest: UpdateCheck["latest"] = null;
   let checkedAt: number | null = null;
   let error: UpdateCheckError | null = null;
   let etag: string | null = null;
-  let inFlight: Promise<UpdateStatus> | null = null;
+  let inFlight: Promise<UpdateCheck> | null = null;
   const timers: NodeJS.Timeout[] = [];
 
-  const status = (): UpdateStatus => ({
+  const status = (): UpdateCheck => ({
     current: config.appVersion,
     repository,
     latest,

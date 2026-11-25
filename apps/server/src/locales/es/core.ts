@@ -162,11 +162,17 @@ export default {
       doneManual: "La copia pedida a mano terminó bien y ya está en la lista.",
       doneScheduled: "La copia programada terminó bien y ya está en la lista.",
       doneBeforeRestore: "La copia hecha antes de restaurar terminó bien y ya está en la lista.",
+      doneBeforeUpdate: "La copia hecha antes de actualizar terminó bien y ya está en la lista.",
       restoredTitle: "terminó una restauración",
       restoredBody: "La plataforma volvió al estado de la copia elegida y ya está en marcha otra vez.",
     },
   },
   /** Problems of the external storage, in plain words. */
+  updates: {
+    noHelper: "Esta instalación no puede actualizarse desde la consola: su ayudante no está en marcha o no ve la carpeta de la instalación",
+    running: "Ya hay una actualización pedida o en marcha",
+    notLatest: "Esa no es la última versión publicada, o no es más nueva que la instalada",
+  },
   storage: {
     blocked: "Cloudflare Access bloqueó la petición antes de que llegara al almacenamiento: en Cloudflare hay que dar paso a este servidor en esa dirección",
     notS3: "Esa dirección no respondió como un almacenamiento S3, sino con una página: revisa que sea la del servicio S3 y no la de otra cosa, como un panel de administración",

@@ -35,6 +35,10 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/).
   el `docker-compose.yml` de la versión nueva, la levanta y vuelve a la anterior si no
   responde, o restaura la copia sacada antes si ni esa arranca. Una prueba de punta a
   punta lo comprueba con Docker en la CI (ADR-0004, #22).
+- Botón «Actualizar a X.Y.Z» en Sistema → Actualizaciones: hace antes una copia de todo
+  («Antes de actualizar»), deja el pedido al ayudante y muestra en qué va; la página se
+  recarga sola con la versión nueva, o dice por qué no se instaló. Con Dokploy muestra
+  los pasos a mano (#24).
 
 ### Cambiado
 

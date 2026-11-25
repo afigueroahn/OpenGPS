@@ -194,7 +194,17 @@ Para ver el registro de la plataforma en vivo: `docker compose logs -f opengps`.
 
 ### Instalar una versión nueva
 
-Cada versión está en [las releases del repositorio](https://github.com/afigueroahn/OpenGPS/releases), con sus cambios. Sus notas dicen si pide algo más, como una variable nueva. Para instalarla, cambia `X.Y.Z` por su número:
+Cada versión está en [las releases del repositorio](https://github.com/afigueroahn/OpenGPS/releases), con sus cambios. Sus notas dicen si pide algo más, como una variable nueva. La consola avisa al dueño cuando sale una.
+
+**Desde la consola**, con Docker Compose: en Administración → Sistema → Actualizaciones, pulsa «Actualizar a X.Y.Z».
+1. La plataforma hace antes una copia de todo, de tipo «Antes de actualizar».
+2. El ayudante descarga la versión y la instala. La plataforma queda sin servicio unos segundos.
+3. Si la versión nueva no arranca, vuelve sola a la anterior, y si tampoco arranca la anterior, restaura esa copia.
+4. Deja `docker-compose.yml.previous` y `.env.previous` con lo que había.
+
+Con Dokploy el botón no aparece, porque Dokploy desharía el cambio: allí se cambia `OPENGPS_VERSION` y se pulsa *Deploy*.
+
+**A mano**, cambia `X.Y.Z` por su número:
 
 ```bash
 cd /opt/opengps

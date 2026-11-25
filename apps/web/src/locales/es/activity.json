@@ -140,7 +140,8 @@
       },
       "user_ban": "suspendió al usuario {{email}}",
       "user_delete": "eliminó al usuario {{email}}",
-      "user_unban": "reactivó al usuario {{email}}"
+      "user_unban": "reactivó al usuario {{email}}",
+      "update_install": "pidió instalar la versión {{version}}, en lugar de la {{from}}"
     },
     "notification": {
       "create": "creó el aviso {{name}}",
