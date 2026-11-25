@@ -7,13 +7,13 @@ import { type ButtonHTMLAttributes, type InputHTMLAttributes, type ReactNode, us
 import { useTranslation } from "react-i18next";
 
 /**
- * The platform's icon with its name. The drawing is the official one, public/icon.svg, wider than it is tall:
- * `size` is its width. `dark` is for a surface that is dark; `iconOnly` leaves just the icon, for a folded menu.
+ * The platform's icon with its name. The drawing is the official one, public/icon.svg, also the browser tab's
+ * icon. `dark` is for a surface that is dark; `iconOnly` leaves just the icon, for a folded menu.
  */
 export function Logo({ dark = false, size = 30, iconOnly = false }: { dark?: boolean; size?: number; iconOnly?: boolean }) {
   return (
     <span className="inline-flex items-center gap-2.5">
-      <img src="/icon.svg" width={size} height={Math.round((size * 360) / 512)} alt="" />
+      <img src="/icon.svg" width={size} height={size} alt="" />
       {!iconOnly && (
         <span className={clsx("text-[15px] font-semibold tracking-tight", dark ? "text-white" : "text-ink")}>
           Open<span className={dark ? "text-white/60" : "text-muted"}>GPS</span>
