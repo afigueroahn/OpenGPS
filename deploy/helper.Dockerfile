@@ -10,6 +10,7 @@ COPY deploy/helper.sh /usr/local/bin/helper.sh
 # Compose: when it installs it, the helper takes from here the one of the way
 # the installation has.
 COPY deploy/docker-compose/docker-compose.yml /opt/opengps/docker-compose/docker-compose.yml
+COPY deploy/caddy/docker-compose.yml /opt/opengps/caddy/docker-compose.yml
 COPY deploy/cloudflare/docker-compose.yml /opt/opengps/cloudflare/docker-compose.yml
 # Where the helpers from before the ways existed (0.1.x) look for it.
 COPY deploy/docker-compose/docker-compose.yml /opt/opengps/docker-compose.yml

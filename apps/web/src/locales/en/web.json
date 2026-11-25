@@ -1008,7 +1008,7 @@
         "requested": "Backup ready. Waiting for the helper to install {{version}}…",
         "running": "Installing {{version}}. The platform restarts and this page reloads by itself.",
         "ok": "The platform was updated to version {{version}} ({{when}}).",
-        "manual": "This installation is updated by hand: with Docker Compose, follow \"Install a new version\" in the guide; with Dokploy, change OPENGPS_VERSION to {{version}} in Environment and press Deploy.",
+        "manual": "This installation is updated by hand: with Docker Compose, follow \"Install a new version\" in the guide; with Dokploy or Coolify, change OPENGPS_VERSION to {{version}} in its variables and deploy again.",
         "source": "This platform was built from the code: it is updated with git pull and building again.",
         "reasons": {
           "backup": "The backup before it could not be made, so {{version}} was not installed. Nothing changed.",

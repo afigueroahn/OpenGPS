@@ -10,6 +10,11 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/).
 
 - `deploy/cloudflare/`: instalar con Docker Compose y un túnel de Cloudflare es una
   forma propia, con su compose (ADR-0005, #36).
+- `deploy/caddy/`: instalar con Docker Compose y Caddy, que pone el dominio con HTTPS y
+  consigue el certificado solo. `CADDY_SITES` suma otros nombres, como `api.`. Se
+  actualiza desde la consola y cada release adjunta `docker-compose.caddy.yml` (#38).
+- `deploy/coolify/`: instalar en Coolify, que genera los secretos y pone el dominio.
+  Solo pide `OPENGPS_VERSION` (#38).
 
 ### Cambiado
 

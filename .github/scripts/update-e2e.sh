@@ -5,7 +5,7 @@
 #   .github/scripts/update-e2e.sh [WAY] [WORK_DIR]
 #
 # WAY is a folder of deploy/ that the helper can update (docker-compose by
-# default, cloudflare), or "legacy":
+# default, caddy, cloudflare), or "legacy":
 #
 # - A way: builds three versions of the images, 0.0.1, 0.0.2 and a 0.0.3 whose
 #   platform cannot start. Installs 0.0.1 as a server would, from that way's
@@ -80,6 +80,12 @@ update() { # version
 }
 # The way of installing the installation has now.
 way_installed() { sed -n 's/^x-opengps-deploy:[[:space:]]*//p' "$INSTALL/docker-compose.yml"; }
+# With deploy/caddy, the web app answers through the proxy, on the server's port 80.
+through_proxy() { # version
+  if [ "$WAY" = caddy ] && ! curl -fsS --retry 10 --retry-delay 3 --retry-all-errors http://localhost/api/health | grep -q "\"version\":\"$1\""; then
+    fail "the web app does not answer $1 through Caddy"
+  fi
+}
 
 mkdir -p "$INSTALL"
 if [ "$WAY" = legacy ]; then
@@ -114,6 +120,7 @@ else
 fi
 (cd "$INSTALL" && docker compose up -d --quiet-pull > /dev/null)
 answers "$FIRST" 300 || fail "$FIRST did not start"
+through_proxy "$FIRST"
 grep -q '^update=yes$' <(docker exec "$(service helper)" cat /data/backups/helper.alive) || fail "the helper does not offer updates"
 
 say "asking for 0.0.2"
@@ -134,6 +141,7 @@ if [ "$WAY" = legacy ]; then
 fi
 
 [ "$(way_installed)" = "$WAY" ] || fail "the installation is no longer deploy/$WAY: $(way_installed)"
+through_proxy 0.0.2
 
 say "asking for 0.0.3, which cannot start"
 result="$(update 0.0.3)"
