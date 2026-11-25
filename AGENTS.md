@@ -28,12 +28,8 @@
 - Las decisiones de arquitectura NO viven en issues: van a `docs/adr/NNNN-titulo.md`,
   numerados e inmutables (se marcan `Superseded by`, nunca se reescriben).
 
-## 3. Commits: autoría, firma y atribución
+## 3. Commits
 - Conventional Commits (`feat:`, `fix:`, `chore:`, `docs:`, `refactor:`, `test:`).
-- **Autor git = el humano.** 
-- Trailer `Signed-off-by:` del humano (DCO).
-- Trailer `Co-Authored-By:` tuyo, como atribución de herramienta.
-- **Prohibido** firmar criptográficamente como "Claude Code" o usar identidades ficticias.
 - Prohibido: `--no-verify`, force-push a `main`, reescribir historia publicada.
 
 Formato:
@@ -43,8 +39,6 @@ feat(ingest): describir el cambio en imperativo
 Cuerpo: qué y por qué, no cómo.
 
 Closes #42
-Signed-off-by: Nombre Humano <email>
-Co-Authored-By: Claude <noreply@anthropic.com>
 ```
 
 ## 4. Definition of Done (checklist obligatorio en cada PR)
@@ -59,33 +53,36 @@ Co-Authored-By: Claude <noreply@anthropic.com>
 - [ ] Diff dentro del límite o justificado
 
 ## 5. Entorno reproducible
-- Host: Ubuntu Server 26.04 LTS, **desechable**. Todo el aprovisionamiento en
-  `infra/bootstrap/` como script idempotente. Cero pasos manuales no documentados.
-  Objetivo: reconstruir el host desde cero en ≤10 minutos.
-- En el host solo se instala lo mínimo (Docker, git, make). Todo lo demás en contenedores.
-- Imágenes pineadas por versión **y digest**. Prohibido `:latest`.
-- Multi-stage builds, usuario no-root, `HEALTHCHECK` en cada servicio.
-- Versiones de herramientas pineadas en el repo (devcontainer / `mise.toml`).
-  Lockfiles commiteados. `.editorconfig` + formateador automático.
-- `.env.example` completo y comentado. `.env` jamás commiteado.
+- Servidor: Ubuntu 24.04 o 26.04 con Docker, **desechable**. Su preparación y cada
+  forma de instalar (`deploy/<forma>/`, ADR-0005) están en `deploy/README.md`. Cero
+  pasos manuales fuera de esa guía. Objetivo: instalar desde cero en ≤10 minutos.
+- En el servidor no se clona ni se construye el código: descarga las imágenes de la
+  release en `ghcr.io` (ADR-0003) y se actualiza desde la consola (ADR-0004).
+- Imágenes fijadas por versión: las de terceros por su tag, las propias por `X.Y.Z`.
+  Prohibido `:latest`.
+- La imagen de la plataforma se construye en varias etapas y corre sin root. El
+  ayudante corre como root porque maneja Docker.
+- Los healthchecks van en los compose, no en los Dockerfile: `postgres`, `traccar` y
+  `opengps` tienen el suyo, y los servicios que dependen de ellos esperan a que estén sanos.
+- Versiones de herramientas fijadas en el `package.json` raíz (`packageManager`,
+  `engines`). Lockfiles commiteados. `.editorconfig` para el formato.
+- `deploy/.env.example` (instalación) y `apps/server/.env.example` (desarrollo),
+  completos y comentados. `.env` jamás commiteado.
 - Volúmenes nombrados. Todo servicio con estado requiere procedimiento de backup
   **y de restore probado** antes de cerrar su issue.
-- Punto de entrada único: `Makefile` (`setup`, `dev`, `test`, `lint`, `build`,
-  `migrate`, `seed`, `clean`). La documentación cita targets, no comandos largos.
+- Punto de entrada único: los scripts del `package.json` raíz (`pnpm dev`, `test`,
+  `lint`, `typecheck`, `build`). Las migraciones las aplica la plataforma al arrancar.
+  La documentación cita scripts, no comandos largos.
 
 ## 6. Verificación obligatoria
 Checks requeridos para mergear desde el primer PR, aunque haya un solo contributor:
-`lint` · `format` · `typecheck estricto` · `unit` · `integration` · `build` ·
-`auditoría de dependencias` · `escaneo de secretos` · `límites de arquitectura` ·
-`umbral de cobertura`
+`lint` · `typecheck estricto` · `unit` · `integration` · `build` (código e imágenes) ·
+`auditoría de dependencias` · `scripts de shell` · `archivos de instalación` ·
+`escaneo de secretos` · `actualización de punta a punta` (cuando cambia `deploy/`)
 
 - Branch protection en `main`: PR obligatorio, checks obligatorios, historia lineal.
-- Pre-commit hooks: formato, lint, secretos.
-- Los límites entre capas se declaran en `AGENTS.md` y se verifican con herramienta
-  en CI. Un import que viole una capa **rompe el build**.
 - **Prohibido modificar, saltar o silenciar un test para que pase.** Si falla, se
   arregla el código o se discute el test en el issue.
-- Renovate o Dependabot configurado desde el inicio.
 
 ## 7. Dependencias
 Ninguna dependencia nueva sin issue aprobado que justifique: necesidad, alternativas
@@ -110,17 +107,15 @@ consideradas, estado de mantenimiento y licencia compatible con Apache-2.0 (ADR-
 opengps/
 ├── AGENTS.md              # este documento (fuente de verdad)
 ├── CLAUDE.md              # importa AGENTS.md
-├── Makefile
 ├── README.md  LICENSE  NOTICE  CHANGELOG.md  CONTRIBUTING.md  SECURITY.md  CODEOWNERS
-├── .env.example  .editorconfig  .gitignore
-├── .devcontainer/
-├── .github/{ISSUE_TEMPLATE,PULL_REQUEST_TEMPLATE.md,workflows}
-├── docs/{architecture.md,adr/}
-├── infra/bootstrap/
-├── services/              # límites de capas definidos por ADR
-├── packages/
-├── migrations/
-└── tools/
+├── package.json  pnpm-lock.yaml  pnpm-workspace.yaml  tsconfig.base.json
+├── .editorconfig  .gitignore  .dockerignore
+├── .github/{ISSUE_TEMPLATE,PULL_REQUEST_TEMPLATE.md,scripts,workflows}
+├── docs/{API.md,adr/}
+├── apps/{server,web,mobile}/  # plataforma, web y apps (ADR-0002)
+├── packages/shared/       # tipos, reglas y textos compartidos
+├── db/migrations/         # core y una carpeta por módulo
+└── deploy/                # una carpeta por forma de instalar (ADR-0005), imágenes y variables
 ```
 
 ## 11. Plantillas
@@ -134,9 +129,11 @@ opengps/
 - Labels y milestones creados y documentados.
 
 ## 12. Documentación
-- `README.md`: qué es, estado del proyecto, requisitos, **quickstart ≤5 min verificado
-  en host limpio**, configuración, targets de make, troubleshooting, licencia.
-- `docs/architecture.md`: un solo archivo con diagrama, actualizado cuando cambie.
+- `README.md`: qué es, estado del proyecto, estructura, requisitos, desarrollo y
+  pruebas con los scripts de pnpm, licencia.
+- `deploy/README.md`: instalar desde un servidor recién creado, **verificado en un
+  servidor limpio**, variables, actualizar, copias y restaurar, troubleshooting.
+- `docs/API.md`: contrato de la API para la web y las apps.
 - `docs/adr/`: una decisión por archivo.
 - `CONTRIBUTING.md`: flujo, commits, DoD y **declaración explícita de uso de IA**.
 - `SECURITY.md`: cómo reportar vulnerabilidades. `CHANGELOG.md`: Keep a Changelog.
@@ -144,18 +141,14 @@ opengps/
 
 ## 13. Fases de arranque (en orden, con parada y aprobación entre cada una)
 - **Fase 0 — Preguntas.** Lista de todo lo `[PENDIENTE]` que necesitas de mí.
-  Incluye identidad git y llave de firma. No escribas código.
+  Incluye identidad git. No escribas código.
 - **Fase 1 — Gobernanza.** LICENSE, README stub, CONTRIBUTING, SECURITY, CODEOWNERS,
   plantillas de issue/PR, labels, .gitignore, .editorconfig, política de commits. Un PR.
-- **Fase 2 — Entorno.** Bootstrap del host, Docker/Compose, devcontainer, Makefile,
-  .env.example, pre-commit. Criterio: `make setup && make dev` funciona en host limpio.
+- **Fase 2 — Entorno.** Instalación con Docker Compose en `deploy/` y `.env.example`.
+  Criterio: `deploy/README.md` deja la plataforma en marcha en un servidor recién
+  creado y `pnpm install && pnpm test` funciona en una máquina limpia.
 - **Fase 3 — CI.** Todos los checks del §6 corriendo y bloqueando merges, con un smoke
   test aunque todavía no haya producto. Branch protection activada.
-- **Fase 4 — ADRs.** Propuestas de stack, almacenamiento, modelo de tenancy, límites
-  de capas y licencia. Solo propuestas, sin implementar.
+- **Fase 4 — ADRs.** Propuestas de stack, almacenamiento, modelo de tenancy y
+  licencia. Solo propuestas, sin implementar.
 - **Fase 5 — MVP.** Te daré el alcance cerrado. Nada fuera de él.
-
-## 14. Primera tarea
-1. Guarda este documento textualmente como `AGENTS.md` y crea `CLAUDE.md` que lo importe.
-2. Ejecuta **únicamente la Fase 0**.
-3. Detente y espera mis respuestas.

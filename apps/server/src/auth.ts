@@ -44,6 +44,11 @@ export type Auth = ReturnType<typeof createAuth>;
 
 /** Header with the visitor's real IP; the backend writes it from what the proxy in front says, and no one else. */
 export const CLIENT_IP_HEADER = "x-real-ip";
+/**
+ * Header with the page a request comes from, when that page is the web app itself at an address other than the
+ * platform's own. The API writes it, and no one else (api/server.ts).
+ */
+export const OWN_ORIGIN_HEADER = "x-own-origin";
 
 /** What is needed to delete the data of someone who deletes their account. */
 export type BeforeUserDelete = (userId: string) => Promise<void>;
@@ -170,8 +175,9 @@ export function createAuth(config: Config, db: Db, mailer: Mailer, beforeUserDel
       basePath: "/api/auth",
       secret: config.authSecret,
       database: db.auth,
-      // Apple posts the person back from its own page.
-      trustedOrigins: oauthReady(config, "apple") ? [...config.trustedOrigins, APPLE_ORIGIN] : config.trustedOrigins,
+      // The platform's address; the address the web app was opened by, when the API says it is another of its
+      // own; and Apple, which posts the person back from its own page.
+      trustedOrigins: (request) => [config.publicUrl, request?.headers.get(OWN_ORIGIN_HEADER), oauthReady(config, "apple") ? APPLE_ORIGIN : null],
       telemetry: { enabled: false },
       // A trip to another service that goes wrong comes back to the sign-in screen, which says why.
       onAPIError: { errorURL: `${config.publicUrl}/login?via=oauth` },

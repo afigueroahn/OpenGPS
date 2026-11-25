@@ -8,9 +8,32 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/).
 
 ### Cambiado
 
+- La plataforma acepta entrar y guardar cambios desde cualquier dirección por la que se
+  abra (una IP, otro dominio), sin configurar nada, y sigue rechazando a las páginas
+  ajenas (ADR-0006, #44).
+- Los equipos GPS apuntan siempre a `gw.` + el dominio, o a la misma IP cuando la
+  plataforma se abre por una IP. La IP que se muestra a quien configura un equipo sale
+  del registro DNS de ese nombre (#44).
+- `deploy/caddy/` atiende la dirección de `PUBLIC_URL` y `api.` bajo su dominio, cada
+  una con su certificado (#44).
+- `deploy/docker-compose/` publica la web siempre hacia toda la red. Una instalación
+  0.1.x sin túnel que se actualiza pasa a publicar el puerto 3000 (#44).
+- El simulador de la consola ya no tiene tope de equipos a la vez (#44).
+- `AGENTS.md` y `CONTRIBUTING.md` describen la plataforma como es: se instala con
+  `deploy/`, se trabaja con los scripts de pnpm y la CI corre los checks que se piden.
+  Se quitan las reglas que no hacían falta (ADR-0007, #50).
+- La web usa el icono oficial de la plataforma, el marcador con su órbita: en la pestaña
+  del navegador, en el logo de todas las pantallas y al guardarla en la pantalla de
+  inicio de un iPhone (#46).
 - La sección de versión de la consola dice menos: la frase bajo su título queda en
   «Versión actual, última disponible y novedades.» y la tarjeta ya no muestra con qué
   repositorio se compara ni cuándo se consultó (#48).
+
+### Eliminado
+
+- Las variables `WEB_BIND`, `CADDY_SITES`, `DEVICE_GATEWAY_HOST`, `DEVICE_GATEWAY_IP`,
+  `TRUSTED_ORIGINS` y `SIMULATOR_MAX_DEVICES`. Quien las tenga en su `.env` puede
+  borrarlas: ya no se leen (ADR-0006, #44).
 
 ## [0.2.0] - 2026-11-25
 

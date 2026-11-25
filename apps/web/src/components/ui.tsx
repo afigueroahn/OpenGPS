@@ -6,15 +6,15 @@ import { Check, Copy, LoaderCircle, X } from "lucide-react";
 import { type ButtonHTMLAttributes, type InputHTMLAttributes, type ReactNode, useId, useLayoutEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 
-/** `iconOnly` leaves just the mark, for a folded menu. */
+/**
+ * The platform's icon with its name. The drawing is the official one, public/icon.svg: its dark tile shows on a
+ * light surface and blends into a dark one, where the mark is left. `dark` is for a surface that is dark;
+ * `iconOnly` leaves just the icon, for a folded menu.
+ */
 export function Logo({ dark = false, size = 30, iconOnly = false }: { dark?: boolean; size?: number; iconOnly?: boolean }) {
   return (
     <span className="inline-flex items-center gap-2.5">
-      <svg width={size} height={size} viewBox="0 0 32 32" aria-hidden="true">
-        <rect width="32" height="32" rx="8" fill={dark ? "#1a2233" : "#101623"} />
-        <path d="M16 6.5c-4.1 0-7.4 3.2-7.4 7.2 0 5.2 7.4 11.8 7.4 11.8s7.4-6.600 7.400-11.800c0-4-3.300-7.200-7.400-7.200z" fill="#3ddc97" />
-        <circle cx="16" cy="13.800" r="2.900" fill={dark ? "#1a2233" : "#101623"} />
-      </svg>
+      <img src="/icon.svg" width={size} height={size} alt="" />
       {!iconOnly && (
         <span className={clsx("text-[15px] font-semibold tracking-tight", dark ? "text-white" : "text-ink")}>
           Open<span className={dark ? "text-white/60" : "text-muted"}>GPS</span>

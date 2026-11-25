@@ -94,7 +94,7 @@ export interface Simulator {
 export interface SimulatorDeps {
   db: Db;
   bus: Bus;
-  config: Pick<Config, "traccar" | "gatewayHost" | "gatewayIp" | "simulator" | "routing" | "geocoder">;
+  config: Pick<Config, "traccar" | "gatewayHost" | "gatewayIp" | "routing" | "geocoder">;
   /** Who traces routes along streets; a test puts its own there. */
   routing?: Routing | undefined;
   /** How a device opens its connection; a test puts its own gateway there. */
@@ -239,8 +239,6 @@ export function createSimulator(deps: SimulatorDeps): Simulator {
   async function launch(row: SimulationRow, code: "started" | "resumed"): Promise<void> {
     const brand = protocolOf(row.modelId);
     if (!brand) throw badRequest(say("simulator.errors.brandNotYet"));
-    const max = config.simulator.maxDevices;
-    if (devicesRunning() + row.identifiers.length > max) throw badRequest(say("simulator.errors.tooManyDevices", { max }));
     const route = await getRoute(db.core, row.routeId);
     if (!route) throw badRequest(say("simulator.errors.routeNotFound"));
     const plan = compile(row.scenario, route);
@@ -459,7 +457,7 @@ export function createSimulator(deps: SimulatorDeps): Simulator {
         if (!protocol) return [];
         return [{ modelId: model.id, brand: model.brand, name: model.name, protocol: model.protocol, port: model.port, idLabel: model.idLabel, idFormat: protocol.idFormat, capabilities: [...protocol.capabilities] }];
       });
-      return { brands, host: config.gatewayHost, maxDevices: config.simulator.maxDevices, running: devicesRunning(), routing: routing.enabled };
+      return { brands, host: config.gatewayHost, running: devicesRunning(), routing: routing.enabled };
     },
     routes: () => listRoutes(db.core),
     route: routeOf,
@@ -598,7 +596,7 @@ export function createSimulator(deps: SimulatorDeps): Simulator {
       for (const row of await listSimulations(db.core)) {
         if (on === running.has(row.id)) continue;
         if (on) {
-          // What does not fit under the limit stays stopped; the rest starts.
+          // One that cannot start, for lack of its route or its brand, stays stopped; the rest starts.
           try {
             await launch(row, "started");
           } catch {

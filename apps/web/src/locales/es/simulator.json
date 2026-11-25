@@ -7,7 +7,7 @@
   },
   "list": {
     "title": "Equipos simulados",
-    "capacity": "{{running}} de {{max}} en marcha",
+    "running": "{{running}} en marcha",
     "new": "Nuevo equipo simulado",
     "startAll": "Iniciar todos",
     "stopAll": "Detener todos",

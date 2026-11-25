@@ -7,7 +7,7 @@
   },
   "list": {
     "title": "Simulated devices",
-    "capacity": "{{running}} of {{max}} running",
+    "running": "{{running}} running",
     "new": "New simulated device",
     "startAll": "Start all",
     "stopAll": "Stop all",

@@ -492,8 +492,6 @@ export interface SimulatorMeta {
   brands: SimBrand[];
   /** The address real devices are given to reach this platform: what a new simulated device starts with. */
   host: string;
-  /** Simulated devices that can run at once. */
-  maxDevices: number;
   running: number;
   /** There is a routing service: routes can be traced along streets. */
   routing: boolean;

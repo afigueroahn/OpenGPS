@@ -137,12 +137,6 @@ services:
       APP_NAME: ${APP_NAME:-OpenGPS}
       # Whose releases are newer versions of this one. Empty turns the look off.
       UPDATE_REPOSITORY: ${UPDATE_REPOSITORY-afigueroahn/OpenGPS}
-      DEVICE_GATEWAY_HOST: ${DEVICE_GATEWAY_HOST:-}
-      DEVICE_GATEWAY_IP: ${DEVICE_GATEWAY_IP:-}
-      # Other addresses the web app is opened at, besides PUBLIC_URL, comma-separated.
-      TRUSTED_ORIGINS: ${TRUSTED_ORIGINS:-}
-      # Simulated devices the console's simulator can run at once.
-      SIMULATOR_MAX_DEVICES: ${SIMULATOR_MAX_DEVICES:-50}
       # Everything with the database's only user: the platform, the gateway's positions and the backups.
       DATABASE_URL: postgres://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-opengps}
       TRACCAR_DATABASE_URL: postgres://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD}@postgres:5432/traccar
@@ -189,8 +183,9 @@ services:
       - no-new-privileges:true
 
   # The proxy with HTTPS. Caddy gets the certificate of each of its sites and
-  # renews it by itself, and takes them to http://opengps:3000. Its sites are
-  # CADDY_SITES, or PUBLIC_URL alone. An http:// site gets no certificate.
+  # renews it by itself, and takes them to http://opengps:3000. Each site has
+  # its own certificate: the one of api. waits for its DNS record without
+  # holding the domain's back. An http:// site gets no certificate.
   caddy:
     image: caddy:2.11.9
     restart: unless-stopped
@@ -199,8 +194,21 @@ services:
       opengps:
         condition: service_started
     environment:
-      # Read by the configuration below. As a variable of the service, changing it restarts Caddy.
-      SITES: ${CADDY_SITES:-${PUBLIC_URL}}
+      PUBLIC_URL: ${PUBLIC_URL}
+    # The sites Caddy serves come from PUBLIC_URL: that address, and api. under its domain. An IP has no
+    # name to put api. under. As a variable of the service, changing PUBLIC_URL restarts Caddy.
+    command:
+      - /bin/sh
+      - -c
+      - |
+        address="$${PUBLIC_URL%/}"
+        host="$${address#*://}"
+        case "$${host%%[:/]*}" in
+          *[!0-9.]*) SITES="$$address, $${address%%://*}://api.$$host" ;;
+          *) SITES="$$address" ;;
+        esac
+        export SITES
+        exec caddy run --config /etc/caddy/Caddyfile --adapter caddyfile
     ports:
       - "80:80"
       - "443:443"
