@@ -6,6 +6,8 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Sin publicar]
 
+## [0.5.2] - 2026-11-25
+
 ### Cambiado
 
 - La web tiene un icono nuevo, cuadrado, con el marcador más grande y un verde más vivo:
