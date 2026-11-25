@@ -5,8 +5,10 @@ La plataforma se instala con Docker, de la forma que le convenga a cada servidor
 | Carpeta | Para qué servidor | Cómo llega la web |
 |---|---|---|
 | [`docker-compose/`](docker-compose/docker-compose.yml) | Cualquier servidor con Docker | En un puerto del servidor, en HTTP. Si quieres HTTPS, lo pone tu propio proxy |
+| [`caddy/`](caddy/docker-compose.yml) | Cualquier servidor con Docker y un dominio | Por Caddy, que pone el HTTPS y consigue el certificado solo, en los puertos 80 y 443 |
 | [`cloudflare/`](cloudflare/docker-compose.yml) | Cualquier servidor con Docker, con el dominio en Cloudflare | Por un túnel de Cloudflare, con HTTPS y sin abrir los puertos 80 y 443 |
 | [`dokploy/`](dokploy/docker-compose.yml) | Un servidor con [Dokploy](https://dokploy.com) | Por el proxy de Dokploy, que pone el dominio y su certificado |
+| [`coolify/`](coolify/docker-compose.yml) | Un servidor con [Coolify](https://coolify.io) | Por el proxy de Coolify, que pone el dominio y su certificado |
 
 Esta guía va desde un servidor recién creado hasta la plataforma en marcha, con sus copias de seguridad.
 
@@ -30,7 +32,7 @@ Todas levantan cuatro contenedores:
 | `postgres` | Las bases `opengps` (la plataforma) y `traccar` (los equipos), con un solo usuario, `postgres` de fábrica | 5432, solo dentro de la red de Docker |
 | `helper` | El ayudante de la plataforma, el único con acceso a Docker: cuando se pide desde la consola, cambia las bases y los archivos por los de una copia | Ninguno |
 
-`cloudflare/` suma un quinto, `tunnel`: el túnel de Cloudflare, que pone el dominio con HTTPS.
+Dos formas suman un quinto: `caddy/` trae `caddy`, el proxy con HTTPS, y `cloudflare/` trae `tunnel`, el túnel de Cloudflare.
 
 Las dos bases, por dentro:
 
@@ -44,7 +46,7 @@ Las dos bases, por dentro:
 
 La web y la API van en el mismo puerto a propósito: si fueran en puertos distintos serían dos sitios para el navegador, y la sesión y las llamadas de la web a la API dejarían de funcionar.
 
-En todas, el servidor publica los puertos de los equipos, y la base no se publica. La web sale en HTTP por el puerto 3000 del contenedor `opengps`. Lo que cambia de una forma a otra es quién la lleva hasta el navegador: un puerto del servidor, el túnel de Cloudflare o el proxy de Dokploy.
+En todas, el servidor publica los puertos de los equipos, y la base no se publica. La web sale en HTTP por el puerto 3000 del contenedor `opengps`. Lo que cambia de una forma a otra es quién la lleva hasta el navegador: un puerto del servidor, Caddy, el túnel de Cloudflare, o el proxy de Dokploy o de Coolify.
 
 Las imágenes vienen ya armadas, para procesadores Intel/AMD y ARM: cada versión las publica en `ghcr.io/afigueroahn/` y el servidor solo las descarga. Cada instalación dice en `OPENGPS_VERSION` qué versión corre.
 
@@ -65,13 +67,13 @@ Opcional, se agrega después desde la consola de la plataforma:
 
 ## Preparar un servidor Ubuntu nuevo
 
-Con Dokploy, prepara el servidor como diga Dokploy y sigue en «Apuntar el dominio».
+Con Dokploy o con Coolify, prepara el servidor como digan ellos y sigue en «Apuntar el dominio».
 
 1. En el panel del proveedor, crea el servidor con Ubuntu, en la región más cercana a tus usuarios, y agrega tu llave SSH. Anota su IP pública.
 2. Si el proveedor tiene un cortafuegos propio (lo suelen llamar *firewall*), abre en él:
    - 22, por TCP, para entrar por SSH;
    - 5001, 5002, 5004, 5011, 5013, 5015, 5023, 5027 y 5046, por TCP y por UDP: por ahí llegan los equipos GPS;
-   - 80 y 443, por TCP, solo si el HTTPS lo pone un proxy en el servidor. Con el túnel de Cloudflare no hacen falta.
+   - 80 y 443, por TCP, solo si el HTTPS lo pone un proxy en el servidor, como con `caddy/`. Con el túnel de Cloudflare no hacen falta.
 3. Entra al servidor desde tu computadora:
 
    ```bash
@@ -134,6 +136,7 @@ Con Dokploy, prepara el servidor como diga Dokploy y sigue en «Apuntar el domin
    | Forma | Archivo de la última línea |
    |---|---|
    | En un puerto del servidor | `docker-compose.yml` |
+   | Con Caddy | `docker-compose.caddy.yml` |
    | Con el túnel de Cloudflare | `docker-compose.cloudflare.yml` |
 
    Siempre se guarda como `docker-compose.yml`. No hace falta descargar el código.
@@ -174,6 +177,7 @@ Las opcionales:
 | `UPDATE_REPOSITORY` | `afigueroahn/OpenGPS` | El repositorio de GitHub cuyas releases son las versiones nuevas: el dueño las ve en Administración → Actualizaciones. Vacío, la plataforma no consulta |
 | `COMPOSE_PROJECT_NAME` | `opengps` | Solo con Docker Compose: el nombre del grupo de contenedores |
 | `WEB_PORT`, `WEB_BIND` | `3000`, `0.0.0.0` | Solo con `docker-compose/`: el puerto del servidor donde responde la web, y en qué dirección escucha. `127.0.0.1` la deja solo para un proxy instalado en el mismo servidor |
+| `CADDY_SITES` | `PUBLIC_URL` | Solo con `caddy/`: los sitios que atiende Caddy, separados por comas, para sumar otro nombre como `api.` |
 | `CLOUDFLARE_TUNNEL_TOKEN` | | Solo con `cloudflare/`, y ahí es obligatoria: el token del túnel |
 | `POSTGRES_TUNE_MEMORY`, `TRACCAR_JAVA_OPTS` | | Para servidores de 2 GB o menos: `768MB` y `-Xmx320m` |
 
@@ -213,6 +217,30 @@ La web abre en `http://IP-DEL-SERVIDOR:3000`. El puerto se cambia con `WEB_PORT`
 Para entrar a la base con una herramienta: `docker compose exec postgres psql -U postgres opengps`.
 
 Para ver el registro de la plataforma en vivo: `docker compose logs -f opengps`.
+
+## Con Docker Compose y Caddy
+
+Caddy pone el dominio con HTTPS: pide el certificado él solo la primera vez y lo renueva. Necesita que el dominio ya apunte al servidor y que los puertos 80 y 443 lleguen hasta él.
+
+1. Crea el registro DNS del dominio (tipo A) hacia la IP del servidor. Si el dominio está en Cloudflare, déjalo en «solo DNS» (nube gris): así Caddy puede conseguir el certificado.
+2. Abre los puertos 80 y 443 en el cortafuegos del proveedor, si lo hay. En el servidor: `ufw allow 80/tcp` y `ufw allow 443`.
+3. Con el compose `docker-compose.caddy.yml` descargado como `docker-compose.yml`:
+
+   ```bash
+   cd /opt/opengps
+   sh generate-env.sh https://tu-dominio.com .env
+   docker compose up -d
+   ```
+
+   Aparece el contenedor `caddy`. A los pocos segundos de levantar, `https://tu-dominio.com` abre con su certificado. Si no, `docker compose logs caddy` dice por qué no pudo conseguirlo.
+
+4. Opcional: para que la API responda también en `api.tu-dominio.com`, crea su registro DNS y escribe en `.env` los dos sitios. Después, `docker compose up -d`:
+
+   ```
+   CADDY_SITES=https://tu-dominio.com, https://api.tu-dominio.com
+   ```
+
+Esta forma pide Docker Compose 2.23.1 o posterior (`docker compose version`), porque la configuración de Caddy va dentro del compose.
 
 ## Con Docker Compose y un túnel de Cloudflare
 
@@ -257,6 +285,16 @@ El túnel lleva el dominio con HTTPS hasta la plataforma sin abrir los puertos 8
 
 Para instalar una versión nueva: en *Environment*, cambia `OPENGPS_VERSION` por su número y pulsa *Deploy*.
 
+## Con Coolify
+
+1. **Proyecto:** en Coolify, *Projects → New → Public Repository*, con `https://github.com/afigueroahn/OpenGPS` y la rama `main`. En *Build Pack*, **Docker Compose**; en *Base Directory*, `/`; en *Docker Compose Location*, `/deploy/coolify/docker-compose.yml`.
+2. **Variables:** solo hay que escribir `OPENGPS_VERSION`, con el número de la última versión. Los secretos los genera Coolify, y la dirección de la web es el dominio del paso siguiente.
+3. **Dominio:** en el servicio **`opengps`**, en *Domains*, escribe `https://tu-dominio.com:3000`. El `:3000` es el puerto del contenedor al que Coolify dirige el dominio; la web abre en `https://tu-dominio.com`, con su certificado. El registro DNS del dominio apunta al servidor de Coolify.
+4. **Equipos GPS:** el registro `gw` apunta directo al servidor (en Cloudflare, «solo DNS») y sus puertos se abren en el cortafuegos. No pasan por el proxy de Coolify: Coolify los publica tal cual.
+5. **Deploy.** La primera vez tarda unos minutos, lo que se demora en descargar las imágenes. Cuando abra `https://tu-dominio.com`, crea tu cuenta enseguida.
+
+Para instalar una versión nueva: cambia `OPENGPS_VERSION` por su número y pulsa *Redeploy*.
+
 ## Instalar una versión nueva
 
 Cada versión está en [las releases del repositorio](https://github.com/afigueroahn/OpenGPS/releases), con sus cambios. Sus notas dicen si pide algo más, como una variable nueva. La consola avisa al dueño cuando sale una.
@@ -267,9 +305,9 @@ Cada versión está en [las releases del repositorio](https://github.com/afiguer
 3. Si la versión nueva no arranca, vuelve sola a la anterior, y si tampoco arranca la anterior, restaura esa copia.
 4. Deja `docker-compose.yml.previous` y `.env.previous` con lo que había.
 
-La instalación conserva su forma: el ayudante toma el compose de la misma carpeta (`docker-compose/` o `cloudflare/`) en la versión nueva. Una instalación 0.1.x, de antes de que hubiera varias formas, queda sola en la suya: `cloudflare/` si usaba el túnel, y si no `docker-compose/`, con `WEB_BIND=127.0.0.1` para no abrir un puerto que antes estaba cerrado.
+La instalación conserva su forma: el ayudante toma el compose de la misma carpeta (`docker-compose/`, `caddy/` o `cloudflare/`) en la versión nueva. Una instalación 0.1.x, de antes de que hubiera varias formas, queda sola en la suya: `cloudflare/` si usaba el túnel, y si no `docker-compose/`, con `WEB_BIND=127.0.0.1` para no abrir un puerto que antes estaba cerrado.
 
-Con Dokploy el botón no aparece, porque Dokploy desharía el cambio: allí se cambia `OPENGPS_VERSION` y se pulsa *Deploy*.
+Con Dokploy y con Coolify el botón no aparece, porque ellos desharían el cambio: allí se cambia `OPENGPS_VERSION` y se vuelve a desplegar.
 
 **A mano**, cambia `X.Y.Z` por su número:
 
@@ -282,7 +320,7 @@ sed -i "s/^OPENGPS_VERSION=.*/OPENGPS_VERSION=$V/" .env
 docker compose up -d --remove-orphans
 ```
 
-Con el túnel de Cloudflare, `F=docker-compose.cloudflare.yml`.
+Con Caddy, `F=docker-compose.caddy.yml`. Con el túnel de Cloudflare, `F=docker-compose.cloudflare.yml`.
 
 Las migraciones de la base se aplican solas al arrancar la plataforma. `--remove-orphans` quita los servicios que la versión nueva ya no tiene, para que no queden contenedores viejos en marcha.
 
@@ -485,7 +523,7 @@ Para llevar a un servidor nuevo una plataforma que ya funciona, con sus cuentas,
 
 | Qué pasa | Qué revisar |
 |---|---|
-| La web no abre o Cloudflare muestra un error | `docker compose ps`. Con el túnel: que `tunnel` esté `Up`, su registro (`logs tunnel`), el token en `.env` y que los nombres públicos apunten a HTTP `opengps:3000`. Con otro proxy: que esté unido a la red `opengps_default` y los puertos 80 y 443 abiertos |
+| La web no abre o Cloudflare muestra un error | `docker compose ps`. Con el túnel: que `tunnel` esté `Up`, su registro (`logs tunnel`), el token en `.env` y que los nombres públicos apunten a HTTP `opengps:3000`. Con Caddy: su registro (`logs caddy`), que el dominio apunte al servidor y que los puertos 80 y 443 estén abiertos. Con otro proxy: que esté unido a la red `opengps_default` y los puertos 80 y 443 abiertos |
 | No llega el correo de confirmación | Canales de aviso → Correo y «Enviar prueba»; la carpeta de no deseado; el registro con `logs opengps` |
 | Los equipos no se conectan | `gw` con el proxy de Cloudflare desactivado; los puertos de los equipos abiertos por TCP y UDP en el cortafuegos del proveedor y en `ufw` |
 | El servidor se queda sin memoria | `POSTGRES_TUNE_MEMORY` y `TRACCAR_JAVA_OPTS`, la memoria de intercambio, o un plan con más memoria |

@@ -32,7 +32,7 @@ Están construidos el núcleo (mapa en vivo, historial, alertas, avisos, reporte
 | `apps/mobile/` | Las apps de iPhone y Android (Expo), el paso siguiente |
 | `packages/shared/` | Lo que comparten la plataforma y la web: las reglas de cada dato y los textos comunes, para que las dos validen igual |
 | `db/migrations/` | Los pasos que crean y actualizan la base, en orden: `core` para el núcleo y una carpeta por módulo (`a_antitheft` … `i_integrations`) |
-| `deploy/` | Las formas de instalarla, una carpeta por cada una (`docker-compose/`, `cloudflare/`, `dokploy/`), las recetas de las imágenes de la plataforma, de la base y del ayudante, y las variables. Ver [deploy/README.md](deploy/README.md) |
+| `deploy/` | Las formas de instalarla, una carpeta por cada una (`docker-compose/`, `caddy/`, `cloudflare/`, `dokploy/`, `coolify/`), las recetas de las imágenes de la plataforma, de la base y del ayudante, y las variables. Ver [deploy/README.md](deploy/README.md) |
 | `docs/` | Los documentos |
 
 Dentro de `apps/server/`:
@@ -145,7 +145,7 @@ Para probar sin equipos, la plataforma trae un simulador en **Administración �
 
 ## Despliegue
 
-Se instala con Docker, desde la carpeta `deploy/`, que trae una carpeta por cada forma de hacerlo: en un puerto del servidor, con un túnel de Cloudflare o con Dokploy. El paso a paso, desde un servidor recién creado, está en [deploy/README.md](deploy/README.md).
+Se instala con Docker, desde la carpeta `deploy/`, que trae una carpeta por cada forma de hacerlo: en un puerto del servidor, con Caddy, con un túnel de Cloudflare, con Dokploy o con Coolify. El paso a paso, desde un servidor recién creado, está en [deploy/README.md](deploy/README.md).
 
 ## Licencia
 

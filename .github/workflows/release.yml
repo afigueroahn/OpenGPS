@@ -160,6 +160,7 @@ jobs:
           files="$RUNNER_TEMP/files"
           mkdir -p "$files"
           cp deploy/docker-compose/docker-compose.yml "$files/docker-compose.yml"
+          cp deploy/caddy/docker-compose.yml "$files/docker-compose.caddy.yml"
           cp deploy/cloudflare/docker-compose.yml "$files/docker-compose.cloudflare.yml"
           cp deploy/generate-env.sh "$files/"
           sed "s|^OPENGPS_VERSION=.*|OPENGPS_VERSION=$VERSION|" deploy/.env.example > "$files/env.example"

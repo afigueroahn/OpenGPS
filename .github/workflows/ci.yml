@@ -49,8 +49,10 @@ jobs:
           # its folder's name as its mark, and builds from the code too.
           sh deploy/generate-env.sh https://example.com "$RUNNER_TEMP/.env"
           grep -qx "OPENGPS_VERSION=$(node -p 'require("./package.json").version')" "$RUNNER_TEMP/.env"
-          # What one way asks for besides: here, any value.
+          # What one way asks for besides, and what Coolify gives its own: here, any value.
           sed -i 's/^CLOUDFLARE_TUNNEL_TOKEN=.*/CLOUDFLARE_TUNNEL_TOKEN=any/' "$RUNNER_TEMP/.env"
+          printf '%s\n' SERVICE_URL_OPENGPS_3000=https://example.com SERVICE_URL_OPENGPS=https://example.com \
+            SERVICE_PASSWORD_64_AUTHSECRET=any SERVICE_PASSWORD_POSTGRES=any >> "$RUNNER_TEMP/.env"
           for compose in deploy/*/docker-compose.yml; do
             way="$(basename "$(dirname "$compose")")"
             docker compose --env-file "$RUNNER_TEMP/.env" -f "$compose" config --quiet
