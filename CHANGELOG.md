@@ -25,6 +25,9 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/).
 - La web usa el icono oficial de la plataforma, el marcador con su órbita: en la pestaña
   del navegador, en el logo de todas las pantallas y al guardarla en la pantalla de
   inicio de un iPhone (#46).
+- La sección de versión de la consola dice menos: la frase bajo su título queda en
+  «Versión actual, última disponible y novedades.» y la tarjeta ya no muestra con qué
+  repositorio se compara ni cuándo se consultó (#48).
 
 ### Eliminado
 

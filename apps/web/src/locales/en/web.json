@@ -80,7 +80,7 @@
       "notifications": "Who is told about each alert, and through which channel.",
       "channels": "The channels the platform notifies through. They are connected once, here, and every account uses them.",
       "systemNotifications": "Who the platform tells about what happens to it: backups, disk, channels and new accounts.",
-      "updates": "The version this installation runs against the latest one published, and what it brings."
+      "updates": "Current version, latest available and what's new."
     },
     "menu": {
       "open": "Open the menu",
@@ -980,8 +980,6 @@
     },
     "updates": {
       "title": "Platform version",
-      "from": "Compared with the versions published in {{repository}} · checked {{when}}",
-      "never": "never",
       "checkNow": "Check now",
       "installed": "Installed",
       "latest": "Latest published",

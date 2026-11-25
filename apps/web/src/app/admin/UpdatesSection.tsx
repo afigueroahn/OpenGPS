@@ -100,7 +100,6 @@ function Install({ updates }: { updates: UpdateStatus }) {
 
 export function UpdatesSection() {
   const { t } = useTranslation();
-  const now = useNow(60_000);
   const queryClient = useQueryClient();
   const updates = useUpdates(true, { follow: true });
   const shown = useConfig().data?.version;
@@ -113,13 +112,12 @@ export function UpdatesSection() {
   }, [shown, running]);
 
   if (!updates.data) return updates.isError ? <Notice tone="error">{errorText(updates.error)}</Notice> : <Spinner />;
-  const { current, latest, checkedAt, repository } = updates.data;
+  const { current, latest, repository } = updates.data;
 
   return (
     <div className="space-y-6">
       <Card
         title={t("admin.updates.title")}
-        {...(repository && { note: t("admin.updates.from", { repository, when: checkedAt ? timeAgo(checkedAt, now) : t("admin.updates.never") }) })}
         action={
           repository && (
             <Button variant="secondary" size="sm" loading={check.isPending} onClick={() => check.mutate()}>
