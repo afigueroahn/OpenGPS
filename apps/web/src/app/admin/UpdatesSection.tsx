@@ -1,16 +1,18 @@
 // Updates: the version this installation runs against the latest release on
-// GitHub, and what it brings. Only for whoever administers the platform.
+// GitHub, what it brings, and installing it (ADR-0004). Only for whoever
+// administers the platform.
 import type { UpdateStatus } from "@opengps/shared";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { ExternalLink } from "lucide-react";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Button, Notice, Spinner } from "../../components/ui";
-import { checkUpdates } from "../../lib/api";
+import { checkUpdates, installUpdate } from "../../lib/api";
 import { formatDateTime, timeAgo } from "../../lib/format";
-import { useNow } from "../../lib/session";
-import { UPDATES_KEY, useUpdates } from "../../lib/updates";
+import { useConfig, useNow } from "../../lib/session";
+import { UPDATES_KEY, installing, useUpdates } from "../../lib/updates";
 import { Card } from "../reports/kit";
-import { errorText } from "../widgets";
+import { ConfirmDialog, errorText } from "../widgets";
 import { Row } from "./SettingsTabs";
 
 /** Where the install guide explains how to install a new version. */
@@ -23,10 +25,15 @@ function Status({ updates }: { updates: UpdateStatus }) {
   if (updates.available && updates.latest) {
     return (
       <Notice tone="success">
-        {t("admin.updates.available", { version: updates.latest.version })}{" "}
-        <a href={GUIDE} target="_blank" rel="noreferrer" className="font-semibold underline">
-          {t("admin.updates.howTo")}
-        </a>
+        {t("admin.updates.available", { version: updates.latest.version })}
+        {updates.install.mode !== "console" && (
+          <>
+            {" "}
+            <a href={GUIDE} target="_blank" rel="noreferrer" className="font-semibold underline">
+              {t("admin.updates.howTo")}
+            </a>
+          </>
+        )}
       </Notice>
     );
   }
@@ -34,15 +41,64 @@ function Status({ updates }: { updates: UpdateStatus }) {
   return <Notice tone="success">{t("admin.updates.upToDate")}</Notice>;
 }
 
+/** Installing the new version, or how to do it by hand; and how the last install ended. */
+function Install({ updates }: { updates: UpdateStatus }) {
+  const { t } = useTranslation();
+  const now = useNow(60_000);
+  const queryClient = useQueryClient();
+  const [confirming, setConfirming] = useState(false);
+  const { install, latest, available } = updates;
+  const last = install.last;
+
+  if (last && installing(updates)) {
+    const step = last.state as "preparing" | "requested" | "running";
+    return (
+      <Notice>
+        <span className="flex items-center gap-2">
+          <Spinner /> {t(`admin.updates.install.${step}`, { version: last.version })}
+        </span>
+      </Notice>
+    );
+  }
+  return (
+    <div className="space-y-3">
+      {last?.state === "ok" && <Notice tone="success">{t("admin.updates.install.ok", { version: last.version, when: timeAgo(last.at, now) })}</Notice>}
+      {last?.state === "failed" && <Notice tone="error">{t(`admin.updates.install.reasons.${last.reason ?? "broken"}`, { version: last.version, from: last.from ?? "—" })}</Notice>}
+      {available && latest && install.mode === "console" && (
+        <>
+          <Button onClick={() => setConfirming(true)}>{t("admin.updates.install.button", { version: latest.version })}</Button>
+          <ConfirmDialog
+            open={confirming}
+            title={t("admin.updates.install.confirmTitle", { version: latest.version })}
+            confirm={t("admin.updates.install.confirm")}
+            onClose={() => setConfirming(false)}
+            action={async () => queryClient.setQueryData(UPDATES_KEY, await installUpdate(latest.version))}
+          >
+            {t("admin.updates.install.confirmBody", { version: latest.version, current: updates.current })}
+          </ConfirmDialog>
+        </>
+      )}
+      {available && latest && install.mode === "manual" && <Notice>{t("admin.updates.install.manual", { version: latest.version })}</Notice>}
+      {available && install.mode === "source" && <Notice>{t("admin.updates.install.source")}</Notice>}
+    </div>
+  );
+}
+
 export function UpdatesSection() {
   const { t } = useTranslation();
   const now = useNow(60_000);
   const queryClient = useQueryClient();
-  const updates = useUpdates(true);
+  const updates = useUpdates(true, { follow: true });
+  const shown = useConfig().data?.version;
   const check = useMutation({ mutationFn: checkUpdates, onSuccess: (data) => queryClient.setQueryData(UPDATES_KEY, data) });
 
-  if (updates.isError) return <Notice tone="error">{errorText(updates.error)}</Notice>;
-  if (!updates.data) return <Spinner />;
+  // Once the platform answers with another version, the page loads that version's web app.
+  const running = updates.data?.current;
+  useEffect(() => {
+    if (shown && running && running !== shown) window.location.reload();
+  }, [shown, running]);
+
+  if (!updates.data) return updates.isError ? <Notice tone="error">{errorText(updates.error)}</Notice> : <Spinner />;
   const { current, latest, checkedAt, repository } = updates.data;
 
   return (
@@ -68,6 +124,7 @@ export function UpdatesSection() {
             </Row>
           </div>
           {check.isError ? <Notice tone="error">{errorText(check.error)}</Notice> : <Status updates={updates.data} />}
+          <Install updates={updates.data} />
         </div>
       </Card>
 

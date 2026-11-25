@@ -744,6 +744,7 @@
         "scheduled": "Scheduled",
         "manual": "On demand",
         "pre_restore": "Before restoring",
+        "pre_update": "Before updating",
         "imported": "Found in storage"
       },
       "signedOut": "The platform went back to how it was in the backup and your session is no longer valid. <login>Sign in again</login> to see how it ended.",
@@ -997,7 +998,32 @@
       },
       "notes": "Changes in {{name}}",
       "onGitHub": "View on GitHub",
-      "noNotes": "This version has no notes."
+      "noNotes": "This version has no notes.",
+      "install": {
+        "button": "Update to {{version}}",
+        "confirmTitle": "Update to version {{version}}",
+        "confirm": "Update",
+        "confirmBody": "First a backup of everything is made. Then the platform goes from {{current}} to {{version}} and restarts: it is out of service for a few seconds, and devices that report meanwhile reconnect by themselves. If the new version does not start, it goes back to {{current}} by itself.",
+        "preparing": "Making the backup before installing {{version}}…",
+        "requested": "Backup ready. Waiting for the helper to install {{version}}…",
+        "running": "Installing {{version}}. The platform restarts and this page reloads by itself.",
+        "ok": "Version {{version}} was installed ({{when}}).",
+        "manual": "This installation is updated by hand: with Docker Compose, follow \"Install a new version\" in the guide; with Dokploy, change OPENGPS_VERSION to {{version}} in Environment and press Deploy.",
+        "source": "This platform was built from the code: it is updated with git pull and building again.",
+        "reasons": {
+          "backup": "The backup before it could not be made, so {{version}} was not installed. Nothing changed.",
+          "invalid": "The request to install {{version}} was not valid. Nothing changed.",
+          "unsupported": "The helper cannot install versions in this installation. Nothing changed.",
+          "pull": "The images of {{version}} could not be downloaded. Nothing changed: try again in a while.",
+          "files": "The installation's files could not be prepared for {{version}}. Nothing changed.",
+          "env": "The installation's variables do not work for {{version}}: it may need a new one (see its notes). Nothing changed.",
+          "start": "The helper could not start installing {{version}}. Nothing changed.",
+          "rolled_back": "Version {{version}} did not start, so it went back to {{from}} by itself.",
+          "restored": "Neither {{version}} nor {{from}} started, so the backup made just before was restored.",
+          "broken": "Neither {{version}} nor {{from}} started, and the backup could not be restored: the server needs checking.",
+          "cut": "Installing {{version}} was cut halfway. The files of {{from}} are back: check the server."
+        }
+      }
     }
   },
   "gps": {

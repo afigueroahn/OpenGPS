@@ -466,6 +466,8 @@ export const getAdminStats = () => api<{ stats: PlatformStats }>("/api/admin/sta
 export const getUpdates = () => api<{ updates: UpdateStatus }>("/api/admin/updates").then((r) => r.updates);
 /** Looks for a new version now, unless it was looked for less than a minute ago. */
 export const checkUpdates = () => api<{ updates: UpdateStatus }>("/api/admin/updates/check", { method: "POST", body: {} }).then((r) => r.updates);
+/** Installs the latest version: the backup before it is made first, and the helper does the rest. */
+export const installUpdate = (version: string) => api<{ updates: UpdateStatus }>("/api/admin/updates/install", { method: "POST", body: { version } }).then((r) => r.updates);
 export const getAdminAudit = (before?: number) =>
   api<{ entries: AuditEntry[] }>(`/api/admin/audit?limit=50${before ? `&before=${before}` : ""}`).then((r) => r.entries);
 export const getAccountSummary = () => api<{ summary: AccountSummary }>("/api/account/summary").then((r) => r.summary);

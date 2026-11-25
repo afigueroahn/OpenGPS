@@ -916,7 +916,7 @@ export async function buildApp(deps: AppDeps): Promise<App> {
 
   registerPlatformSettings({ app, db, bus, config, traccar: deps.traccar, mailer: deps.mailer, settings, backups, outbox, system, platformAdmin, clientIp, language: languageOf, parse });
   registerSimulator({ app, simulator, geocoder, db, platformAdmin, clientIp, language: languageOf, parse });
-  registerUpdates({ app, updates: deps.updates ?? createUpdates({ config }), platformAdmin });
+  registerUpdates({ app, updates: deps.updates ?? createUpdates({ config }), backups, platformAdmin, clientIp, parse });
 
   // ─── Live ──────────────────────────────────────────────────────────────────
 

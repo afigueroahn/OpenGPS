@@ -1984,8 +1984,8 @@ export interface Backup {
   id: string;
   startedAt: string;
   finishedAt: string | null;
-  /** `pre_restore` is the one made automatically before restoring another; `imported`, one found in the external storage. */
-  kind: "scheduled" | "manual" | "pre_restore" | "imported";
+  /** `pre_restore` and `pre_update` are made automatically before restoring another and before installing a new version; `imported`, one found in the external storage. */
+  kind: "scheduled" | "manual" | "pre_restore" | "pre_update" | "imported";
   status: "running" | "ok" | "failed";
   error: string | null;
   files: BackupFile[];
@@ -2678,8 +2678,8 @@ export function compareVersions(a: string, b: string): -1 | 0 | 1 | null {
 /** Why the last look for a new version failed. */
 export type UpdateCheckError = "unreachable" | "rate_limited" | "unexpected";
 
-/** The platform's version against the latest release, for the owner of the platform. */
-export interface UpdateStatus {
+/** The platform's version against the latest release, as the server last looked. */
+export interface UpdateCheck {
   /** The version running. */
   current: string;
   /** Where releases are looked for ("owner/name"); null when looking is turned off. */
@@ -2692,6 +2692,30 @@ export interface UpdateStatus {
   checkedAt: string | null;
   /** Why the last look failed; what was known before is kept. */
   error: UpdateCheckError | null;
+}
+
+/**
+ * How this installation installs a new version: from the console, by the
+ * helper (Docker Compose); by hand (Dokploy, or a helper that cannot); or
+ * from the code (a build that is not a release image).
+ */
+export type UpdateInstallMode = "console" | "manual" | "source";
+
+/** Why an install from the console did not end well: the helper's code, or "backup" if the backup before it failed. */
+export type UpdateFailure = "backup" | "invalid" | "unsupported" | "pull" | "files" | "env" | "start" | "rolled_back" | "restored" | "broken" | "cut";
+
+export interface UpdateInstall {
+  mode: UpdateInstallMode;
+  /**
+   * The last install asked from the console: making the backup before it,
+   * waiting for the helper, under way, or how it ended.
+   */
+  last: { state: "preparing" | "requested" | "running" | "ok" | "failed"; version: string; from: string | null; at: string; reason: UpdateFailure | null } | null;
+}
+
+/** The platform's version against the latest release, and how to install it, for the owner of the platform. */
+export interface UpdateStatus extends UpdateCheck {
+  install: UpdateInstall;
 }
 
 export interface PublicConfig {

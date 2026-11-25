@@ -1,8 +1,14 @@
 // Looking for a new version (ADR-0003): the latest release of the platform's
 // GitHub repository against the version running, only for the platform's
-// owner. GitHub is simulated: no test reaches it.
+// owner; and installing it from the console (ADR-0004), up to the request the
+// helper takes. GitHub and pg_dump are simulated: no test reaches GitHub, and
+// the helper is tested with Docker in .github/scripts/update-e2e.sh.
+import { chmodSync, existsSync, mkdirSync, mkdtempSync, readFileSync, renameSync, rmSync, utimesSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 import { compareVersions } from "@opengps/shared";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
+import { HELPER_ALIVE, UPDATE_REQUEST, UPDATE_RESULT, UPDATE_RUNNING } from "../src/core/backups";
 import { createUpdates } from "../src/core/updates";
 import { type Harness, type TestUser, createHarness } from "./harness";
 
@@ -138,5 +144,110 @@ describe("the owner's routes", () => {
     const now = await h.request("POST", "/api/admin/updates/check", { cookie: boss.cookie });
     expect(h.github.looks.length).toBe(looks + 2);
     expect(now.json.updates).toMatchObject({ error: "unreachable", latest: { version: "99.0.0" } });
+  });
+});
+
+describe("installing from the console", () => {
+  let h: Harness;
+  let boss: TestUser;
+  let customer: TestUser;
+  let tmp: string;
+  const previous = process.env.APP_VERSION;
+  const dir = () => h.config.backup.dir;
+  const helperSays = (update: "yes" | "no") => writeFileSync(join(dir(), HELPER_ALIVE), `restore=yes\nupdate=${update}\n`);
+  const status = async () => (await h.request("GET", "/api/admin/updates", { cookie: boss.cookie })).json.updates;
+  const install = (version: unknown, user: TestUser | null = boss) =>
+    h.request("POST", "/api/admin/updates/install", user ? { cookie: user.cookie, body: { version } } : { body: { version } });
+  const note = (name: string) =>
+    Object.fromEntries(
+      readFileSync(join(dir(), name), "utf8")
+        .split("\n")
+        .filter((line) => line.includes("="))
+        .map((line) => [line.slice(0, line.indexOf("=")), line.slice(line.indexOf("=") + 1)]),
+    );
+
+  beforeAll(async () => {
+    // A release image: the version is the release's.
+    process.env.APP_VERSION = "1.0.0";
+    tmp = mkdtempSync(join(tmpdir(), "opengps-update-"));
+    h = await createHarness();
+    boss = await h.signUp("Dueña que actualiza");
+    customer = await h.signUp("Cliente");
+    await h.makeOwner(boss);
+    // A fake pg_dump, ahead of the real one if there is one: the backup before updating is made with it.
+    mkdirSync(join(tmp, "bin"));
+    writeFileSync(join(tmp, "bin", "pg_dump"), `#!/bin/sh\nfor a in "$@"; do case "$a" in --file=*) out="\${a#--file=}";; esac; done\nprintf 'copia de %s' "$PGDATABASE" > "$out"\n`);
+    chmodSync(join(tmp, "bin", "pg_dump"), 0o755);
+    process.env.PATH = `${join(tmp, "bin")}:${process.env.PATH}`;
+    rmSync(dir(), { recursive: true, force: true });
+    mkdirSync(dir(), { recursive: true });
+    mkdirSync(h.config.filesDir, { recursive: true });
+    h.github.reply = release("v1.1.0");
+    h.github.clock += 2 * HOUR;
+  }, 120_000);
+  afterAll(async () => {
+    if (previous === undefined) delete process.env.APP_VERSION;
+    else process.env.APP_VERSION = previous;
+    rmSync(tmp, { recursive: true, force: true });
+    if (h) {
+      await h.backups.idle();
+      await h.db.core.query(`DELETE FROM gps.backups WHERE kind = 'pre_update'`);
+      rmSync(dir(), { recursive: true, force: true });
+    }
+    await h?.close();
+  });
+
+  it("says how this installation installs a version", async () => {
+    expect((await status()).install).toEqual({ mode: "manual", last: null });
+    // Dokploy: the helper restores, but does not see the installation's folder.
+    helperSays("no");
+    expect((await status()).install.mode).toBe("manual");
+    helperSays("yes");
+    expect((await status()).install.mode).toBe("console");
+    // A helper that stopped answering long ago does not count.
+    const old = new Date(Date.now() - 10 * 60_000);
+    utimesSync(join(dir(), HELPER_ALIVE), old, old);
+    expect((await status()).install.mode).toBe("manual");
+  });
+
+  it("installs only the latest version, only for the owner, and only with a helper that can", async () => {
+    helperSays("yes");
+    expect((await install("1.0.9")).status).toBe(400);
+    expect((await install("latest")).status).toBe(400);
+    expect((await install("1.1.0", customer)).status).toBe(404);
+    expect((await install("1.1.0", null)).status).toBe(401);
+    helperSays("no");
+    expect((await install("1.1.0")).status).toBe(400);
+    expect(existsSync(join(dir(), UPDATE_REQUEST))).toBe(false);
+  });
+
+  it("makes a backup first, leaves the request for the helper, and shows how it went", async () => {
+    helperSays("yes");
+    const asked = await install("1.1.0");
+    expect(asked.status, JSON.stringify(asked.json)).toBe(202);
+    expect(asked.json.updates.install.last).toMatchObject({ state: "preparing", version: "1.1.0", from: "1.0.0" });
+    // While it is being prepared, another is not admitted.
+    expect((await install("1.1.0")).status).toBe(409);
+    await h.backups.idle();
+
+    const request = note(UPDATE_REQUEST);
+    expect(request).toMatchObject({ version: "1.1.0" });
+    expect(request.id).toMatch(/^[0-9a-f-]{36}$/);
+    expect(request.gps).toMatch(/^gps_\d{8}_\d{6}\.dump$/);
+    expect(request.traccar).toMatch(/^traccar_\d{8}_\d{6}\.dump$/);
+    const safety = await h.db.core.query(`SELECT kind, status FROM gps.backups WHERE id = $1`, [request.backup]);
+    expect(safety.rows[0]).toEqual({ kind: "pre_update", status: "ok" });
+    const audited = await h.db.core.query(`SELECT detail FROM gps.audit_log WHERE action = 'admin.update_install' ORDER BY id DESC LIMIT 1`);
+    expect(audited.rows[0]?.detail).toMatchObject({ version: "1.1.0", from: "1.0.0" });
+    expect((await status()).install.last).toMatchObject({ state: "requested", version: "1.1.0" });
+
+    // The helper takes it, and then says how it ended.
+    renameSync(join(dir(), UPDATE_REQUEST), join(dir(), UPDATE_RUNNING));
+    writeFileSync(join(dir(), UPDATE_RUNNING), `${readFileSync(join(dir(), UPDATE_RUNNING), "utf8")}from=1.0.0\n`);
+    expect((await status()).install.last).toMatchObject({ state: "running", version: "1.1.0", from: "1.0.0" });
+    expect((await install("1.1.0")).status).toBe(409);
+    rmSync(join(dir(), UPDATE_RUNNING));
+    writeFileSync(join(dir(), UPDATE_RESULT), `id=${request.id}\nversion=1.1.0\nfrom=1.0.0\nfinished=2026-11-25T12:00:00Z\nstatus=failed\nreason=rolled_back\n`);
+    expect((await status()).install.last).toEqual({ state: "failed", version: "1.1.0", from: "1.0.0", at: "2026-11-25T12:00:00Z", reason: "rolled_back" });
   });
 });

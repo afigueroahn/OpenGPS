@@ -161,9 +161,15 @@ const en: SameShape<typeof es> = {
       doneManual: "The backup requested by hand finished fine and is now in the list.",
       doneScheduled: "The scheduled backup finished fine and is now in the list.",
       doneBeforeRestore: "The backup made before restoring finished fine and is now in the list.",
+      doneBeforeUpdate: "The backup made before updating finished fine and is now in the list.",
       restoredTitle: "a restore finished",
       restoredBody: "The platform went back to the state of the chosen backup and is running again.",
     },
+  },
+  updates: {
+    noHelper: "This installation cannot be updated from the console: its helper is not running or does not see the installation's folder",
+    running: "An update is already requested or running",
+    notLatest: "That is not the latest version published, or it is not newer than the installed one",
   },
   storage: {
     blocked: "Cloudflare Access blocked the request before it reached the storage: in Cloudflare, this server has to be let through at that address",

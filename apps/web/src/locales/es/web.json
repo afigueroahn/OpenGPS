@@ -744,6 +744,7 @@
         "scheduled": "Programada",
         "manual": "A pedido",
         "pre_restore": "Antes de restaurar",
+        "pre_update": "Antes de actualizar",
         "imported": "Encontrada en el almacenamiento"
       },
       "signedOut": "La plataforma volvió a como estaba en la copia y tu sesión ya no vale. <login>Vuelve a entrar</login> para ver cómo terminó.",
@@ -997,7 +998,32 @@
       },
       "notes": "Cambios de {{name}}",
       "onGitHub": "Ver en GitHub",
-      "noNotes": "Esta versión no trae notas."
+      "noNotes": "Esta versión no trae notas.",
+      "install": {
+        "button": "Actualizar a {{version}}",
+        "confirmTitle": "Actualizar a la versión {{version}}",
+        "confirm": "Actualizar",
+        "confirmBody": "Primero se hace una copia de seguridad de todo. Después la plataforma pasa de la {{current}} a la {{version}} y se reinicia: queda sin servicio unos segundos, y los equipos que reporten en ese momento vuelven a conectarse solos. Si la versión nueva no arranca, se vuelve sola a la {{current}}.",
+        "preparing": "Haciendo la copia de seguridad antes de instalar la {{version}}…",
+        "requested": "Copia lista. Esperando al ayudante para instalar la {{version}}…",
+        "running": "Instalando la {{version}}. La plataforma se reinicia y esta página se recarga sola.",
+        "ok": "Se instaló la versión {{version}} ({{when}}).",
+        "manual": "Esta instalación se actualiza a mano: con Docker Compose, sigue «Instalar una versión nueva» de la guía; con Dokploy, cambia OPENGPS_VERSION a {{version}} en Environment y pulsa Deploy.",
+        "source": "Esta plataforma se construyó desde el código: se actualiza con git pull y volviendo a construir.",
+        "reasons": {
+          "backup": "No se pudo hacer la copia de seguridad previa, así que no se instaló la {{version}}. No cambió nada.",
+          "invalid": "El pedido de instalar la {{version}} no era válido. No cambió nada.",
+          "unsupported": "El ayudante no puede instalar versiones en esta instalación. No cambió nada.",
+          "pull": "No se pudieron descargar las imágenes de la {{version}}. No cambió nada: inténtalo de nuevo en un rato.",
+          "files": "No se pudieron preparar los archivos de la instalación para la {{version}}. No cambió nada.",
+          "env": "Las variables de la instalación no sirven para la {{version}}: quizá pide una nueva (mira sus notas). No cambió nada.",
+          "start": "El ayudante no pudo empezar a instalar la {{version}}. No cambió nada.",
+          "rolled_back": "La versión {{version}} no arrancó, así que se volvió sola a la {{from}}.",
+          "restored": "Ni la {{version}} ni la {{from}} arrancaron, así que se restauró la copia hecha justo antes.",
+          "broken": "Ni la {{version}} ni la {{from}} arrancaron, y la copia previa no se pudo restaurar: hay que revisar el servidor.",
+          "cut": "La instalación de la {{version}} se cortó a la mitad. Quedaron los archivos de la {{from}}: revisa el servidor."
+        }
+      }
     }
   },
   "gps": {
