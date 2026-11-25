@@ -23,14 +23,14 @@ Las acompañan estos archivos:
 | [`postgres.Dockerfile`](postgres.Dockerfile) | La base de datos, con [`postgres-init.sh`](postgres-init.sh), que crea la base `traccar` la primera vez que arranca |
 | [`helper.Dockerfile`](helper.Dockerfile) | El ayudante de la plataforma, con [`helper.sh`](helper.sh): instala una versión nueva cuando se pide desde la consola |
 
-Todas levantan cuatro contenedores:
+Las formas con Docker Compose levantan cuatro contenedores; Dokploy y Coolify, los tres primeros:
 
 | Contenedor | Qué hace | Puerto |
 |---|---|---|
 | `opengps` | La plataforma: la web y la API juntas, la sesión, el mapa en vivo, las tareas y las copias | 3000, dentro de la red de Docker. Con `docker-compose/`, además en un puerto del servidor |
 | `traccar` | La entrada de los equipos GPS | 5001, 5002, 5004, 5011, 5013, 5015, 5023, 5027 y 5046, por TCP y UDP, publicados en el servidor |
 | `postgres` | Las bases `opengps` (la plataforma) y `traccar` (los equipos), con un solo usuario, `postgres` de fábrica | 5432, solo dentro de la red de Docker |
-| `helper` | El ayudante de la plataforma, el único con acceso a Docker: instala las versiones nuevas que se piden desde la consola | Ninguno |
+| `helper` | El ayudante de la plataforma, el único con acceso a Docker: instala las versiones nuevas que se piden desde la consola. Dokploy y Coolify no lo llevan, porque allí se actualiza volviendo a desplegar | Ninguno |
 
 Dos formas suman un quinto: `caddy/` trae `caddy`, el proxy con HTTPS, y `cloudflare/` trae `tunnel`, el túnel de Cloudflare.
 
@@ -279,6 +279,8 @@ El túnel lleva el dominio con HTTPS hasta la plataforma sin abrir los puertos 8
 
 Para instalar una versión nueva, pulsa *Deploy*: el compose de `main` dice siempre la última versión publicada.
 
+Las instalaciones anteriores tenían además el servicio `helper`, que ya no se usa: si después de desplegar sigue apareciendo, detenlo y bórralo.
+
 ## Con Coolify
 
 1. **Proyecto:** en Coolify, *Projects → New → Public Repository*, con `https://github.com/afigueroahn/OpenGPS` y la rama `main`. En *Build Pack*, **Docker Compose**; en *Base Directory*, `/`; en *Docker Compose Location*, `/deploy/coolify/docker-compose.yml`.
@@ -288,6 +290,8 @@ Para instalar una versión nueva, pulsa *Deploy*: el compose de `main` dice siem
 5. **Deploy.** La primera vez tarda unos minutos, lo que se demora en descargar las imágenes. Cuando abra `https://tu-dominio.com`, crea tu cuenta enseguida.
 
 Para instalar una versión nueva, pulsa *Redeploy*: el compose de `main` dice siempre la última versión publicada.
+
+Las instalaciones anteriores tenían además el servicio `helper`, que ya no se usa: si después de desplegar sigue apareciendo, detenlo y bórralo.
 
 ## Instalar una versión nueva
 
@@ -520,7 +524,7 @@ Para llevar a un servidor nuevo una plataforma que ya funciona, con sus cuentas,
 
 ## A tener en cuenta
 
-- **El ayudante de la plataforma tiene acceso a Docker** (monta `/var/run/docker.sock`) para instalar las versiones nuevas que se piden desde la consola. Con Docker Compose ve además la carpeta de la instalación (`docker-compose.yml` y `.env`). Es el único servicio con ese acceso y no abre ningún puerto. Si no lo quieres, quita el servicio `helper` del Compose: las versiones se instalan a mano, y las copias se siguen haciendo y restaurando desde la consola.
+- **El ayudante de la plataforma tiene acceso a Docker** (monta `/var/run/docker.sock`) para instalar las versiones nuevas que se piden desde la consola, y ve la carpeta de la instalación (`docker-compose.yml` y `.env`). Solo está en las formas con Docker Compose. Es el único servicio con ese acceso y no abre ningún puerto. Si no lo quieres, quita el servicio `helper` del Compose: las versiones se instalan a mano, y las copias se siguen haciendo y restaurando desde la consola.
 - **Una instalación por servidor recibe equipos.** Los puertos de los equipos son fijos: dos instalaciones en el mismo servidor no pueden usarlos a la vez.
 - **La IP de quien visita** la toma la plataforma de lo que escribe el proxy de delante, si ese proxy está en una red privada (como el de Dokploy). Detrás de Cloudflare y de Dokploy a la vez se ve la de Cloudflare, salvo que el proxy de Dokploy esté configurado para confiar en Cloudflare. Solo afecta al registro y a los límites de intentos.
 - **Los textos legales** no nombran a un titular ni a un país: dicen «quien presta el servicio en» tu dominio, y dan el correo de contacto que pongas en Ajustes. Las leyes de privacidad suelen pedir que se identifique al responsable: revísalo con quien te asesore en lo legal.

@@ -18,6 +18,9 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/).
   El botón «Restaurar» aparece siempre que la plataforma tiene acceso a las bases. El
   ayudante queda solo para instalar versiones y ya no ve la carpeta de archivos
   (ADR-0009, #61).
+- Dokploy y Coolify ya no llevan el ayudante ni su acceso a Docker: allí solo
+  restauraba copias, y ahora lo hace la plataforma. Si después de volver a desplegar
+  sigue apareciendo el contenedor `helper`, se puede detener y borrar (#62).
 
 ### Corregido
 

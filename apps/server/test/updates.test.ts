@@ -154,7 +154,7 @@ describe("installing from the console", () => {
   let tmp: string;
   const previous = process.env.APP_VERSION;
   const dir = () => h.config.backup.dir;
-  const helperSays = (update: "yes" | "no") => writeFileSync(join(dir(), HELPER_ALIVE), `restore=yes\nupdate=${update}\n`);
+  const helperSays = (update: "yes" | "no") => writeFileSync(join(dir(), HELPER_ALIVE), `update=${update}\n`);
   const status = async () => (await h.request("GET", "/api/admin/updates", { cookie: boss.cookie })).json.updates;
   const install = (version: unknown, user: TestUser | null = boss) =>
     h.request("POST", "/api/admin/updates/install", user ? { cookie: user.cookie, body: { version } } : { body: { version } });
@@ -198,8 +198,9 @@ describe("installing from the console", () => {
   });
 
   it("says how this installation installs a version", async () => {
+    // Without a helper, as with Dokploy and Coolify, it is installed by hand.
     expect((await status()).install).toEqual({ mode: "manual", last: null });
-    // Dokploy: the helper restores, but does not see the installation's folder.
+    // Nor with one that does not see the installation's folder.
     helperSays("no");
     expect((await status()).install.mode).toBe("manual");
     helperSays("yes");
