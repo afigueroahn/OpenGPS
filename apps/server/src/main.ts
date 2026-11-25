@@ -6,34 +6,15 @@ import { createAuth } from "./auth";
 import { Bus } from "./bus";
 import { loadConfig } from "./config";
 import { syncCatalog } from "./core/catalog";
-import { createDayKeeper } from "./core/days";
-import { createMeterKeeper } from "./core/meters";
-import { createBackups } from "./core/backups";
-import { createEventEngine } from "./core/events";
-import { createNotifier } from "./core/notifications";
-import { createOutbox } from "./core/outbox";
-import { createSystemNotifier } from "./core/system";
 import { deleteOwnedAccounts } from "./core/privacy";
 import { createRestore } from "./core/restore";
-import { createSettings } from "./core/settings";
 import { createTasks, syncRetention } from "./core/tasks";
-import { createUpdates } from "./core/updates";
 import { createDb } from "./db";
+import { createEngines } from "./engines";
 import { createIngest } from "./ingest/poller";
 import { say } from "./i18n";
 import { createMailer } from "./mail";
-import { createAntitheftEngine } from "./modules/antitheft";
-import { createFuelEngine } from "./modules/fuel";
-import { createDriversEngine } from "./modules/drivers";
-import { createDiagnosticsEngine } from "./modules/diagnostics";
-import { createFleetEngine } from "./modules/fleet";
-import { createIntegrationsEngine } from "./modules/integrations";
-import { createMaintenanceEngine } from "./modules/maintenance";
-import { createRoutesEngine } from "./modules/routes";
-import { createModuleGate } from "./modules/gate";
-import { createReportsEngine } from "./modules/reports";
 import { findMigrationsDir, migrate } from "./migrate";
-import { createSimulator } from "./simulator/manager";
 import { createTraccar } from "./traccar";
 
 async function retry<T>(what: string, fn: () => Promise<T>, attempts = 30, delayMs = 2000): Promise<T> {
@@ -66,13 +47,12 @@ async function main(): Promise<void> {
   const applied = await migrate(db.core, findMigrationsDir(config.migrationsDir));
   console.log(applied.length ? `[db] migrations applied: ${applied.join(", ")}` : "[db] up to date");
   await syncCatalog(db.core);
-  // What the platform's admin console has defined is applied before anything uses it.
-  const settings = createSettings({ db, bus, config });
-  await settings.load();
+  const ingest = createIngest({ db, bus });
+  // A restore ready to swap in ends the process, as a stop would: Docker brings it back and it swaps on starting.
+  const engines = await createEngines({ config, db, bus, traccar, mailer, restore, restart: () => process.kill(process.pid, "SIGTERM") });
+  const { settings, outbox, system, gate, backups, simulator, updates } = engines;
 
   // When deleting their account, the person takes with them everything that was theirs.
-  const outbox = createOutbox({ db, config, mailer });
-  const system = createSystemNotifier({ db, config, outbox });
   const auth = createAuth(
     config,
     db,
@@ -85,19 +65,7 @@ async function main(): Promise<void> {
         void system.notify("account_created", { title: say("mail.system.accountCreated.title"), body: say("mail.system.accountCreated.body", { name: account.name }), path: "/admin/system/accounts" }),
     },
   );
-  const ingest = createIngest({ db, bus });
   const tasks = createTasks({ db, bus, traccar, config, system, outbox, ingest });
-  const events = createEventEngine({ db, bus, config });
-  const days = createDayKeeper({ db, bus });
-  const meters = createMeterKeeper({ db, bus });
-  const notifier = createNotifier({ db, bus, config, outbox });
-  const gate = createModuleGate(db.core, bus);
-  const moduleDeps = { db, bus, config, traccar, mailer, gate, outbox };
-  const moduleEngines = [createAntitheftEngine(moduleDeps), createDriversEngine(moduleDeps), createFuelEngine(moduleDeps), createDiagnosticsEngine(moduleDeps), createFleetEngine(moduleDeps), createMaintenanceEngine(moduleDeps), createRoutesEngine(moduleDeps), createIntegrationsEngine(moduleDeps), createReportsEngine(moduleDeps)];
-  // A restore ready to swap in ends the process, as a stop would: Docker brings it back and it swaps on starting.
-  const backups = createBackups({ db, bus, config, settings, system, restore, restart: () => process.kill(process.pid, "SIGTERM") });
-  const simulator = createSimulator({ db, bus, config });
-  const updates = createUpdates({ config });
   const { fastify } = await buildApp({ config, db, auth, bus, traccar, mailer, ingest, gate, settings, backups, outbox, system, simulator, updates });
 
   // Before serving anyone: if the database was restored by hand, the backup list goes back to being the folder's.
@@ -112,11 +80,7 @@ async function main(): Promise<void> {
   if (!config.disableBackground) {
     await retry("Traccar", () => traccar.bootstrap());
     await syncRetention({ db, bus, traccar, config });
-    events.start();
-    days.start();
-    meters.start();
-    notifier.start();
-    for (const engine of moduleEngines) engine.start();
+    engines.start();
     ingest.start();
     tasks.start();
     backups.start();
@@ -142,19 +106,8 @@ async function main(): Promise<void> {
     updates.stop();
     await backups.idle();
     await ingest.stop();
-    events.stop();
-    await events.idle();
-    days.stop();
-    await days.idle();
-    meters.stop();
-    await meters.idle();
-    notifier.stop();
-    await notifier.idle();
+    await engines.stop();
     await outbox.idle();
-    for (const engine of moduleEngines) {
-      engine.stop();
-      await engine.idle();
-    }
     await fastify.close();
     await db.close();
     process.exit(0);

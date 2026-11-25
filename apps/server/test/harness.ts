@@ -6,30 +6,11 @@ import { buildApp } from "../src/api/server";
 import { createAuth } from "../src/auth";
 import { Bus } from "../src/bus";
 import { loadConfig } from "../src/config";
-import { createSimulator } from "../src/simulator/manager";
 import { LEGAL_VERSION, type LonLat, type SimTrace, metersBetween } from "@opengps/shared";
 import { syncCatalog } from "../src/core/catalog";
-import { createBackups } from "../src/core/backups";
-import { createEventEngine } from "../src/core/events";
-import { createSettings } from "../src/core/settings";
-import { createUpdates } from "../src/core/updates";
-import { createNotifier } from "../src/core/notifications";
-import { createOutbox } from "../src/core/outbox";
-import { createSystemNotifier } from "../src/core/system";
-import { createAntitheftEngine } from "../src/modules/antitheft";
-import { createFuelEngine } from "../src/modules/fuel";
-import { createDriversEngine } from "../src/modules/drivers";
-import { createDiagnosticsEngine } from "../src/modules/diagnostics";
-import { createFleetEngine } from "../src/modules/fleet";
-import { createIntegrationsEngine } from "../src/modules/integrations";
-import { createMaintenanceEngine } from "../src/modules/maintenance";
-import { createRoutesEngine } from "../src/modules/routes";
-import { createReportsEngine } from "../src/modules/reports";
-import { createDayKeeper } from "../src/core/days";
-import { createMeterKeeper } from "../src/core/meters";
-import { createModuleGate } from "../src/modules/gate";
 import { deleteOwnedAccounts } from "../src/core/privacy";
 import { createDb } from "../src/db";
+import { createEngines } from "../src/engines";
 import { type TraccarRow, createIngest } from "../src/ingest/poller";
 import type { Mailer } from "../src/mail";
 import { findMigrationsDir, migrate } from "../src/migrate";
@@ -105,8 +86,6 @@ export async function createHarness() {
     [TEST_OWNER_ID],
   );
   await db.core.query(`INSERT INTO gps.platform_owners (user_id) VALUES ($1) ON CONFLICT DO NOTHING`, [TEST_OWNER_ID]);
-  const settings = createSettings({ db, bus, config });
-  await settings.load();
   const mails: { to: string; subject: string; url: string | undefined; body: string; attachments: { filename: string; content: Buffer; contentType: string }[] }[] = [];
   const mailer: Mailer = {
     async send(m) {
@@ -115,17 +94,6 @@ export async function createHarness() {
     async verify() {},
   };
   const traccar = fakeTraccar();
-  const outbox = createOutbox({ db, config, mailer });
-  const system = createSystemNotifier({ db, config, outbox });
-  const auth = createAuth(
-    config,
-    db,
-    mailer,
-    async (userId) => {
-      await deleteOwnedAccounts({ db, bus, traccar: traccar.api }, userId);
-    },
-    { accountCreated: (account) => void system.notify("account_created", { title: "se creó una cuenta nueva", body: `Alguien se registró y creó la cuenta «${account.name}».`, path: "/admin/system/accounts" }) },
-  );
   // Simulated address service: records each query it receives.
   const geocoded: [number, number][] = [];
   const geocoder = {
@@ -139,10 +107,7 @@ export async function createHarness() {
       return query.includes("nada") ? [] : [{ label: `${query}, Centro`, lat: 14.1, lon: -87.2 }];
     },
   };
-  const gate = createModuleGate(db.core, bus);
-  const moduleDeps = { db, bus, config, traccar: traccar.api, mailer, gate, outbox };
-  const backups = createBackups({ db, bus, config, settings, system, tickEveryMs: null });
-  // The device simulator without its clock: a test gives it its turns by hand. Its simulations are platform-wide: each setup starts with none.
+  // The device simulator's simulations are platform-wide: each setup starts with none.
   await db.core.query(`DELETE FROM gps.simulations`);
   // Simulated routing service: a path with a point between every two it is asked for, at 36 km/h; it records each query.
   const routed: LonLat[][] = [];
@@ -162,7 +127,6 @@ export async function createHarness() {
       return { line, secs, lengthM: Math.round(meters), seconds: secs[secs.length - 1] as number };
     },
   };
-  const simulator = createSimulator({ db, bus, config, tickMs: null, routing });
   // Simulated GitHub, for the look for a new version: it answers what a test
   // sets ("down" when it cannot be reached), records each look, and has a
   // clock of its own that a test moves forward.
@@ -171,44 +135,39 @@ export async function createHarness() {
     looks: [] as Record<string, string>[],
     clock: Date.now(),
   };
-  const updates = createUpdates({
+  // The engines the platform runs, without their clocks: a test gives the
+  // simulator its turns by hand and calls each periodic check when it needs it.
+  const engines = await createEngines({
     config,
-    now: () => github.clock,
-    async fetch(_url, init) {
-      github.looks.push(init.headers);
-      const reply = github.reply;
-      if (reply === "down") throw new Error("GitHub is not reachable");
-      return { status: reply.status, headers: { get: (name: string) => (name.toLowerCase() === "etag" ? (reply.etag ?? null) : null) }, json: async () => reply.body };
+    db,
+    bus,
+    traccar: traccar.api,
+    mailer,
+    clocks: false,
+    routing,
+    updates: {
+      now: () => github.clock,
+      async fetch(_url, init) {
+        github.looks.push(init.headers);
+        const reply = github.reply;
+        if (reply === "down") throw new Error("GitHub is not reachable");
+        return { status: reply.status, headers: { get: (name: string) => (name.toLowerCase() === "etag" ? (reply.etag ?? null) : null) }, json: async () => reply.body };
+      },
     },
   });
+  const { settings, outbox, system, gate, backups, simulator, updates, events, notifier, antitheft, fuel, maintenance, integrations, reports } = engines;
+  const auth = createAuth(
+    config,
+    db,
+    mailer,
+    async (userId) => {
+      await deleteOwnedAccounts({ db, bus, traccar: traccar.api }, userId);
+    },
+    { accountCreated: (account) => void system.notify("account_created", { title: "se creó una cuenta nueva", body: `Alguien se registró y creó la cuenta «${account.name}».`, path: "/admin/system/accounts" }) },
+  );
   const { fastify, routes } = await buildApp({ config, db, auth, bus, traccar: traccar.api, mailer, geocoder, gate, settings, backups, outbox, system, simulator, updates, gatewayLookup: async () => GATEWAY_IP });
-  // The event engine listens to new positions, as in production, but
-  // without its clock: the tests call the periodic check when they need it.
-  const events = createEventEngine({ db, bus, config, sweepEveryMs: null });
-  events.start();
-  const notifier = createNotifier({ db, bus, config, outbox });
-  notifier.start();
-  const antitheft = createAntitheftEngine({ ...moduleDeps, sweepEveryMs: null });
-  antitheft.start();
-  const drivers = createDriversEngine(moduleDeps);
-  drivers.start();
-  const fuel = createFuelEngine({ ...moduleDeps, sweepEveryMs: null });
-  fuel.start();
-  const diagnostics = createDiagnosticsEngine(moduleDeps);
-  diagnostics.start();
-  const fleet = createFleetEngine(moduleDeps);
-  fleet.start();
-  const maintenance = createMaintenanceEngine({ ...moduleDeps, sweepEveryMs: null });
-  maintenance.start();
-  const routesEngine = createRoutesEngine(moduleDeps);
-  routesEngine.start();
-  const integrations = createIntegrationsEngine({ ...moduleDeps, tickMs: null });
-  integrations.start();
-  const meters = createMeterKeeper({ db, bus });
-  meters.start();
-  const reports = createReportsEngine({ ...moduleDeps, tickEveryMs: null });
-  const days = createDayKeeper({ db, bus });
-  days.start();
+  // They listen to new positions, as in production.
+  engines.start();
 
   /** Enables optional modules on an account, as the platform admin console would. */
   async function enableModules(orgId: string, modules: string[]) {
@@ -220,19 +179,7 @@ export async function createHarness() {
   }
   /** Waits for the core and the modules to finish processing what was received. */
   async function settle() {
-    await events.idle();
-    await antitheft.idle();
-    await drivers.idle();
-    await fuel.idle();
-    await diagnostics.idle();
-    await fleet.idle();
-    await maintenance.idle();
-    await routesEngine.idle();
-    await integrations.idle();
-    await meters.idle();
-    await days.idle();
-    await events.idle();
-    await notifier.idle();
+    await engines.idle();
   }
   await fastify.listen({ port: 0, host: "127.0.0.1" });
   const port = (fastify.server.address() as AddressInfo).port;
@@ -329,31 +276,7 @@ export async function createHarness() {
     await db.core.query(`DELETE FROM auth.organization WHERE id = ANY($1::text[])`, [orgIds]);
     await db.core.query(`DELETE FROM auth."user" WHERE id = ANY($1::text[])`, [users.map((u) => u.userId)]);
     await db.core.query(`DELETE FROM gps.ingest_cursor WHERE source = ANY($1::text[])`, [sources]);
-    events.stop();
-    await events.idle();
-    notifier.stop();
-    await notifier.idle();
-    antitheft.stop();
-    await antitheft.idle();
-    drivers.stop();
-    await drivers.idle();
-    fuel.stop();
-    await fuel.idle();
-    diagnostics.stop();
-    await diagnostics.idle();
-    fleet.stop();
-    await fleet.idle();
-    maintenance.stop();
-    await maintenance.idle();
-    routesEngine.stop();
-    await routesEngine.idle();
-    integrations.stop();
-    await integrations.idle();
-    meters.stop();
-    await meters.idle();
-    days.stop();
-    await days.idle();
-    await reports.idle();
+    await engines.stop();
     await backups.idle();
     await outbox.idle();
     simulator.stop();
