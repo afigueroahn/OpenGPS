@@ -13,7 +13,4 @@ process.env.GEOCODER_URL = "";
 process.env.ROUTING_URL = "";
 // Who operates the installation under test, shown in the legal texts.
 process.env.LEGAL_ENTITY = "Operador de Prueba";
-// The platform's own gateway goes by names of its own, so a local test gateway on 127.0.0.1 is "another server".
-process.env.DEVICE_GATEWAY_HOST = "gw.plataforma.prueba";
-process.env.DEVICE_GATEWAY_IP = "203.0.113.10";
 process.env.TRACCAR_API_URL = "http://traccar.prueba:8082";

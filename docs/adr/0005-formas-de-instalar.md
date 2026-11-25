@@ -1,6 +1,6 @@
 # ADR-0005: Formas de instalar
 
-- **Estado:** Aceptada
+- **Estado:** Aceptada. Superseded by ADR-0006 en un punto: `WEB_BIND` ya no existe
 - **Fecha:** 2026-11-25
 - **Decide:** Angel Figueroa (@afigueroahn)
 

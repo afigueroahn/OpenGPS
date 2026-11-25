@@ -325,8 +325,7 @@ variant_of() { sed -n 's/^x-opengps-deploy:[[:space:]]*//p' "$1" 2> /dev/null | 
 # version: the compose file of its way of installing, from <root>/<way>/, and
 # its .env with that version. An installation from before the ways existed
 # (0.1.x) has no mark: with the tunnel's profile it is deploy/cloudflare, and
-# otherwise deploy/docker-compose with the web app's port only for the server
-# itself, since those installations did not publish it.
+# otherwise deploy/docker-compose, with the web app on a port of the server.
 stage_update() { # base, root, version
   local base="$1" root="$2" version="$3" stage="$1/.update" variant legacy=no
   variant="$(variant_of "$base/docker-compose.yml")"
@@ -339,7 +338,6 @@ stage_update() { # base, root, version
   {
     if [ "$legacy" = yes ]; then
       grep -v -e '^OPENGPS_VERSION=' -e '^COMPOSE_PROFILES=' "$base/.env"
-      if [ "$variant" = docker-compose ] && ! grep -q '^WEB_BIND=' "$base/.env"; then echo 'WEB_BIND=127.0.0.1'; fi
     else
       grep -v '^OPENGPS_VERSION=' "$base/.env"
     fi
