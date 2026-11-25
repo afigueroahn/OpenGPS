@@ -23,6 +23,9 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/).
   publicarla, o la del repositorio con `-dev` cuando se construye desde el código. La
   devuelven `GET /api/config` y `GET /api/health`, y la web la muestra en lugar de
   «x.x.x» (ADR-0003, #12).
+- Flujo `Release`: cuando `main` trae una versión nueva con su sección en este archivo,
+  publica las imágenes para amd64 y arm64 en `ghcr.io/afigueroahn/` y después crea el
+  tag y la release de GitHub (#14).
 
 ### Cambiado
 
