@@ -44,6 +44,8 @@ jobs:
         run: shellcheck deploy/*.sh .github/scripts/*.sh
       - name: Install files
         run: |
+          # .env.example explains the variables the compose files read, and no other.
+          .github/scripts/env-check.sh
           # The env generator fills the secrets and the version, and the
           # compose file of each way of installing is valid with it, carries
           # its folder's name as its mark, and builds from the code too.

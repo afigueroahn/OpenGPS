@@ -174,6 +174,8 @@ Las opcionales:
 | `DEVICE_GATEWAY_HOST` | `gw.` + el dominio | A qué nombre se configuran los equipos |
 | `DEVICE_GATEWAY_IP` | | La IP del servidor, para los equipos que solo aceptan números |
 | `APP_NAME` | `OpenGPS` | El nombre de la plataforma en la web, los correos y los avisos |
+| `TRUSTED_ORIGINS` | | Otras direcciones en las que también se abre la web, además de `PUBLIC_URL`, separadas por comas. Desde ellas también se puede entrar y guardar cambios |
+| `SIMULATOR_MAX_DEVICES` | `50` | Cuántos equipos simulados puede correr a la vez el simulador de la consola (de 1 a 5000) |
 | `UPDATE_REPOSITORY` | `afigueroahn/OpenGPS` | El repositorio de GitHub cuyas releases son las versiones nuevas: el dueño las ve en Administración → Actualizaciones. Vacío, la plataforma no consulta |
 | `COMPOSE_PROJECT_NAME` | `opengps` | Solo con Docker Compose: el nombre del grupo de contenedores |
 | `WEB_PORT`, `WEB_BIND` | `3000`, `0.0.0.0` | Solo con `docker-compose/`: el puerto del servidor donde responde la web, y en qué dirección escucha. `127.0.0.1` la deja solo para un proxy instalado en el mismo servidor |

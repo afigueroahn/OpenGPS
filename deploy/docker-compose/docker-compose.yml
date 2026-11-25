@@ -137,6 +137,10 @@ services:
       UPDATE_REPOSITORY: ${UPDATE_REPOSITORY-afigueroahn/OpenGPS}
       DEVICE_GATEWAY_HOST: ${DEVICE_GATEWAY_HOST:-}
       DEVICE_GATEWAY_IP: ${DEVICE_GATEWAY_IP:-}
+      # Other addresses the web app is opened at, besides PUBLIC_URL, comma-separated.
+      TRUSTED_ORIGINS: ${TRUSTED_ORIGINS:-}
+      # Simulated devices the console's simulator can run at once.
+      SIMULATOR_MAX_DEVICES: ${SIMULATOR_MAX_DEVICES:-50}
       # Everything with the database's only user: the platform, the gateway's positions and the backups.
       DATABASE_URL: postgres://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-opengps}
       TRACCAR_DATABASE_URL: postgres://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD}@postgres:5432/traccar
