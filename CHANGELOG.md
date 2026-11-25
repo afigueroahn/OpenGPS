@@ -6,6 +6,14 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Sin publicar]
 
+## [0.1.1] - 2026-11-25
+
+### Cambiado
+
+- La confirmación de «Actualizar a X.Y.Z» usa el botón principal en lugar del rojo de
+  las acciones que borran: instalar una versión no borra nada y vuelve atrás sola si
+  falla (#30).
+
 ## [0.1.0] - 2026-11-25
 
 ### Añadido

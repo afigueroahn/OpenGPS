@@ -197,6 +197,8 @@ export function ConfirmDialog(props: {
   onClose: () => void;
   action: () => Promise<unknown>;
   onDone?: () => void;
+  /** The confirm button's color: red for what deletes or cannot be undone (the default), the main one otherwise. */
+  tone?: "danger" | "primary";
 }) {
   const { t } = useTranslation();
   const queryClient = useQueryClient();
@@ -219,7 +221,7 @@ export function ConfirmDialog(props: {
           <Button type="button" variant="secondary" onClick={props.onClose}>
             {t("common.cancel")}
           </Button>
-          <Button type="button" variant="danger" loading={run.isPending} onClick={() => run.mutate()}>
+          <Button type="button" variant={props.tone ?? "danger"} loading={run.isPending} onClick={() => run.mutate()}>
             {props.confirm}
           </Button>
         </div>
