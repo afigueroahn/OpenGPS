@@ -154,13 +154,16 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           VERSION: ${{ needs.plan.outputs.version }}
         run: |
-          # What a Docker Compose installation downloads: the compose file, the
-          # script that writes its variables, and their example with this version.
+          # What a Docker Compose installation downloads: the compose file of
+          # its way of installing (ADR-0005), the script that writes its
+          # variables, and their example with this version.
           files="$RUNNER_TEMP/files"
           mkdir -p "$files"
-          cp deploy/docker-compose/docker-compose.yml deploy/generate-env.sh "$files/"
+          cp deploy/docker-compose/docker-compose.yml "$files/docker-compose.yml"
+          cp deploy/cloudflare/docker-compose.yml "$files/docker-compose.cloudflare.yml"
+          cp deploy/generate-env.sh "$files/"
           sed "s|^OPENGPS_VERSION=.*|OPENGPS_VERSION=$VERSION|" deploy/.env.example > "$files/env.example"
           grep -qx "OPENGPS_VERSION=$VERSION" "$files/env.example"
           gh release create "v$VERSION" --repo "$GITHUB_REPOSITORY" --target "$GITHUB_SHA" \
             --title "OpenGPS $VERSION" --notes-file "$RUNNER_TEMP/notes.md" \
-            "$files/docker-compose.yml" "$files/generate-env.sh" "$files/env.example"
+            "$files"/*

@@ -45,13 +45,18 @@ jobs:
       - name: Install files
         run: |
           # The env generator fills the secrets and the version, and the
-          # compose files are valid with it, with images and built from code.
+          # compose file of each way of installing is valid with it, carries
+          # its folder's name as its mark, and builds from the code too.
           sh deploy/generate-env.sh https://example.com "$RUNNER_TEMP/.env"
           grep -qx "OPENGPS_VERSION=$(node -p 'require("./package.json").version')" "$RUNNER_TEMP/.env"
-          for compose in deploy/docker-compose/docker-compose.yml deploy/dokploy/docker-compose.yml; do
+          # What one way asks for besides: here, any value.
+          sed -i 's/^CLOUDFLARE_TUNNEL_TOKEN=.*/CLOUDFLARE_TUNNEL_TOKEN=any/' "$RUNNER_TEMP/.env"
+          for compose in deploy/*/docker-compose.yml; do
+            way="$(basename "$(dirname "$compose")")"
             docker compose --env-file "$RUNNER_TEMP/.env" -f "$compose" config --quiet
+            grep -qx "x-opengps-deploy: $way" "$compose"
+            docker compose --env-file "$RUNNER_TEMP/.env" -f "$compose" -f deploy/build.yml config --quiet
           done
-          docker compose --env-file "$RUNNER_TEMP/.env" -f deploy/docker-compose/docker-compose.yml -f deploy/docker-compose/build.yml config --quiet
 
   test:
     name: Unit and integration tests

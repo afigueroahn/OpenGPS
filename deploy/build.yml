@@ -1,7 +1,10 @@
 # Builds the images from the code instead of downloading them: to develop, or
 # to try a change before it is released. From the repository:
 #
-#   docker compose -f deploy/docker-compose/docker-compose.yml -f deploy/docker-compose/build.yml up -d --build
+#   docker compose -f deploy/docker-compose/docker-compose.yml -f deploy/build.yml up -d --build
+#
+# It goes after the compose file of any of the ways of installing (deploy/caddy,
+# deploy/cloudflare…): the paths are taken from that first file's folder.
 #
 # OPENGPS_VERSION only names the images built here; the platform shows the
 # repository's version with -dev.

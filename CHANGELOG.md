@@ -6,6 +6,24 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Sin publicar]
 
+### Añadido
+
+- `deploy/cloudflare/`: instalar con Docker Compose y un túnel de Cloudflare es una
+  forma propia, con su compose (ADR-0005, #36).
+
+### Cambiado
+
+- `deploy/docker-compose/` publica la web en un puerto del servidor (`WEB_PORT`, 3000;
+  `WEB_BIND`) y ya no trae el túnel de Cloudflare como perfil opcional:
+  `COMPOSE_PROFILES` deja de usarse (#36).
+- El ayudante conserva la forma de instalar al actualizar: cada compose lleva su marca
+  y la imagen del ayudante trae el de cada forma. Una instalación 0.1.x queda sola en
+  la suya: `cloudflare` si usaba el túnel, y si no `docker-compose` con
+  `WEB_BIND=127.0.0.1` (#36).
+- Cada release adjunta también `docker-compose.cloudflare.yml`.
+- `deploy/docker-compose/build.yml` pasa a `deploy/build.yml` y sirve para cualquier
+  forma.
+
 ## [0.1.2] - 2026-11-25
 
 ### Cambiado
