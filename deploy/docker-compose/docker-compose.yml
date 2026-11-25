@@ -155,11 +155,13 @@ services:
     security_opt:
       - no-new-privileges:true
 
-  # Restores a backup when the console asks for it: restores the databases
-  # and the files aside, stops the platform and the gateway, swaps them and
-  # brings them back, going back to what there was if the platform does not
-  # start (deploy/helper.sh). It is the only service with access to Docker,
-  # through its socket, and it opens no port.
+  # Restores a backup or installs a new version when the console asks for it
+  # (deploy/helper.sh): restores the databases and the files aside, stops the
+  # platform and the gateway, swaps them and brings them back; or brings up
+  # the new version's images and compose file. Either way it goes back to what
+  # there was if the platform does not start. It is the only service with
+  # access to Docker, through its socket, and it opens no port. It sees this
+  # folder, with docker-compose.yml and .env, to install versions.
   helper:
     image: ghcr.io/afigueroahn/opengps-helper:${OPENGPS_VERSION:?Set OPENGPS_VERSION, the OpenGPS version to run (0.1.0)}
     restart: unless-stopped
@@ -174,6 +176,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
       - backups-data:/data/backups
       - files-data:/data/files
+      - .:/data/install
     security_opt:
       - no-new-privileges:true
 

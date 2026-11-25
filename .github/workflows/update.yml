@@ -1,0 +1,35 @@
+# Installing a version from the console, end to end (ADR-0004): builds three
+# versions of the images, installs the first, installs the second through the
+# helper, and checks that a third that cannot start is undone. Runs when the
+# installation or the helper changes.
+name: Update
+
+on:
+  pull_request:
+    paths:
+      - deploy/**
+      - .github/scripts/update-e2e.sh
+      - .github/workflows/update.yml
+  push:
+    branches: [main]
+    paths:
+      - deploy/**
+      - .github/scripts/update-e2e.sh
+      - .github/workflows/update.yml
+
+permissions:
+  contents: read
+
+concurrency:
+  group: update-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  update:
+    name: Install, update and roll back
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Update end to end
+        run: .github/scripts/update-e2e.sh "$RUNNER_TEMP/e2e"

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # The platform's helper, the only service with access to Docker. It restores
-# a backup when the platform's admin console asks for it.
+# a backup, or installs a new version, when the platform's admin console asks.
 #
 # The platform cannot restore by itself: it would have to drop the database it
 # lives on and stop the device gateway. It leaves the request in the backups
@@ -11,11 +11,26 @@
 # platform does not start, it goes back to what there was.
 #
 # Files they talk through, in the backups folder, as "key=value" lines:
-#   helper.alive           touched every 30 s: the console shows the button
+#   helper.alive           rewritten every 30 s: the console shows the buttons.
+#                          update=yes when this helper can install versions
 #   restore.request        written by the platform: which backup to restore
 #   restore.running        the same request, while it is handled
 #   restore.result         written here: how it ended (reason: a code the
 #                          platform turns into words)
+#   update.request         written by the platform: which version to install,
+#                          and the backup made just before
+#   update.running         the same request, while it is handled
+#   update.result          written here: how it ended
+#
+# Installing a version (ADR-0004). A container cannot replace itself: this
+# helper prepares the new version (its images and its compose file, which
+# comes inside the new helper image) and hands over to a container of the new
+# helper, outside the Compose project ("helper.sh apply"). That one swaps the
+# compose file and OPENGPS_VERSION in .env, brings everything up (this helper
+# too, replaced), waits for the platform to answer with the new version, and
+# otherwise goes back to the previous files, and to the backup if even that
+# does not start. Only with Docker Compose: the folder with docker-compose.yml
+# and .env is mounted at /data/install. Dokploy does not mount it.
 set -uo pipefail
 
 DIR=/data/backups
@@ -29,6 +44,12 @@ REQUEST="$DIR/restore.request"
 RUNNING="$DIR/restore.running"
 RESULT="$DIR/restore.result"
 ALIVE="$DIR/helper.alive"
+UPDATE_REQUEST="$DIR/update.request"
+UPDATE_RUNNING="$DIR/update.running"
+UPDATE_RESULT="$DIR/update.result"
+INSTALL=/data/install
+# How long a new version has to answer before going back to the previous one.
+UPDATE_WAIT_S="${UPDATE_WAIT_S:-300}"
 # The backup's files are unpacked here first; what there was waits here until the end.
 FILES_NEW="$FILES/.restore-new"
 FILES_OLD="$FILES/.restore-previous"
@@ -44,7 +65,8 @@ if ! [[ "$PGUSER" =~ ^[A-Za-z_][A-Za-z0-9_]*$ && "$MAIN" =~ ^[A-Za-z_][A-Za-z0-9
 fi
 
 # This helper's Compose project: the other services are found by its labels.
-PROJECT="$(docker inspect -f '{{index .Config.Labels "com.docker.compose.project"}}' "$HOSTNAME" 2>/dev/null || true)"
+# The container that applies an update is outside the project: it is told.
+PROJECT="${HELPER_PROJECT:-$(docker inspect -f '{{index .Config.Labels "com.docker.compose.project"}}' "$HOSTNAME" 2>/dev/null || true)}"
 if [ -z "$PROJECT" ]; then
   log "cannot tell which Compose project this helper belongs to: is the Docker socket mounted?"
   exit 1
@@ -252,22 +274,203 @@ handle_request() {
   if replace "$DIR/$main_file" "$DIR/$gateway_file" "${files_file:+$DIR/$files_file}"; then report ok ""; else report failed "${REASON:-unknown}"; fi
 }
 
+# ─── Updates ─────────────────────────────────────────────────────────────────
+
+# Where something mounted in this container comes from: a volume's name or a host folder.
+mount_of() { # destination
+  docker inspect -f "{{range .Mounts}}{{if eq .Destination \"$1\"}}{{if .Name}}{{.Name}}{{else}}{{.Source}}{{end}}{{end}}{{end}}" "$HOSTNAME" 2>/dev/null
+}
+# The installation's folder on the host, as Docker Compose resolves its paths.
+HOST_INSTALL="${HOST_INSTALL:-}"
+if [ -z "$HOST_INSTALL" ] && [ -d "$INSTALL" ]; then HOST_INSTALL="$(mount_of "$INSTALL")"; fi
+# This helper can install versions when it sees the installation's files and has Docker Compose.
+UPDATE_OK=no
+if [ -n "$HOST_INSTALL" ] && [ -f "$INSTALL/docker-compose.yml" ] && [ -w "$INSTALL/.env" ] && docker compose version > /dev/null 2>&1; then UPDATE_OK=yes; fi
+
+ufield() { grep -m1 "^$1=" "$UPDATE_RUNNING" 2>/dev/null | cut -d= -f2- | tr -d '\r' || true; }
+installed_version() { grep -m1 '^OPENGPS_VERSION=' "$1/.env" 2>/dev/null | cut -d= -f2- | tr -d '\r' || true; }
+report_update() { # status (ok|failed), reason code, detail
+  local tmp="$UPDATE_RESULT.tmp"
+  printf 'id=%s\nversion=%s\nfrom=%s\nrequested=%s\nstarted=%s\nfinished=%s\nstatus=%s\nreason=%s\ndetail=%s\n' \
+    "$(ufield id)" "$(ufield version)" "$(ufield from)" "$(ufield requested)" "${started:-$(now)}" "$(now)" "$1" "$2" "${3:-}" | tr -d '\r' > "$tmp"
+  chown "$OWNER" "$tmp" && chmod 600 "$tmp" && mv "$tmp" "$UPDATE_RESULT"
+  rm -f "$UPDATE_RUNNING"
+  log "update ended: $1 $2 ${3:-}"
+}
+
+# Docker Compose on a folder with docker-compose.yml and .env, in this helper's project.
+compose_in() { # folder, arguments...
+  local folder="$1"
+  shift
+  docker compose --project-name "$PROJECT" --project-directory "$folder" -f "$folder/docker-compose.yml" --env-file "$folder/.env" "$@"
+}
+have_image() { docker image inspect "$1" > /dev/null 2>&1; }
+# The image of this helper in another version: same name, other tag.
+helper_image() { # version
+  local image
+  image="$(docker inspect -f '{{.Config.Image}}' "$HOSTNAME")"
+  echo "${image%:*}:$1"
+}
+updater() { docker ps -q --filter "name=^$PROJECT-updater$"; }
+
+# Until the platform answers with this version and the gateway is up. A
+# platform that cannot start fails quickly; one that starts slowly has up to
+# UPDATE_WAIT_S.
+wait_version() { # version
+  local want="$1" waited platform state
+  for ((waited = 0; waited < UPDATE_WAIT_S; waited += 5)); do
+    platform="$(container opengps)"
+    state="$(docker inspect -f '{{.State.Status}} {{if .State.Health}}{{.State.Health.Status}}{{end}}' "$platform" 2>/dev/null)"
+    case "$state" in
+      "running healthy")
+        if docker exec "$platform" wget -qO- http://127.0.0.1:3000/api/health 2> /dev/null | grep -q "\"version\":\"$want\"" && healthy "$(container traccar)"; then return 0; fi
+        ;;
+      restarting* | exited* | dead* | "running unhealthy")
+        if [ "$waited" -ge 20 ]; then return 1; fi
+        ;;
+    esac
+    sleep 5
+  done
+  return 1
+}
+
+# The request, prepared here: the new images downloaded and the new compose
+# file checked against .env. Then a container of the new helper applies it.
+handle_update_request() {
+  started="$(now)"
+  local id version helper stage cid err
+  id="$(ufield id)"
+  version="$(ufield version)"
+  log "update request to $version"
+  if ! [[ "$id" =~ ^[0-9a-f-]{36}$ && "$version" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+    report_update failed invalid
+    return
+  fi
+  if [ "$UPDATE_OK" != yes ]; then
+    report_update failed unsupported
+    return
+  fi
+  printf 'from=%s\n' "$(installed_version "$INSTALL")" >> "$UPDATE_RUNNING"
+  helper="$(helper_image "$version")"
+  if ! have_image "$helper" && ! docker pull -q "$helper" > /dev/null; then
+    report_update failed pull "$helper"
+    return
+  fi
+  # The new version's compose file travels inside its helper image.
+  stage="$INSTALL/.update"
+  if ! { rm -rf "$stage" && mkdir -p "$stage"; }; then
+    report_update failed files
+    return
+  fi
+  if ! cid="$(docker create "$helper")" || ! docker cp "$cid:/opt/opengps/docker-compose.yml" "$stage/docker-compose.yml" > /dev/null; then
+    [ -n "${cid:-}" ] && docker rm "$cid" > /dev/null
+    report_update failed files
+    return
+  fi
+  docker rm "$cid" > /dev/null
+  { grep -v '^OPENGPS_VERSION=' "$INSTALL/.env"; printf 'OPENGPS_VERSION=%s\n' "$version"; } > "$stage/.env"
+  if ! err="$(compose_in "$stage" config --quiet 2>&1)"; then
+    report_update failed env "$(echo "$err" | tail -1)"
+    return
+  fi
+  if ! compose_in "$stage" pull --policy missing --quiet; then
+    report_update failed pull
+    return
+  fi
+  log "version $version ready; a container of it installs it"
+  if ! docker run -d --rm --name "$PROJECT-updater" \
+    -e HELPER_PROJECT="$PROJECT" -e HOST_INSTALL="$HOST_INSTALL" -e UPDATE_WAIT_S="$UPDATE_WAIT_S" \
+    -e POSTGRES_USER="$PGUSER" -e POSTGRES_DB="$MAIN" \
+    -v /var/run/docker.sock:/var/run/docker.sock -v "$HOST_INSTALL:$HOST_INSTALL" \
+    -v "$(mount_of /data/backups):/data/backups" -v "$(mount_of /data/files):/data/files" \
+    "$helper" /usr/local/bin/helper.sh apply > /dev/null; then
+    report_update failed start
+  fi
+}
+
+# In the container of the new version: swaps the files, brings everything up
+# and waits; if the new version does not answer, the previous files, and if
+# even that does not start, the backup made just before.
+apply_update() {
+  started="$(now)"
+  local folder="$HOST_INSTALL" version from main_file gateway_file files_file
+  version="$(ufield version)"
+  from="$(ufield from)"
+  if ! { cp "$folder/docker-compose.yml" "$folder/docker-compose.yml.previous" && cp "$folder/.env" "$folder/.env.previous" &&
+    cat "$folder/.update/docker-compose.yml" > "$folder/docker-compose.yml" && cat "$folder/.update/.env" > "$folder/.env" &&
+    rm -rf "$folder/.update"; }; then
+    report_update failed files
+    return
+  fi
+  log "installing $version over $from"
+  if compose_in "$folder" up -d --remove-orphans && wait_version "$version"; then
+    report_update ok ""
+    return
+  fi
+  log "version $version did not answer; going back to $from"
+  cat "$folder/docker-compose.yml.previous" > "$folder/docker-compose.yml" && cat "$folder/.env.previous" > "$folder/.env"
+  if compose_in "$folder" up -d --remove-orphans && wait_version "$from"; then
+    report_update failed rolled_back
+    return
+  fi
+  main_file="$(ufield gps)"
+  gateway_file="$(ufield traccar)"
+  files_file="$(ufield files)"
+  if [ -n "$main_file" ] && [ -n "$gateway_file" ] && [ -f "$DIR/$main_file" ] && [ -f "$DIR/$gateway_file" ]; then
+    log "version $from does not start either; restoring the backup made before"
+    REASON=""
+    if replace "$DIR/$main_file" "$DIR/$gateway_file" "${files_file:+$DIR/$files_file}"; then
+      report_update failed restored
+      return
+    fi
+  fi
+  report_update failed broken
+}
+
+# A request left halfway: the container applying it stopped. If the new
+# version answers, it was done; otherwise the previous files come back.
+handle_update_cut() {
+  started="$(now)"
+  local version
+  version="$(ufield version)"
+  if UPDATE_WAIT_S=30 wait_version "$version"; then
+    report_update ok ""
+  elif [ -f "$INSTALL/docker-compose.yml.previous" ] && [ -f "$INSTALL/.env.previous" ]; then
+    cat "$INSTALL/docker-compose.yml.previous" > "$INSTALL/docker-compose.yml" && cat "$INSTALL/.env.previous" > "$INSTALL/.env"
+    report_update failed cut
+    log "the previous files are back; docker compose up -d in the installation's folder brings that version up"
+  else
+    report_update failed cut
+  fi
+}
+
 # ─── The loop ────────────────────────────────────────────────────────────────
 
 trap 'exit 0' TERM INT
 mkdir -p "$DIR"
-# Sign of life for the console, also while a restore is under way.
+# The container of a new version, applying it, does that and leaves.
+if [ "${1:-}" = apply ]; then
+  apply_update
+  exit 0
+fi
+# Sign of life for the console, also while a restore is under way, and what this helper can do.
 (while true; do
-  touch "$ALIVE" && chown "$OWNER" "$ALIVE"
+  printf 'restore=yes\nupdate=%s\n' "$UPDATE_OK" > "$ALIVE.tmp" && chown "$OWNER" "$ALIVE.tmp" && mv "$ALIVE.tmp" "$ALIVE"
   sleep 30
 done) &
-log "restore helper ready (project $PROJECT)"
+log "helper ready (project $PROJECT, updates: $UPDATE_OK)"
 while true; do
   if [ -f "$RUNNING" ]; then
     handle_cut
   elif [ -f "$REQUEST" ] && [ ! -L "$REQUEST" ]; then
     mv "$REQUEST" "$RUNNING"
     handle_request
+  elif [ -f "$UPDATE_RUNNING" ]; then
+    # While the container of the new version works, it is left alone.
+    [ -n "$(updater)" ] || handle_update_cut
+  elif [ -f "$UPDATE_REQUEST" ] && [ ! -L "$UPDATE_REQUEST" ]; then
+    mv "$UPDATE_REQUEST" "$UPDATE_RUNNING"
+    handle_update_request
   fi
   sleep 10 &
   wait $!

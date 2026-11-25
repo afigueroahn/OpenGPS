@@ -40,6 +40,8 @@ jobs:
         run: pnpm build
       - name: Dependency audit
         run: pnpm audit
+      - name: Shell scripts
+        run: shellcheck deploy/*.sh .github/scripts/*.sh
       - name: Install files
         run: |
           # The env generator fills the secrets and the version, and the

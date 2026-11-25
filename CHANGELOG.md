@@ -31,6 +31,10 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/).
   por hora, y el dueño ve «Versión nueva» en el menú de su cuenta y al pie de
   Administración. La sección Sistema → Actualizaciones muestra las dos versiones, las
   notas de la nueva y cómo instalarla (#20).
+- El ayudante instala versiones nuevas cuando se le piden: descarga sus imágenes, toma
+  el `docker-compose.yml` de la versión nueva, la levanta y vuelve a la anterior si no
+  responde, o restaura la copia sacada antes si ni esa arranca. Una prueba de punta a
+  punta lo comprueba con Docker en la CI (ADR-0004, #22).
 
 ### Cambiado
 
