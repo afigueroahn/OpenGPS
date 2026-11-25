@@ -1007,7 +1007,7 @@
         "preparing": "Making the backup before installing {{version}}…",
         "requested": "Backup ready. Waiting for the helper to install {{version}}…",
         "running": "Installing {{version}}. The platform restarts and this page reloads by itself.",
-        "ok": "Version {{version}} was installed ({{when}}).",
+        "ok": "The platform was updated to version {{version}} ({{when}}).",
         "manual": "This installation is updated by hand: with Docker Compose, follow \"Install a new version\" in the guide; with Dokploy, change OPENGPS_VERSION to {{version}} in Environment and press Deploy.",
         "source": "This platform was built from the code: it is updated with git pull and building again.",
         "reasons": {

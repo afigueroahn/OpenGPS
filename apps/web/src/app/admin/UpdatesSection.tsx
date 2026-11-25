@@ -15,11 +15,24 @@ import { Card } from "../reports/kit";
 import { ConfirmDialog, errorText } from "../widgets";
 import { Row } from "./SettingsTabs";
 
+/** How long, after an install from the console, its result takes the place of "up to date". */
+const JUST_INSTALLED_MS = 60 * 60_000;
+
+/** An install from the console ended well not long ago, and its version is the one running. */
+const justInstalled = (updates: UpdateStatus, now: number) => {
+  const last = updates.install.last;
+  return last?.state === "ok" && last.version === updates.current && now - Date.parse(last.at) < JUST_INSTALLED_MS ? last : null;
+};
+
 /** Where the install guide explains how to install a new version. */
 const GUIDE = "https://github.com/afigueroahn/OpenGPS/blob/main/deploy/README.md#instalar-una-versión-nueva";
 
 function Status({ updates }: { updates: UpdateStatus }) {
   const { t } = useTranslation();
+  const now = useNow(60_000);
+  // Right after updating, one message says so, instead of "up to date" as well.
+  const installed = justInstalled(updates, now);
+  if (installed && !updates.available) return <Notice tone="success">{t("admin.updates.install.ok", { version: installed.version, when: timeAgo(installed.at, now) })}</Notice>;
   if (!updates.repository) return <Notice>{t("admin.updates.off")}</Notice>;
   if (updates.error) return <Notice tone="error">{t(`admin.updates.error.${updates.error}`)}</Notice>;
   if (updates.available && updates.latest) {
@@ -44,7 +57,6 @@ function Status({ updates }: { updates: UpdateStatus }) {
 /** Installing the new version, or how to do it by hand; and how the last install ended. */
 function Install({ updates }: { updates: UpdateStatus }) {
   const { t } = useTranslation();
-  const now = useNow(60_000);
   const queryClient = useQueryClient();
   const [confirming, setConfirming] = useState(false);
   const { install, latest, available } = updates;
@@ -62,8 +74,8 @@ function Install({ updates }: { updates: UpdateStatus }) {
   }
   return (
     <div className="space-y-3">
-      {last?.state === "ok" && <Notice tone="success">{t("admin.updates.install.ok", { version: last.version, when: timeAgo(last.at, now) })}</Notice>}
-      {last?.state === "failed" && <Notice tone="error">{t(`admin.updates.install.reasons.${last.reason ?? "broken"}`, { version: last.version, from: last.from ?? "—" })}</Notice>}
+      {/* A failed install is told while that version is still the one offered. */}
+      {last?.state === "failed" && last.version === latest?.version && <Notice tone="error">{t(`admin.updates.install.reasons.${last.reason ?? "broken"}`, { version: last.version, from: last.from ?? "—" })}</Notice>}
       {available && latest && install.mode === "console" && (
         <>
           <Button onClick={() => setConfirming(true)}>{t("admin.updates.install.button", { version: latest.version })}</Button>
