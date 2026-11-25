@@ -6,6 +6,8 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Sin publicar]
 
+## [0.2.0] - 2026-11-25
+
 ### Añadido
 
 - `deploy/cloudflare/`: instalar con Docker Compose y un túnel de Cloudflare es una
