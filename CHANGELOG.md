@@ -19,6 +19,10 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/).
 - CI en GitHub Actions para cada PR y cada cambio en `main`: estilo, tipos,
   compilación, auditoría de dependencias, pruebas contra PostgreSQL con TimescaleDB,
   construcción de las imágenes de Docker y escaneo de secretos (#9).
+- La plataforma conoce su versión: la de su release cuando la imagen se arma para
+  publicarla, o la del repositorio con `-dev` cuando se construye desde el código. La
+  devuelven `GET /api/config` y `GET /api/health`, y la web la muestra en lugar de
+  «x.x.x» (ADR-0003, #12).
 
 ### Cambiado
 

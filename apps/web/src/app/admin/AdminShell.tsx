@@ -12,8 +12,8 @@ import { Avatar } from "../../components/Avatar";
 import { Logo } from "../../components/ui";
 import { auth, saveSettings } from "../../lib/api";
 import { adoptLanguage } from "../../lib/i18n";
+import { useConfig } from "../../lib/session";
 import { adoptMode, setMode, useTheme } from "../../lib/theme";
-import { APP_VERSION } from "../../lib/version";
 import { GROUPS, type Section, pathOf } from "./sections";
 
 const COLLAPSED_KEY = "admin-menu-collapsed";
@@ -109,13 +109,15 @@ export function AdminShell({ me, sections, current, children }: { me: Me; sectio
     </div>
   );
 
-  const version = t("common.version", { version: APP_VERSION });
+  const appVersion = useConfig().data?.version;
+  const version = appVersion ? t("common.version", { version: appVersion }) : "";
   // Only the version goes at the foot; with the menu folded, just its number.
-  const versionFoot = (compact: boolean) => (
-    <p className="num shrink-0 border-t border-line px-2 py-3 text-center text-[12px] text-faint" title={compact ? version : undefined}>
-      {compact ? APP_VERSION : version}
-    </p>
-  );
+  const versionFoot = (compact: boolean) =>
+    appVersion && (
+      <p className="num shrink-0 border-t border-line px-2 py-3 text-center text-[12px] text-faint" title={compact ? version : undefined}>
+        {compact ? appVersion : version}
+      </p>
+    );
 
   const iconButton = "flex h-9 w-9 items-center justify-center rounded-[10px] text-ink-3 hover:bg-ink/[0.06] hover:text-ink";
 

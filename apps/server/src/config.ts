@@ -2,6 +2,7 @@
 import { createHmac } from "node:crypto";
 import { CHANNELS_DEFAULT, type ChannelSettings, type CustomHeader, type Language, OAUTH_DEFAULT, type MailTemplates, type ModuleKey, PASSWORD_POLICY_DEFAULT, type PasswordPolicy } from "@opengps/shared";
 import { z } from "zod";
+import { SOURCE_VERSION } from "./version";
 
 /** External S3-compatible storage, already with its key. */
 export interface S3Target {
@@ -55,6 +56,8 @@ const schema = z.object({
   HOST: z.string().default("0.0.0.0"),
 
   APP_NAME: z.string().min(1).default("OpenGPS"),
+  // The release this image is, set when the image is built. Empty: built from the code.
+  APP_VERSION: z.string().default(""),
   PUBLIC_URL: z.url(),
   /** Additional origins authorized to use the API, comma-separated. */
   TRUSTED_ORIGINS: z.string().default(""),
@@ -154,6 +157,7 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env) {
     port: e.PORT,
     host: e.HOST,
     appName: e.APP_NAME,
+    appVersion: e.APP_VERSION || SOURCE_VERSION,
     publicUrl,
     trustedOrigins: [
       publicUrl,

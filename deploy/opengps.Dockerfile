@@ -50,6 +50,16 @@ COPY --from=build /repo/apps/server/dist ./dist
 COPY db ./db
 COPY --from=web /repo/apps/web/dist /app/web
 ENV WEB_DIR=/app/web
+# The release this image is (ADR-0003): the release workflow passes it, and
+# the platform shows it. Empty when the image is built from the code.
+ARG APP_VERSION=""
+ARG REVISION=""
+ENV APP_VERSION=$APP_VERSION
+LABEL org.opencontainers.image.title="OpenGPS" \
+  org.opencontainers.image.source="https://github.com/afigueroahn/OpenGPS" \
+  org.opencontainers.image.licenses="Apache-2.0" \
+  org.opencontainers.image.version=$APP_VERSION \
+  org.opencontainers.image.revision=$REVISION
 RUN mkdir -p /data/files /data/backups && chown -R node:node /data/files /data/backups
 USER node
 EXPOSE 3000
