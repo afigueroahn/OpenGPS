@@ -10,7 +10,7 @@ La única forma de instalar la plataforma: con Docker Compose en cualquier servi
 | [`generate-env.sh`](generate-env.sh) | Escribe las variables con sus secretos ya generados |
 | [`opengps.Dockerfile`](opengps.Dockerfile) | La plataforma: la imagen con la web dentro |
 | [`postgres.Dockerfile`](postgres.Dockerfile) | La base de datos, con [`postgres-init.sh`](postgres-init.sh), que crea la base `traccar` la primera vez que arranca |
-| [`restorer.Dockerfile`](restorer.Dockerfile) | El ayudante de restauración, con [`restorer.sh`](restorer.sh): restaura una copia cuando se pide desde la consola |
+| [`helper.Dockerfile`](helper.Dockerfile) | El ayudante de la plataforma, con [`helper.sh`](helper.sh): restaura una copia cuando se pide desde la consola |
 
 Las dos formas levantan cuatro contenedores:
 
@@ -19,7 +19,7 @@ Las dos formas levantan cuatro contenedores:
 | `opengps` | La plataforma: la web y la API juntas, la sesión, el mapa en vivo, las tareas y las copias | 3000, solo dentro de la red de Docker |
 | `traccar` | La entrada de los equipos GPS | 5001, 5002, 5004, 5011, 5013, 5015, 5023, 5027 y 5046, por TCP y UDP, publicados en el servidor |
 | `postgres` | Las bases `opengps` (la plataforma) y `traccar` (los equipos), con un solo usuario, `postgres` de fábrica | 5432, solo dentro de la red de Docker |
-| `restorer` | El ayudante de restauración: cuando se pide desde la consola, cambia las bases y los archivos por los de una copia | Ninguno |
+| `helper` | El ayudante de la plataforma, el único con acceso a Docker: cuando se pide desde la consola, cambia las bases y los archivos por los de una copia | Ninguno |
 
 Con Docker Compose se puede sumar un quinto, `tunnel`: el túnel de Cloudflare, que pone el dominio con HTTPS (ver «Con un túnel de Cloudflare»).
 
@@ -199,10 +199,10 @@ Para publicar una versión nueva:
 ```bash
 cd /opt/opengps
 git pull
-docker compose -f deploy/docker-compose/docker-compose.yml up -d --build
+docker compose -f deploy/docker-compose/docker-compose.yml up -d --build --remove-orphans
 ```
 
-Las migraciones de la base se aplican solas al arrancar la plataforma.
+Las migraciones de la base se aplican solas al arrancar la plataforma. `--remove-orphans` quita los servicios que la versión nueva ya no tiene: por ejemplo `restorer`, que ahora se llama `helper`. Si quedara en marcha, habría dos ayudantes atendiendo los mismos pedidos.
 
 ### Con un túnel de Cloudflare
 
@@ -297,13 +297,13 @@ En Administración → Copias de seguridad, cada copia completa tiene el botón 
 
 1. La plataforma hace una copia de cómo está todo ahora, de tipo «Antes de restaurar»: con ella se puede deshacer la restauración, restaurándola igual.
 2. Si la copia elegida ya no está en el servidor pero sí en el almacenamiento externo, la baja primero.
-3. El ayudante (`restorer`) restaura las bases y los archivos aparte y los comprueba, sin detener nada. Si la copia no se puede leer entera, se detiene ahí y no cambia nada.
+3. El ayudante (`helper`) restaura las bases y los archivos aparte y los comprueba, sin detener nada. Si la copia no se puede leer entera, se detiene ahí y no cambia nada.
 4. Detiene la plataforma y la entrada de los equipos, cambia las bases y los archivos por los de la copia y los vuelve a levantar. Si la plataforma no arranca, vuelve a lo que había.
 5. La consola muestra en qué va y cómo terminó. Como la sesión puede no existir en la copia, a veces hay que volver a entrar para verlo.
 
 Las claves que se escriben en la consola (correo, almacenamiento, canales de aviso, inicio de sesión) se conservan: si la copia viene de otro servidor con otro `AUTH_SECRET`, quedan las de este.
 
-El botón aparece cuando el ayudante está en marcha: `docker compose -f deploy/docker-compose/docker-compose.yml ps` lo muestra como `restorer`, y su registro está en `logs restorer`.
+El botón aparece cuando el ayudante está en marcha: `docker compose -f deploy/docker-compose/docker-compose.yml ps` lo muestra como `helper`, y su registro está en `logs helper`.
 
 ### A mano
 
@@ -414,7 +414,7 @@ Para llevar a un servidor nuevo una plataforma que ya funciona, con sus cuentas,
 
 ## A tener en cuenta
 
-- **El ayudante de restauración tiene acceso a Docker** (monta `/var/run/docker.sock`) para detener y levantar la plataforma y la entrada de los equipos. Es el único servicio con ese acceso, no abre ningún puerto y solo atiende pedidos con nombres de archivo de copias que estén en el volumen de copias. Si no lo quieres, quita el servicio `restorer` del Compose: las copias se siguen haciendo y se restauran a mano.
+- **El ayudante de la plataforma tiene acceso a Docker** (monta `/var/run/docker.sock`) para detener y levantar la plataforma y la entrada de los equipos. Es el único servicio con ese acceso, no abre ningún puerto y solo atiende pedidos con nombres de archivo de copias que estén en el volumen de copias. Si no lo quieres, quita el servicio `helper` del Compose: las copias se siguen haciendo y se restauran a mano.
 - **Una instalación por servidor recibe equipos.** Los puertos de los equipos son fijos: dos instalaciones en el mismo servidor no pueden usarlos a la vez.
 - **La IP de quien visita** la toma la plataforma de lo que escribe el proxy de delante, si ese proxy está en una red privada (como el de Dokploy). Detrás de Cloudflare y de Dokploy a la vez se ve la de Cloudflare, salvo que el proxy de Dokploy esté configurado para confiar en Cloudflare. Solo afecta al registro y a los límites de intentos.
 - **Los textos legales** no nombran a un titular ni a un país: dicen «quien presta el servicio en» tu dominio, y dan el correo de contacto que pongas en Ajustes. Las leyes de privacidad suelen pedir que se identifique al responsable: revísalo con quien te asesore en lo legal.

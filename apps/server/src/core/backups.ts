@@ -5,7 +5,7 @@
 //
 // Restoring a backup is not done by the backend: it would have to delete the
 // database it lives on and stop the device gateway. Here the request is only
-// left in the backups folder; a helper service handles it (deploy/restorer.sh),
+// left in the backups folder; a helper service handles it (deploy/helper.sh),
 // which restores aside, stops the platform, swaps the databases and brings it
 // back up. Before requesting it, a backup of the current state of everything is made.
 import { spawn } from "node:child_process";
@@ -40,7 +40,7 @@ const FILE_STAMP = /^(gps|traccar|files)_(\d{4})(\d{2})(\d{2})_(\d{2})(\d{2})(\d
 // Files the backend and the restore helper use to talk to each other, in the
 // backups folder. They are "key=value" lines, easy to read from bash.
 /** The helper touches it every 30 seconds: if it is recent, someone is there to handle a request. */
-export const RUNNER_ALIVE = "restore-runner.alive";
+export const HELPER_ALIVE = "helper.alive";
 /** The restore request, written by the backend. */
 export const RESTORE_REQUEST = "restore.request";
 /** The same request, while the helper handles it. */
@@ -361,7 +361,7 @@ export function createBackups(deps: { db: Db; bus: Bus; config: Config; settings
   // ─── Restore ───────────────────────────────────────────────────────────────
 
   const runnerAlive = async (now: number) => {
-    const info = await stat(join(dir(), RUNNER_ALIVE)).catch(() => null);
+    const info = await stat(join(dir(), HELPER_ALIVE)).catch(() => null);
     return info !== null && now - info.mtimeMs < RUNNER_FRESH_MS;
   };
 

@@ -70,7 +70,7 @@ jobs:
         image:
           - { name: opengps, file: deploy/opengps.Dockerfile }
           - { name: opengps-postgres, file: deploy/postgres.Dockerfile }
-          - { name: opengps-helper, file: deploy/restorer.Dockerfile }
+          - { name: opengps-helper, file: deploy/helper.Dockerfile }
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - name: Builder that can push by digest
@@ -105,7 +105,7 @@ jobs:
           path: ${{ runner.temp }}/digests/*
 
   manifests:
-    name: Tag ${{ matrix.name }}
+    name: Tag
     needs: [plan, images]
     if: needs.plan.outputs.release == 'true'
     runs-on: ubuntu-24.04

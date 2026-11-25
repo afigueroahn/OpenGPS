@@ -29,6 +29,10 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/).
 
 ### Cambiado
 
+- El ayudante `restorer` pasa a llamarse `helper`, con `deploy/helper.sh` y
+  `deploy/helper.Dockerfile`, porque además de restaurar va a actualizar la
+  plataforma. Su señal de vida es `helper.alive`. Al actualizar una instalación con
+  Docker Compose, `--remove-orphans` quita el servicio viejo (#16).
 - El menú de Administración ya no muestra «Gestión GPS» bajo el logo, y a su pie
   queda solo la versión, sin los datos de la persona.
 - El §7 de `AGENTS.md` exige que las dependencias nuevas tengan licencia compatible con
