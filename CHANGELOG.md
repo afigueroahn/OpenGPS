@@ -6,6 +6,12 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Sin publicar]
 
+### Cambiado
+
+- La web usa el icono oficial de la plataforma, el marcador con su órbita: en la pestaña
+  del navegador, en el logo de todas las pantallas y al guardarla en la pantalla de
+  inicio de un iPhone (#46).
+
 ## [0.2.0] - 2026-11-25
 
 ### Añadido
