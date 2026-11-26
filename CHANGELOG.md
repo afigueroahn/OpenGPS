@@ -6,6 +6,14 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Sin publicar]
 
+### Agregado
+
+- La app para iPhone entra al repositorio, en `apps/mobile/`: elegir la plataforma, entrar y
+  registrarse, el mapa en vivo, los vehículos, el historial, las alertas, los incidentes y
+  la cuenta, en español e inglés. Se compila con Expo SDK 55 en el simulador, y `pnpm lint`,
+  `pnpm typecheck` y `pnpm test` la revisan también. Todavía no está en la App Store
+  (ADR-0015, ADR-0016, ADR-0017, ADR-0018, #111).
+
 ### Corregido
 
 - En una instalación nueva, el remitente del servidor de correo viene vacío y el canal
@@ -15,6 +23,12 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/).
   consola, Correo sigue al servidor de correo, así que una instalación que ya envía
   correos los sigue enviando. El ejemplo del remitente pasa a ser
   `OpenGPS <no-reply@opengps.dev>` (#112).
+
+### Seguridad
+
+- La auditoría de dependencias fuerza las versiones corregidas de `zod`, `glob` y
+  `minimatch` que traen las herramientas de Expo 55, y excluye los dos avisos de
+  `decode-uri-component` de `expo-router`, que no tienen arreglo en Expo 55 (ADR-0015).
 
 ## [0.8.0] - 2026-11-26
 

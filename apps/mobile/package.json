@@ -2,5 +2,45 @@
   "name": "@opengps/mobile",
   "version": "0.0.0",
   "private": true,
-  "description": "Apps iOS y Android (Expo)"
+  "description": "Apps iOS y Android (Expo)",
+  "main": "expo-router/entry",
+  "scripts": {
+    "start": "expo start --dev-client",
+    "ios": "expo run:ios",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "lint": "oxlint src"
+  },
+  "dependencies": {
+    "@expo-google-fonts/instrument-sans": "0.4.2",
+    "@expo-google-fonts/jetbrains-mono": "0.4.1",
+    "@expo/metro-runtime": "~55.0.12",
+    "@maplibre/maplibre-react-native": "11.5.1",
+    "@opengps/shared": "workspace:*",
+    "@tanstack/react-query": "^5.108.2",
+    "expo": "~55.0.32",
+    "expo-constants": "~55.0.17",
+    "expo-file-system": "~55.0.26",
+    "expo-font": "~55.0.8",
+    "expo-image-manipulator": "~55.0.21",
+    "expo-image-picker": "~55.0.24",
+    "expo-linking": "~55.0.17",
+    "expo-localization": "~55.0.19",
+    "expo-router": "~55.0.18",
+    "expo-secure-store": "~55.0.18",
+    "expo-web-browser": "~55.0.20",
+    "i18next": "^26.7.2",
+    "lucide-react-native": "^1.80.0",
+    "react": "19.2.0",
+    "react-i18next": "^17.1.13",
+    "react-native": "0.83.10",
+    "react-native-safe-area-context": "~5.6.2",
+    "react-native-screens": "~4.23.0",
+    "react-native-svg": "15.15.3"
+  },
+  "devDependencies": {
+    "@types/geojson": "^7946.0.16",
+    "@types/react": "~19.2.2",
+    "vitest": "^5.1.1"
+  }
 }
