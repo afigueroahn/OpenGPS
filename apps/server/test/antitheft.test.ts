@@ -201,6 +201,20 @@ describe("module A: engine lock", () => {
     expect(sentTo(car)).toEqual(["engineStop"]);
   });
 
+  it("an order is sent once, even when two checks try to send it at the same moment", async () => {
+    const car = await addVehicle(ana, "Dos intentos");
+    await report(car, [{ kmh: 0, ignition: false }]);
+    h.traccar.state.online = false;
+    await order(ana, car, "lock");
+    h.traccar.state.online = true;
+    // The request that creates an order and the next position can try to send it together.
+    await Promise.all([h.antitheft.sweep(Date.now(), ana.orgId), h.antitheft.sweep(Date.now(), ana.orgId)]);
+    await h.settle();
+    expect(sentTo(car)).toEqual(["engineStop"]);
+    expect(await eventsOf(car)).toEqual(["engine_locked"]);
+    expect((await security(ana, car)).pending).toMatchObject({ kind: "lock", status: "sent" });
+  });
+
   it("a device that does not report its engine state leaves the order as sent, unconfirmed", async () => {
     const car = await addVehicle(ana, "Con H02", "h02");
     await report(car, [{ kmh: 0, ignition: false }]);

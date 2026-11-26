@@ -8,6 +8,10 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/).
 
 ### Corregido
 
+- Una orden de bloqueo o desbloqueo del arranque llega al equipo una sola vez. Si la
+  petición y la siguiente posición del vehículo intentaban enviarla al mismo tiempo, el
+  equipo recibía el corte dos veces y quedaban dos eventos «Arranque bloqueado» con sus
+  avisos (#95).
 - El historial de la web ya no vuelve al inicio mientras se reproduce un periodo que
   llega hasta ahora, como «Hoy». Cada minuto, al llegar los puntos nuevos, la
   reproducción se detenía, volvía a la velocidad inicial y el cursor regresaba al
