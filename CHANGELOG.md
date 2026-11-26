@@ -6,6 +6,8 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Sin publicar]
 
+## [0.8.0] - 2026-11-26
+
 ### Agregado
 
 - La app móvil puede entrar y registrarse con los servicios que tenga la plataforma
