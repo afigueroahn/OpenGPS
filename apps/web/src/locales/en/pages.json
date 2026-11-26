@@ -67,6 +67,15 @@
       "submit": "Save and sign in"
     }
   },
+  "appSignIn": {
+    "title": "Sign in to the app",
+    "lead": "You're about to sign in to the app with <b>{{email}}</b>.",
+    "confirm": "Back to the app",
+    "cancel": "Cancel",
+    "notYou": "If you weren't signing in from the app, stop here: cancel or close this page.",
+    "failed": "Couldn't go back to the app. Try again.",
+    "expired": "This sign-in is no longer valid. Go back to the app and try again."
+  },
   "delivery": {
     "done": "Delivered",
     "doneAt": "On {{date}}.",

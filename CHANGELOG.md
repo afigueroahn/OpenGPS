@@ -13,6 +13,10 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/).
   de inicio de sesión del sistema y la plataforma le devuelve un pase de un solo uso, que
   dura un minuto, para cambiarlo por la sesión: `GET /api/app/oauth/start`,
   `GET /api/app/oauth` y `POST /api/auth/one-time-token/verify` (ADR-0013, #101).
+- Antes de volver a la app, la persona confirma en una página de la plataforma con qué
+  cuenta entra, y solo entonces se crea el pase (`POST /api/app/oauth`). Así, una página
+  ajena que empiece esa entrada en el navegador no puede llevarse la sesión a otra app
+  (ADR-0014, #103).
 
 ## [0.7.1] - 2026-11-26
 

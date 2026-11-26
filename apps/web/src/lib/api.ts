@@ -7,6 +7,7 @@ import {
   type AdminAccountDetail,
   type AlertRule,
   type AlertRuleInput,
+  APP_OAUTH_RETURN,
   type AttachDeviceInput,
   type AuditEntry,
   type BackupSettingsInput,
@@ -453,6 +454,8 @@ export const getInvitation = (id: string) =>
   api<{ invitation: InvitationPreview }>(`/api/invitations/${encodeURIComponent(id)}`).then((r) => r.invitation);
 export const acceptInvitation = (id: string) => api<null>(`/api/invitations/${encodeURIComponent(id)}/accept`, { method: "POST", body: {} });
 export const acceptLegal = () => api<null>("/api/consent", { method: "POST", body: { version: LEGAL_VERSION } });
+/** The mobile app's pass, once the person confirmed the account they go back to it with (ADR-0014): where to take them. */
+export const appPass = () => api<{ url: string }>(APP_OAUTH_RETURN, { method: "POST", body: {} });
 export const leaveAccount = () => api<null>("/api/accounts/leave", { method: "POST", body: {} });
 export const setActiveAccount = (accountId: string) => api<null>("/api/accounts/active", { method: "POST", body: { accountId } });
 

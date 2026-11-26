@@ -355,15 +355,22 @@ export function createAuth(config: Config, db: Db, mailer: Mailer, beforeUserDel
   }
 
   /**
-   * A one-time pass for the mobile app, from the session the trip to another service just left in the system's
-   * browser (ADR-0013). An older session is not handed over: a page that opens this in a browser where someone
+   * Whether the request brings a session the trip to another service just created in the system's browser
+   * (ADR-0013). An older one is not handed over: a page that opens the way back in a browser where someone
    * already had a session gets nothing.
    */
+  async function freshSession(headers: Headers): Promise<boolean> {
+    const result = await auth.api.getSession({ headers });
+    return result !== null && Date.now() - new Date(result.session.createdAt).getTime() <= APP_OAUTH_FRESH_S * 1000;
+  }
+
+  /** Whether the way back to the app may show the page where the person confirms (ADR-0014). */
+  const canGoBackToApp = (headers: IncomingHttpHeaders) => freshSession(fromNodeHeaders(headers));
+
+  /** A one-time pass for the mobile app, from that fresh session, once the person confirmed (ADR-0014). */
   async function appPass(headers: IncomingHttpHeaders): Promise<string | null> {
     const h = fromNodeHeaders(headers);
-    const result = await auth.api.getSession({ headers: h });
-    if (!result) return null;
-    if (Date.now() - new Date(result.session.createdAt).getTime() > APP_OAUTH_FRESH_S * 1000) return null;
+    if (!(await freshSession(h))) return null;
     const { token } = await auth.api.generateOneTimeToken({ headers: h });
     return token;
   }
@@ -408,6 +415,7 @@ export function createAuth(config: Config, db: Db, mailer: Mailer, beforeUserDel
     ensureOrganization,
     acceptInvitation,
     setActiveAccount,
+    canGoBackToApp,
     appPass,
   };
 }
