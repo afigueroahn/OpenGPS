@@ -15,6 +15,10 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/).
   instalación hecha con la guía no cambia; quien las pasara por su cuenta escribe esos
   valores en la consola. En el servidor de correo, «apagado» dice ahora lo que pasa: la
   plataforma no envía correos (ADR-0010, #79).
+- Una instalación 0.1.x ya no se actualiza con el botón de la consola: responde que no
+  pudo preparar los archivos y no cambia nada. Se actualiza una vez a mano, con los pasos
+  de la guía de instalación, y desde ahí vuelve a usar el botón. Las instalaciones 0.2.0
+  en adelante no cambian (ADR-0011, #76).
 
 ## [0.5.2] - 2026-11-25
 

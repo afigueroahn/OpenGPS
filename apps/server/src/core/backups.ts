@@ -395,7 +395,7 @@ export function createBackups(deps: { db: Db; bus: Bus; config: Config; settings
     return { alive, canUpdate: note?.update === "yes" };
   };
 
-  /** Why a restore failed, in words: from the helper's code, or as it wrote it. */
+  /** Why a restore failed, in words: from its reason code, or as whoever restored wrote it. */
   const reasonOf = (note: Record<string, string>): string => {
     const key = RESTORE_REASONS[note.reason as keyof typeof RESTORE_REASONS];
     if (key) return keep(key);

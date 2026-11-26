@@ -253,9 +253,10 @@ export function registerPlatformSettings(ctx: PlatformRoutes): void {
   });
 
   /**
-   * Requests restoring a backup: the platform goes back to how it was then. The
-   * restore helper does it, stopping the platform while it runs; before that, a
-   * backup of the current state is saved. The confirmation word must be typed.
+   * Requests restoring a backup: the platform goes back to how it was then. It
+   * does it by itself (ADR-0009): it restores aside while it keeps serving, and
+   * restarts for a moment to swap. Before that, a backup of the current state
+   * is saved. The confirmation word must be typed.
    */
   app.post<{ Params: { id: string } }>("/api/admin/backups/:id/restore", async (request, reply) => {
     const admin = await platformAdmin(request);

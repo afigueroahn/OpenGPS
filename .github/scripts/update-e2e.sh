@@ -4,23 +4,19 @@
 #
 #   .github/scripts/update-e2e.sh [WAY] [INSTALL_DIR]
 #
-# WAY is a folder of deploy/ that the helper can update (docker-compose by
-# default, caddy, cloudflare), or "legacy":
+# WAY is a folder of deploy/ that the helper can update: docker-compose by
+# default, caddy or cloudflare.
 #
-# - A way: builds four versions of the images, 0.0.1, 0.0.2, a 0.0.3 whose
-#   platform cannot start, and a 0.0.4 that cannot start either and leaves the
-#   database so that 0.0.2 cannot start. Installs 0.0.1 as a server would, from
-#   that way's compose file in that version and generate-env.sh, then asks the
-#   helper for 0.0.2, which it must install keeping the way; for 0.0.3, which
-#   it must undo; and for 0.0.4, which it must undo by restoring the backup
-#   made before.
-#   With docker-compose it then restores backups as the console asks for them,
-#   which the platform does by itself (ADR-0009): one that cannot be read
-#   changes nothing, one the platform cannot start on is undone, and a good
-#   one brings back both databases and the files, restarting Traccar.
-# - legacy: installs the published 0.1.2, from before the ways existed, with
-#   its Cloudflare Tunnel profile, and asks its helper for 0.0.2: the
-#   installation must end as deploy/cloudflare, with its tunnel.
+# Builds four versions of the images, 0.0.1, 0.0.2, a 0.0.3 whose platform
+# cannot start, and a 0.0.4 that cannot start either and leaves the database
+# so that 0.0.2 cannot start. Installs 0.0.1 as a server would, from that
+# way's compose file in that version and generate-env.sh, then asks the helper
+# for 0.0.2, which it must install keeping the way; for 0.0.3, which it must
+# undo; and for 0.0.4, which it must undo by restoring the backup made before.
+# With docker-compose it then restores backups as the console asks for them,
+# which the platform does by itself (ADR-0009): one that cannot be read
+# changes nothing, one the platform cannot start on is undone, and a good one
+# brings back both databases and the files, restarting Traccar.
 #
 # INSTALL_DIR is the installation's folder, /opt/opengps by default: the one
 # deploy/README.md uses, which is also where the helper image carries its
@@ -34,7 +30,6 @@ REG=ghcr.io/afigueroahn
 WAY="${1:-docker-compose}"
 PROJECT="opengps-e2e-$WAY"
 INSTALL="${2:-/opt/opengps}"
-LEGACY=0.1.2
 
 say() { echo "== $*"; }
 fail() {
@@ -143,48 +138,33 @@ through_proxy() { # version
 }
 
 mkdir -p "$INSTALL"
-if [ "$WAY" = legacy ]; then
-  say "building the images of 0.0.2"
-  build 0.0.2
-  say "installing the published $LEGACY in $INSTALL, with its tunnel profile"
-  for f in docker-compose.yml generate-env.sh env.example; do
-    curl -fsSL -o "$INSTALL/$f" "https://github.com/afigueroahn/OpenGPS/releases/download/v$LEGACY/$f"
-  done
-  (cd "$INSTALL" && sh generate-env.sh https://example.com .env > /dev/null)
-  setting "COMPOSE_PROJECT_NAME=$PROJECT"
-  setting "COMPOSE_PROFILES=tunnel"
-  # Not a real tunnel: its service stays trying, and the platform does not depend on it.
-  setting "CLOUDFLARE_TUNNEL_TOKEN=not-a-real-token"
-  FIRST="$LEGACY"
-else
-  [ -f "deploy/$WAY/docker-compose.yml" ] || fail "deploy/$WAY has no compose file"
-  say "building the images of 0.0.1, 0.0.2 and a broken 0.0.3 and 0.0.4"
-  build 0.0.1
-  build 0.0.2
-  printf 'FROM %s/opengps:0.0.2\nCMD ["sh", "-c", "echo this version cannot start; exit 1"]\n' "$REG" | docker build -q -t "$REG/opengps:0.0.3" - > /dev/null
-  # 0.0.4 changes the record of the migrations before failing: 0.0.2 refuses to start on that database.
-  docker build -q -t "$REG/opengps:0.0.4" - > /dev/null << EOF
+[ -f "deploy/$WAY/docker-compose.yml" ] || fail "deploy/$WAY has no compose file"
+say "building the images of 0.0.1, 0.0.2 and a broken 0.0.3 and 0.0.4"
+build 0.0.1
+build 0.0.2
+printf 'FROM %s/opengps:0.0.2\nCMD ["sh", "-c", "echo this version cannot start; exit 1"]\n' "$REG" | docker build -q -t "$REG/opengps:0.0.3" - > /dev/null
+# 0.0.4 changes the record of the migrations before failing: 0.0.2 refuses to start on that database.
+docker build -q -t "$REG/opengps:0.0.4" - > /dev/null << EOF
 FROM $REG/opengps:0.0.2
 CMD ["sh", "-c", "psql \"\$DATABASE_URL\" -qc \"UPDATE gps.schema_migrations SET checksum = 'broken'\"; echo this version breaks the database; exit 1"]
 EOF
-  for broken in 0.0.3 0.0.4; do
-    docker tag "$REG/opengps-postgres:0.0.2" "$REG/opengps-postgres:$broken"
-    docker build -q --build-arg "APP_VERSION=$broken" -t "$REG/opengps-helper:$broken" -f deploy/helper.Dockerfile . > /dev/null
-  done
-  say "installing 0.0.1 in $INSTALL, as deploy/$WAY"
-  # Its compose file in 0.0.1, as the helper of that version carries it.
-  docker run --rm "$REG/opengps-helper:0.0.1" cat "/opt/opengps/$WAY/docker-compose.yml" > "$INSTALL/docker-compose.yml"
-  cp deploy/generate-env.sh deploy/.env.example "$INSTALL/"
-  (cd "$INSTALL" && sh generate-env.sh http://localhost .env > /dev/null)
-  setting "COMPOSE_PROJECT_NAME=$PROJECT"
-  # Away from the port another installation on this machine may use.
-  setting "WEB_PORT=13000"
-  if [ "$WAY" = cloudflare ]; then setting "CLOUDFLARE_TUNNEL_TOKEN=not-a-real-token"; fi
-  FIRST=0.0.1
-fi
+for broken in 0.0.3 0.0.4; do
+  docker tag "$REG/opengps-postgres:0.0.2" "$REG/opengps-postgres:$broken"
+  docker build -q --build-arg "APP_VERSION=$broken" -t "$REG/opengps-helper:$broken" -f deploy/helper.Dockerfile . > /dev/null
+done
+say "installing 0.0.1 in $INSTALL, as deploy/$WAY"
+# Its compose file in 0.0.1, as the helper of that version carries it.
+docker run --rm "$REG/opengps-helper:0.0.1" cat "/opt/opengps/$WAY/docker-compose.yml" > "$INSTALL/docker-compose.yml"
+cp deploy/generate-env.sh deploy/.env.example "$INSTALL/"
+(cd "$INSTALL" && sh generate-env.sh http://localhost .env > /dev/null)
+setting "COMPOSE_PROJECT_NAME=$PROJECT"
+# Away from the port another installation on this machine may use.
+setting "WEB_PORT=13000"
+# Not a real tunnel: its service stays trying, and the platform does not depend on it.
+if [ "$WAY" = cloudflare ]; then setting "CLOUDFLARE_TUNNEL_TOKEN=not-a-real-token"; fi
 (cd "$INSTALL" && docker compose up -d --quiet-pull > /dev/null)
-answers "$FIRST" 300 || fail "$FIRST did not start"
-through_proxy "$FIRST"
+answers 0.0.1 300 || fail "0.0.1 did not start"
+through_proxy 0.0.1
 grep -q '^update=yes$' <(docker exec "$(service helper)" cat /data/backups/helper.alive) || fail "the helper does not offer updates"
 
 say "asking for 0.0.2"
@@ -194,16 +174,6 @@ grep -q '^status=ok$' <<< "$result" || fail "the update to 0.0.2 did not end wel
 answers 0.0.2 30 || fail "the platform does not answer 0.0.2"
 installed 0.0.2 || fail "the installation's files do not say 0.0.2"
 [ "$(docker inspect -f '{{.Config.Image}}' "$(service helper)")" = "$REG/opengps-helper:0.0.2" ] || fail "the helper was not replaced"
-
-if [ "$WAY" = legacy ]; then
-  [ "$(way_installed)" = cloudflare ] || fail "the installation did not end as deploy/cloudflare: $(way_installed)"
-  [ -n "$(docker ps -aq --filter "label=com.docker.compose.project=$PROJECT" --filter "label=com.docker.compose.service=tunnel")" ] || fail "the tunnel is gone"
-  if grep -q '^COMPOSE_PROFILES=' "$INSTALL/.env"; then fail ".env still has COMPOSE_PROFILES"; fi
-  grep -q '^CLOUDFLARE_TUNNEL_TOKEN=not-a-real-token$' "$INSTALL/.env" || fail ".env lost the tunnel's token"
-  say "updates work: the published $LEGACY → 0.0.2, now deploy/cloudflare with its tunnel"
-  exit 0
-fi
-
 [ "$(way_installed)" = "$WAY" ] || fail "the installation is no longer deploy/$WAY: $(way_installed)"
 through_proxy 0.0.2
 
