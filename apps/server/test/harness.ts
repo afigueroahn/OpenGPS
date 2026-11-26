@@ -83,6 +83,9 @@ export async function createHarness() {
   const bus = new Bus();
   // The platform settings are database-wide: each setup starts from the factory ones.
   await db.core.query(`DELETE FROM gps.platform_settings`);
+  // Except email: the tests' mail goes to a simulated mailer, with no mail server set up in
+  // the console, so the channel is on as an owner who sends email leaves it.
+  await db.core.query(`INSERT INTO gps.platform_settings (section, value) VALUES ('channels', '{"email": {"enabled": true}}')`);
   // So are the platform's own notifications and its messages.
   await db.core.query(`DELETE FROM gps.system_notifications`);
   await db.core.query(`DELETE FROM gps.outbox WHERE org_id IS NULL`);

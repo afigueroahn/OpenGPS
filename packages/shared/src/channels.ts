@@ -26,8 +26,9 @@ export interface ChannelSettings {
   /** The mobile app. */
   push: { enabled: boolean };
 }
+/** Email starts off: without a mail server it has nothing to send with. */
 export const CHANNELS_DEFAULT: ChannelSettings = {
-  email: { enabled: true },
+  email: { enabled: false },
   sms: { enabled: false, accountSid: "", hasToken: false, from: "", monthlyCap: 500 },
   webhook: { enabled: false, method: "POST", url: "", headerNames: [], body: "" },
   push: { enabled: true },

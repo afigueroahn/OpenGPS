@@ -6,6 +6,15 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Sin publicar]
 
+### Corregido
+
+- En una instalación nueva, el remitente del servidor de correo viene vacío y el canal
+  Correo, apagado. Antes el remitente traía el nombre de la plataforma con
+  `no-reply@localhost` (en Dokploy, el nombre interno del compose) y Correo aparecía
+  encendido sin un servidor con qué enviar. Mientras nadie lo encienda ni lo apague en la
+  consola, Correo sigue al servidor de correo, así que una instalación que ya envía
+  correos los sigue enviando (#112).
+
 ## [0.8.0] - 2026-11-26
 
 ### Agregado

@@ -149,8 +149,8 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env) {
     // What follows does not come from variables: it is defined by the platform's admin console
     // and changes while the backend runs. Here are its factory values (ADR-0010).
     mapStyleUrl: "https://tiles.openfreemap.org/styles/liberty",
-    /** Outgoing mail. Without a host, no mail is sent. */
-    smtp: { host: "", port: 587, security: "starttls" as "none" | "starttls" | "ssl", user: "", password: "", from: `${e.APP_NAME} <no-reply@localhost>` },
+    /** Outgoing mail. Without a host, no mail is sent. The sender is written in the console along with the server. */
+    smtp: { host: "", port: 587, security: "starttls" as "none" | "starttls" | "ssl", user: "", password: "", from: "" },
     /** Minutes a newly added GPS has to send its first report. */
     claimWindowMinutes: 60,
     /** Unconfirmed GPS additions an account can have at once. */
