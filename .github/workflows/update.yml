@@ -5,9 +5,8 @@
 # start is undone, and that a fourth that leaves the second unable to start is
 # undone by restoring the backup made before. With docker-compose it also
 # restores backups as the console asks for them, which the platform does by
-# itself (ADR-0009). "legacy" is an installation of the published 0.1.2, from
-# before the ways existed, which must end as deploy/cloudflare. Runs when the
-# installation, the helper or the platform's restore changes.
+# itself (ADR-0009). Runs when the installation, the helper or the platform's
+# restore changes.
 name: Update
 
 on:
@@ -46,7 +45,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        way: [docker-compose, caddy, cloudflare, legacy]
+        way: [docker-compose, caddy, cloudflare]
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - name: Installation folder

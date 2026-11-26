@@ -303,7 +303,7 @@ Cada versión está en [las releases del repositorio](https://github.com/afiguer
 3. Si la versión nueva no arranca, vuelve sola a la anterior, y si tampoco arranca la anterior, restaura esa copia.
 4. Deja `docker-compose.yml.previous` y `.env.previous` con lo que había.
 
-La instalación conserva su forma: el ayudante toma el compose de la misma carpeta (`docker-compose/`, `caddy/` o `cloudflare/`) en la versión nueva. Una instalación 0.1.x, de antes de que hubiera varias formas, queda sola en la suya: `cloudflare/` si usaba el túnel, y si no `docker-compose/`, que publica la web en el puerto 3000 del servidor.
+La instalación conserva su forma: el ayudante toma el compose de la misma carpeta (`docker-compose/`, `caddy/` o `cloudflare/`) en la versión nueva. Una instalación 0.1.x, de antes de que hubiera varias formas, no se actualiza con el botón: responde «No se pudieron preparar los archivos de la instalación» y no cambia nada. Se actualiza una vez a mano, con los pasos de abajo: su compose es `docker-compose.cloudflare.yml` si usaba el túnel y, si no, `docker-compose.yml`, que publica la web en el puerto 3000 del servidor. Desde ahí vuelve a actualizarse con el botón.
 
 Con Dokploy y con Coolify el botón no aparece, porque ellos desharían el cambio: allí basta con volver a desplegar. Justo después de publicarse una versión, sus imágenes tardan unos minutos en estar: si el despliegue no las encuentra, vuelve a desplegar cuando la versión aparezca en las releases.
 
@@ -319,7 +319,7 @@ docker compose up -d --remove-orphans
 
 Con Caddy, `F=docker-compose.caddy.yml`. Con el túnel de Cloudflare, `F=docker-compose.cloudflare.yml`.
 
-El compose trae escrita su versión. Las migraciones de la base se aplican solas al arrancar la plataforma. `--remove-orphans` quita los servicios que la versión nueva ya no tiene, para que no queden contenedores viejos en marcha. Si `.env` todavía tiene una línea `OPENGPS_VERSION`, de cuando la versión iba ahí, se puede borrar: ya no se lee.
+El compose trae escrita su versión. Las migraciones de la base se aplican solas al arrancar la plataforma. `--remove-orphans` quita los servicios que la versión nueva ya no tiene, para que no queden contenedores viejos en marcha. Si `.env` todavía tiene una línea `OPENGPS_VERSION`, de cuando la versión iba ahí, o `COMPOSE_PROFILES`, de una 0.1.x, se pueden borrar: ya no se leen.
 
 ## Construir desde el código
 

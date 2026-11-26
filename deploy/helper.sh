@@ -23,14 +23,15 @@
 # version, and otherwise goes back to the previous files. If even that does not
 # start, it asks for the backup made before to be restored, with the same
 # request the console leaves, and whoever restores in the version it went
-# back to handles it. Only with Docker Compose: the folder with
-# docker-compose.yml and .env is mounted at /data/install. Dokploy and Coolify
-# do not mount it.
+# back to handles it. The folder with docker-compose.yml and .env is mounted
+# at /data/install. Only the ways of installing with Docker Compose have this
+# helper: with Dokploy and Coolify, updating is deploying again (ADR-0005).
 #
 # There are several ways of installing with Docker Compose (deploy/<way>), each
 # with its own compose file, marked "x-opengps-deploy: <way>". The helper image
 # carries the file of each way, in /opt/opengps/<way>/, and an update keeps the
-# way the installation has.
+# way the installation has. An installation without the mark, from before the
+# ways existed (0.1.x), is not updated from here (ADR-0011).
 set -uo pipefail
 
 DIR=/data/backups
@@ -134,23 +135,14 @@ variant_of() { sed -n 's/^x-opengps-deploy:[[:space:]]*//p' "$1" 2> /dev/null | 
 # Leaves in <base>/.update what the installation in <base> gets with another
 # version: the compose file of its way of installing, from <root>/<way>/, which
 # says that version, and its .env without OPENGPS_VERSION, which is no longer
-# read (ADR-0008). An installation from before the ways existed (0.1.x) has no
-# mark: with the tunnel's profile it is deploy/cloudflare, and otherwise
-# deploy/docker-compose, with the web app on a port of the server.
+# read (ADR-0008). Without the mark of a way there is nothing to leave: it
+# fails.
 stage_update() { # base, root
-  local base="$1" root="$2" stage="$1/.update" variant legacy=no
+  local base="$1" root="$2" stage="$1/.update" variant
   variant="$(variant_of "$base/docker-compose.yml")"
-  if [ -z "$variant" ]; then
-    legacy=yes
-    if grep -Eq '^COMPOSE_PROFILES=.*tunnel' "$base/.env"; then variant=cloudflare; else variant=docker-compose; fi
-  fi
   if ! [[ "$variant" =~ ^[a-z-]+$ ]] || [ ! -f "$root/$variant/docker-compose.yml" ]; then return 1; fi
   if ! { rm -rf "$stage" && mkdir -p "$stage" && cp "$root/$variant/docker-compose.yml" "$stage/docker-compose.yml"; }; then return 1; fi
-  if [ "$legacy" = yes ]; then
-    grep -v -e '^OPENGPS_VERSION=' -e '^COMPOSE_PROFILES=' "$base/.env" > "$stage/.env"
-  else
-    grep -v '^OPENGPS_VERSION=' "$base/.env" > "$stage/.env"
-  fi
+  grep -v '^OPENGPS_VERSION=' "$base/.env" > "$stage/.env"
   [ -s "$stage/.env" ]
 }
 
@@ -252,8 +244,8 @@ ask_restore() { # backup id, platform dump, gateway dump, files archive (may be 
 # In the container of the new version: swaps the files, brings everything up
 # and waits; if the new version does not answer, the previous files, and if
 # even that does not start, the backup made just before. What it installs it
-# takes from this image, whoever prepared the request: a helper from before
-# the ways of installing existed leaves here the only file it knew.
+# takes from this image, not from what the helper of the previous version
+# prepared.
 apply_update() {
   started="$(now)"
   local folder="$HOST_INSTALL" version from files backup main_file gateway_file files_file err
