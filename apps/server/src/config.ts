@@ -1,4 +1,5 @@
-// Backend configuration, read once from the environment variables.
+// Backend configuration: what is read once from the environment variables, and
+// the factory values of what the platform's admin console defines.
 import { createHmac } from "node:crypto";
 import { isIP } from "node:net";
 import { CHANNELS_DEFAULT, type ChannelSettings, type CustomHeader, type Language, OAUTH_DEFAULT, type MailTemplates, type ModuleKey, PASSWORD_POLICY_DEFAULT, type PasswordPolicy } from "@opengps/shared";
@@ -62,7 +63,6 @@ const schema = z.object({
   // GitHub repository whose releases are new versions of this one ("owner/name"). Empty: no looking.
   UPDATE_REPOSITORY: z.string().default("afigueroahn/OpenGPS"),
   PUBLIC_URL: z.url(),
-  MAP_STYLE_URL: z.url().default("https://tiles.openfreemap.org/styles/liberty"),
 
   AUTH_SECRET: z.string().min(32, "AUTH_SECRET must be at least 32 characters long"),
 
@@ -73,53 +73,9 @@ const schema = z.object({
   /** Empty = derived from AUTH_SECRET: nobody needs to know it, the platform signs in with it by itself. */
   TRACCAR_ADMIN_PASSWORD: z.string().default(""),
 
-  SMTP_HOST: z.string().default(""),
-  SMTP_PORT: z.coerce.number().int().default(587),
-  SMTP_SECURITY: z.enum(["none", "starttls", "ssl", "tls"]).default("starttls"),
-  SMTP_USER: z.string().default(""),
-  SMTP_PASSWORD: z.string().default(""),
-  MAIL_FROM: z.string().default(""),
-
-  /** Minutes a newly added GPS has to send its first report. */
-  CLAIM_WINDOW_MINUTES: z.coerce.number().int().min(5).default(60),
-  /** Unconfirmed GPS additions an account can have at once. */
-  MAX_PENDING_DEVICES: z.coerce.number().int().min(1).default(20),
-  /** Days of history kept. 0 = no limit. */
-  HISTORY_RETENTION_DAYS: z.coerce.number().int().min(0).default(0),
-  /** Days Traccar keeps its own positions. */
-  TRACCAR_RETENTION_DAYS: z.coerce.number().int().min(1).default(14),
-
-  /**
-   * Nominatim-compatible address service, up to `/reverse`. Out of the box it
-   * is OpenStreetMap's public one, free and limited to one query per second.
-   * Set to empty = off.
-   */
-  GEOCODER_URL: z.string().default("https://nominatim.openstreetmap.org/reverse"),
-  /** How the platform identifies itself to that service. */
-  GEOCODER_USER_AGENT: z.string().default(""),
-  /** Milliseconds between queries to that service. */
-  GEOCODER_MIN_INTERVAL_MS: z.coerce.number().int().min(0).default(1100),
-
-  /**
-   * Routing service that speaks OSRM's API, to trace the simulator's routes
-   * along streets. Out of the box it is the public one over OpenStreetMap
-   * data, free and limited to one query per second. Set to empty = off.
-   */
-  ROUTING_URL: z.string().default("https://router.project-osrm.org"),
-
   /** Where Twilio, the SMS service, is reached. It only changes for tests. */
   TWILIO_API_URL: z.url().default("https://api.twilio.com"),
 
-  /** Who provides the service, for the terms and the privacy policy. */
-  LEGAL_ENTITY: z.string().default(""),
-  /** Country whose law governs those texts. */
-  LEGAL_COUNTRY: z.string().default(""),
-  /** Email for privacy requests and complaints. */
-  LEGAL_CONTACT_EMAIL: z.string().default(""),
-  /** Email that receives operations notifications (disk almost full). Empty = only in the log. */
-  ALERT_EMAIL: z.string().default(""),
-  /** Percentage of disk used above which a notification is sent. */
-  DISK_ALERT_PERCENT: z.coerce.number().int().min(1).max(99).default(70),
   /** Platform files folder; its disk is the one that is watched. */
   FILES_DIR: z.string().default("/data/files"),
 
@@ -170,7 +126,6 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env) {
     gatewayHost: gateway.host,
     /** The IP that name points to, looked up while the backend runs (core/gateway.ts). Null: not known. */
     gatewayIp: gateway.ip,
-    mapStyleUrl: e.MAP_STYLE_URL,
     authSecret: e.AUTH_SECRET,
     databaseUrl: e.DATABASE_URL,
     traccar: {
@@ -178,28 +133,9 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env) {
       apiUrl: e.TRACCAR_API_URL.replace(/\/+$/, ""),
       adminEmail: e.TRACCAR_ADMIN_EMAIL,
       adminPassword: e.TRACCAR_ADMIN_PASSWORD || createHmac("sha256", e.AUTH_SECRET).update("traccar-admin").digest("hex").slice(0, 32),
-      retentionDays: e.TRACCAR_RETENTION_DAYS,
+      /** Days Traccar keeps its own positions. Defined by the console, like what the end of this list holds. */
+      retentionDays: 14,
     },
-    smtp: {
-      host: e.SMTP_HOST,
-      port: e.SMTP_PORT,
-      security: (e.SMTP_SECURITY === "tls" ? "ssl" : e.SMTP_SECURITY) as "none" | "starttls" | "ssl",
-      user: e.SMTP_USER,
-      password: e.SMTP_PASSWORD,
-      from: e.MAIL_FROM || `${e.APP_NAME} <no-reply@localhost>`,
-    },
-    claimWindowMinutes: e.CLAIM_WINDOW_MINUTES,
-    maxPendingDevices: e.MAX_PENDING_DEVICES,
-    historyRetentionDays: e.HISTORY_RETENTION_DAYS,
-    geocoder: {
-      url: e.GEOCODER_URL.replace(/\/+$/, ""),
-      userAgent: e.GEOCODER_USER_AGENT || `${e.APP_NAME} (${publicUrl})`,
-      minIntervalMs: e.GEOCODER_MIN_INTERVAL_MS,
-    },
-    routing: { url: e.ROUTING_URL.replace(/\/+$/, "") },
-    legal: { entity: e.LEGAL_ENTITY, country: e.LEGAL_COUNTRY, contactEmail: e.LEGAL_CONTACT_EMAIL },
-    alertEmail: e.ALERT_EMAIL,
-    diskAlertPercent: e.DISK_ALERT_PERCENT,
     filesDir: e.FILES_DIR,
     // The backups are made with the same user as everything else.
     backup: { databaseUrl: e.DATABASE_URL, traccarDatabaseUrl: e.TRACCAR_DATABASE_URL, dir: e.BACKUP_DIR },
@@ -211,7 +147,35 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env) {
     },
 
     // What follows does not come from variables: it is defined by the platform's admin console
-    // and changes while the backend runs. Here are its starting values.
+    // and changes while the backend runs. Here are its factory values (ADR-0010).
+    mapStyleUrl: "https://tiles.openfreemap.org/styles/liberty",
+    /** Outgoing mail. Without a host, no mail is sent. */
+    smtp: { host: "", port: 587, security: "starttls" as "none" | "starttls" | "ssl", user: "", password: "", from: `${e.APP_NAME} <no-reply@localhost>` },
+    /** Minutes a newly added GPS has to send its first report. */
+    claimWindowMinutes: 60,
+    /** Unconfirmed GPS additions an account can have at once. */
+    maxPendingDevices: 20,
+    /** Days of history kept. 0 = no limit. */
+    historyRetentionDays: 0,
+    /**
+     * Nominatim-compatible address service, up to `/reverse`: OpenStreetMap's
+     * public one, free and limited to one query per second. An empty address
+     * turns it off. The platform identifies itself to it with its name and
+     * address, and waits these milliseconds between queries.
+     */
+    geocoder: { url: "https://nominatim.openstreetmap.org/reverse", userAgent: `${e.APP_NAME} (${publicUrl})`, minIntervalMs: 1100 },
+    /**
+     * Routing service that speaks OSRM's API, to trace the simulator's routes
+     * along streets: the public one over OpenStreetMap data, free and limited
+     * to one query per second. An empty address turns it off.
+     */
+    routing: { url: "https://router.project-osrm.org" },
+    /** Who provides the service, the country whose law governs the terms and the privacy policy, and the email for privacy requests and complaints. */
+    legal: { entity: "", country: "", contactEmail: "" },
+    /** Email that receives operations notifications (disk almost full). Empty = only in the log. */
+    alertEmail: "",
+    /** Percentage of disk used above which a notification is sent. */
+    diskAlertPercent: 70,
     registrationOpen: true,
     passwordPolicy: { ...PASSWORD_POLICY_DEFAULT } as PasswordPolicy,
     newAccount: { maxVehicles: null as number | null, maxUsers: null as number | null, modules: [] as ModuleKey[] },

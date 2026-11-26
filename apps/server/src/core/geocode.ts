@@ -1,7 +1,7 @@
 // Approximate address of a coordinate, cached in the database.
 //
 // The external service is Nominatim (OpenStreetMap) compatible and is
-// configured with GEOCODER_URL; without that variable, the function is off.
+// configured in the console; without its address, the function is off.
 // Lookups go one at a time and spaced out, because those services limit the
 // rate, and each response is stored per cell of about 11 m to avoid repeating it.
 import type { Config } from "../config";

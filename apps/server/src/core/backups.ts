@@ -492,7 +492,7 @@ export function createBackups(deps: { db: Db; bus: Bus; config: Config; settings
     try {
       if (text) mine = JSON.parse(text) as Partial<KeptKeys>;
     } catch {
-      // Without the previous ones, the unreadable sections go back to what the server variables provide.
+      // Without the previous ones, the unreadable sections go back to their factory values.
     }
     const keptKeys = await settings.adopt(mine && typeof mine === "object" ? mine : {});
     if (keptKeys.length > 0) console.log(`[backups] the backup brought another server's keys: this one's are kept in ${keptKeys.join(", ")}`);

@@ -70,6 +70,12 @@ export async function createHarness() {
   // The platform's own gateway goes by names of its own, so a local test gateway on 127.0.0.1 is "another server".
   config.gatewayHost = "gw.plataforma.prueba";
   config.gatewayIp = GATEWAY_IP;
+  // What the tests need different from the factory values (ADR-0010). The address service
+  // and the routing one start off: no test reaches the public ones.
+  config.geocoder.url = "";
+  config.routing.url = "";
+  // Who operates the installation under test, shown in the legal texts.
+  config.legal.entity = "Operador de Prueba";
   const db = createDb(config);
   await migrate(db.core, findMigrationsDir(config.migrationsDir));
   await syncCatalog(db.core);

@@ -2,7 +2,7 @@
 // sections and applied over the backend's configuration, which the rest of the
 // code reads on every use: a change takes effect from that moment, without restarting.
 //
-// What has never been saved takes the value of the server variables.
+// What has never been saved takes its factory value (ADR-0010).
 import {
   type BackupSettings,
   CHANNELS_DEFAULT,
@@ -109,7 +109,7 @@ export interface Settings {
   /** When the backup schedule was last saved, in milliseconds. */
   backupsSavedAt(): number | null;
   save<S extends Section>(section: S, data: SettingsInput[S], actor: SettingsActor): Promise<PlatformSettings>;
-  /** Forgets what is stored in a section: the server variables' values apply again. Its keys are deleted with it. */
+  /** Forgets what is stored in a section: its factory values apply again. Its keys are deleted with it. */
   reset(section: Section, actor: SettingsActor): Promise<PlatformSettings>;
   /**
    * The destination resulting from storage settings not yet saved,
@@ -134,8 +134,8 @@ export function createSettings(deps: { db: Db; bus: Bus; config: Config }): Sett
   const vault = createVault(config.authSecret);
   /** How the platform introduces itself to the address service when nobody wrote something else. */
   const automaticAgent = () => `${config.appName} (${config.publicUrl})`;
-  // What the server variables had, to go back to it if something stops being defined here.
-  const env = {
+  // The factory values, to go back to them if something stops being defined here.
+  const factory = {
     smtp: { ...config.smtp },
     general: {
       registrationOpen: config.registrationOpen,
@@ -165,14 +165,14 @@ export function createSettings(deps: { db: Db; bus: Bus; config: Config }): Sett
   let stored: Stored = {};
   let backupsSavedAt: number | null = null;
 
-  const general = (): GeneralSettings => ({ ...env.general, ...stored.general });
+  const general = (): GeneralSettings => ({ ...factory.general, ...stored.general });
   const passwords = (): PasswordPolicy => ({ ...PASSWORD_POLICY_DEFAULT, ...stored.passwords });
   const backups = (): BackupSettings => {
     const b = { ...BACKUPS_DEFAULT, ...stored.backups };
     return { scheduled: b.scheduled, cron: b.cron, retentionDays: b.retentionDays, upload: b.upload };
   };
   const mail = (): StoredMail =>
-    stored.mail ?? { custom: false, host: env.smtp.host, port: env.smtp.port, security: env.smtp.security as MailSecurity, user: env.smtp.user, password: null, from: env.smtp.from };
+    stored.mail ?? { custom: false, host: factory.smtp.host, port: factory.smtp.port, security: factory.smtp.security as MailSecurity, user: factory.smtp.user, password: null, from: factory.smtp.from };
   const storage = (): StoredStorage => {
     const s = stored.storage;
     if (!s) return { enabled: false, provider: STORAGE_PROVIDER_DEFAULT, endpoint: "", region: "us-east-1", bucket: "", prefix: "", accessKeyId: "", secret: null, args: null };
@@ -294,7 +294,7 @@ export function createSettings(deps: { db: Db; bus: Bus; config: Config }): Sett
     config.passwordPolicy = passwords();
 
     const m = mail();
-    config.smtp = m.custom ? { host: m.host, port: m.port, security: m.security, user: m.user, password: vault.open(m.password) ?? "", from: m.from } : { ...env.smtp };
+    config.smtp = m.custom ? { host: m.host, port: m.port, security: m.security, user: m.user, password: vault.open(m.password) ?? "", from: m.from } : { ...factory.smtp };
 
     const s = storage();
     const secret = vault.open(s.secret);
