@@ -68,13 +68,18 @@ Navegador del sistema y un pase de un solo uso.
 
 ## Consecuencias
 
-- Una página puede intentar abrir `GET /api/app/oauth/start` o `GET /api/app/oauth` en el navegador de alguien que ya
-  tiene sesión en la web. Por eso la ruta solo entrega sesiones creadas hace unos minutos,
-  que en la práctica son las de una ida y vuelta al servicio que la persona acaba de hacer.
-- Otra app puede registrar `opengps://`. La ventana segura del sistema le entrega la vuelta
-  solo a la app que la abrió, así que no puede quedarse con el pase de una entrada que hizo
-  la app de OpenGPS. Los enlaces universales (`https://`) lo cerrarían del todo, pero cada
-  instalación tiene su propio dominio y la app tendría que conocerlos todos.
+- Una página puede abrir `GET /api/app/oauth` en el navegador de alguien que ya tiene sesión
+  en la web. Por eso la vuelta solo entrega sesiones creadas hace menos de cinco minutos, que
+  en la práctica son las de una ida y vuelta al servicio que la persona acaba de hacer.
+- Otra app puede registrar `opengps://`. Cuando la app de OpenGPS abre la ventana segura del
+  sistema, la vuelta se le entrega solo a ella, así que nadie más se queda con ese pase.
+- Queda un caso abierto. Una página puede abrir `GET /api/app/oauth/start` en Safari, y si el
+  servicio deja entrar sin preguntar (la persona ya tenía sesión en él y había autorizado a la
+  plataforma), se crea una sesión nueva cuyo pase va a la app que tenga registrado
+  `opengps://`. Para eso la persona tiene que tener instalada una app que se haga pasar por
+  OpenGPS y aceptar la pregunta de Safari antes de abrirla. Los enlaces universales
+  (`https://`) lo cerrarían del todo, pero cada instalación tiene su propio dominio y la app
+  tendría que conocerlos todos.
 - Si el servicio falla antes de volver a la plataforma, la librería de sesión muestra la
   página de entrada de la web dentro de la ventana; la persona la cierra y vuelve a la app.
 - `docs/API.md` documenta la ruta nueva y las de `/api/auth/one-time-token/`.
