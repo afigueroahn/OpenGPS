@@ -17,6 +17,11 @@ const TARGET_SECONDS = 40;
 
 interface Props {
   points: HistoryPoint[];
+  /**
+   * What is being played. When it changes (another period or trip) playback starts over; the points of a
+   * period that is still going on arrive again every minute with the same key, and playback keeps going.
+   */
+  playKey: string;
   stops: Stop[];
   /** Average while moving, which does not come from the points but from the analysis. */
   avgSpeedKmh: number;
@@ -29,7 +34,7 @@ interface Props {
 
 const PLOT = { left: 30, right: 10, top: 16, bottom: 18 };
 
-export function Player({ points, stops, avgSpeedKmh, map, seek, dark = false }: Props) {
+export function Player({ points, playKey, stops, avgSpeedKmh, map, seek, dark = false }: Props) {
   const { t } = useTranslation();
   const night = useTheme().dark;
   const first = points[0];
@@ -56,7 +61,8 @@ export function Player({ points, stops, avgSpeedKmh, map, seek, dark = false }: 
     setRate(RATES.reduce((best, r) => (Math.abs(r - ideal) < Math.abs(best - ideal) ? r : best), RATES[0] as number));
     setPlaying(false);
     setTime(points[0]?.t ?? 0);
-  }, [points]);
+    // Deliberate dependencies: only with another trip, not each time its points arrive again.
+  }, [playKey]);
 
   useEffect(() => {
     if (seek) setTime(Math.min(t1, Math.max(t0, seek.t)));

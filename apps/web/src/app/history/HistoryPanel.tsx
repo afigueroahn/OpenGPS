@@ -150,6 +150,7 @@ export function HistoryPanel({ vehicle, vehicles, geocoding, map, playerSlot, on
   const player = data && shown.length > 1 && (
     <Player
       points={shown}
+      playKey={[vehicle.id, range.from.getTime(), range.to.getTime(), focus, tripDetail.data ? 1 : 0].join("|")}
       stops={data.stops}
       avgSpeedKmh={trip ? trip.avgSpeedKmh : data.summary.avgSpeedKmh}
       map={map}
