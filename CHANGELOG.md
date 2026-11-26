@@ -6,6 +6,8 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Sin publicar]
 
+## [0.7.1] - 2026-11-26
+
 ### Corregido
 
 - Una orden de bloqueo o desbloqueo del arranque llega al equipo una sola vez. Si la
