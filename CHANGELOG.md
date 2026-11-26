@@ -6,6 +6,8 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Sin publicar]
 
+## [0.6.0] - 2026-11-25
+
 ### Cambiado
 
 - Lo que se ajusta en la consola de administración ya no se puede dar con variables de
