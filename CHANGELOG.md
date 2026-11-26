@@ -6,6 +6,13 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Sin publicar]
 
+### Corregido
+
+- Una orden de bloqueo o desbloqueo del arranque llega al equipo una sola vez. Si la
+  petición y la siguiente posición del vehículo intentaban enviarla al mismo tiempo, el
+  equipo recibía el corte dos veces y quedaban dos eventos «Arranque bloqueado» con sus
+  avisos (#95).
+
 ## [0.7.0] - 2026-11-25
 
 ### Eliminado
