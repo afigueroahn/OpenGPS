@@ -6,7 +6,7 @@ Plataforma abierta y gratuita de rastreo GPS vehicular: web, app Android y app i
 
 1. **Traccar** recibe por internet las señales de los equipos GPS. Cada marca habla su propio protocolo.
 2. **La plataforma** (el backend) lee esas posiciones y las guarda. Calcula viajes y alertas, envía los avisos y atiende a la web y a las apps.
-3. **La web** es lo que se ve en el navegador. Las apps de iPhone y Android son el paso siguiente.
+3. **La web** es lo que se ve en el navegador, y **la app para iPhone**, lo que se ve en el teléfono. La app para Android es el paso siguiente.
 
 Todo se guarda en PostgreSQL, con TimescaleDB para el historial de posiciones.
 
@@ -21,7 +21,7 @@ Todo se guarda en PostgreSQL, con TimescaleDB para el historial de posiciones.
 
 ## Estado
 
-Están construidos el núcleo (mapa en vivo, historial, alertas, avisos, reportes, cuentas y administración) y los nueve módulos opcionales. Las apps de iPhone y Android son el paso siguiente.
+Están construidos el núcleo (mapa en vivo, historial, alertas, avisos, reportes, cuentas y administración), los nueve módulos opcionales y la app para iPhone, que todavía no está en la App Store. La app para Android es el paso siguiente.
 
 ## Estructura
 
@@ -29,8 +29,8 @@ Están construidos el núcleo (mapa en vivo, historial, alertas, avisos, reporte
 |---|---|
 | `apps/server/` | La plataforma (backend, Fastify). Ver la tabla de abajo |
 | `apps/web/` | La web (React + Vite). Contiene las pantallas (`src/app`), las páginas de entrada, registro y textos legales (`src/routes`), esos textos legales (`src/legal`), los textos en español e inglés (`src/locales`) y el ícono (`public`) |
-| `apps/mobile/` | Las apps de iPhone y Android (Expo), el paso siguiente |
-| `packages/shared/` | Lo que comparten la plataforma y la web: las reglas de cada dato y los textos comunes, para que las dos validen igual |
+| `apps/mobile/` | La app para iPhone (Expo). Contiene las pantallas (`src/app`), sus partes (`src/components`), el mapa (`src/map`), la conexión con la plataforma (`src/lib`), los textos en español e inglés (`src/locales`) y las imágenes (`assets`) |
+| `packages/shared/` | Lo que comparten la plataforma, la web y la app: las reglas de cada dato y los textos comunes, para que todas validen igual |
 | `db/migrations/` | Los pasos que crean y actualizan la base, en orden: `core` para el núcleo y una carpeta por módulo (`a_antitheft` … `i_integrations`) |
 | `deploy/` | Las formas de instalarla, una carpeta por cada una (`docker-compose/`, `caddy/`, `cloudflare/`, `dokploy/`, `coolify/`), las recetas de las imágenes de la plataforma, de la base y del ayudante, y las variables. Ver [deploy/README.md](deploy/README.md) |
 | `docs/` | Los documentos |
@@ -59,6 +59,7 @@ En la raíz:
 
 - `node_modules`: las librerías, que `pnpm install` descarga según `pnpm-lock.yaml`. Hay una carpeta por cada parte del proyecto, pero la de la raíz guarda cada librería una sola vez y las demás solo apuntan a ella.
 - `dist`: lo compilado.
+- `apps/mobile/ios`: el proyecto de Xcode de la app, que Expo genera al compilarla.
 - Los archivos de variables con valores reales: `apps/server/.env.local` en desarrollo y `deploy/docker-compose/.env` al levantar la plataforma desde el código. Un servidor instalado con la guía no tiene el repositorio: su `.env` está en `/opt/opengps`.
 
 ## Requisitos
@@ -125,6 +126,22 @@ pnpm --filter @opengps/web dev
 |---|---|
 | Web | http://localhost:5173 |
 | API | http://localhost:3000/api |
+
+## App para iPhone
+
+Se compila en una Mac con Xcode 26.3 y CocoaPods, en el simulador de iPhone. La app usa Expo SDK 55, la última que compila ese Xcode (ADR-0015).
+
+```bash
+pnpm --filter @opengps/mobile ios
+```
+
+La primera vez genera `apps/mobile/ios`, compila la app, la instala en el simulador y deja Metro en marcha. Las siguientes veces basta con Metro:
+
+```bash
+pnpm --filter @opengps/mobile start
+```
+
+Al abrirla pide la dirección de la plataforma, con `app.opengps.dev` ya escrita. Para una plataforma local, `http://localhost:3000`: el simulador llega a la computadora en `localhost`.
 
 ## Simulador
 

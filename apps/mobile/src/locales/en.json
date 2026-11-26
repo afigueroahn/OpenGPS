@@ -1,0 +1,578 @@
+{
+  "tabs": {
+    "map": "Map",
+    "vehicles": "Vehicles",
+    "account": "Account",
+    "alerts": "Alerts",
+    "incidents": "Incidents"
+  },
+  "server": {
+    "headline": "Your vehicle on the map, live.",
+    "title": "Where is your platform?",
+    "body": "Type the address you use to open OpenGPS on the web.",
+    "label": "Address",
+    "placeholder": "app.opengps.dev",
+    "submit": "Continue",
+    "invalid": "Type a valid address, like app.opengps.dev.",
+    "unreachable": "Couldn't connect to that address. Check that it's spelled right and that the platform is running.",
+    "notPlatform": "There's no OpenGPS platform at that address.",
+    "incompatible": "This app doesn't work with that platform's version. Update the app or the platform."
+  },
+  "signIn": {
+    "title": "Sign in to your account",
+    "email": "Email",
+    "password": "Password",
+    "submit": "Sign in",
+    "changeServer": "Change platform",
+    "noAccount": "Don't have an account yet?",
+    "forgot": "I forgot my password",
+    "resend": "Resend the confirmation link",
+    "resentOk": "Done, we sent it again. It may take a minute; check your spam folder too.",
+    "resendFailed": "We couldn't resend it. Try again in a moment.",
+    "createAccount": "Create one for free"
+  },
+  "consent": {
+    "title": "We updated the terms",
+    "body": "To keep using {{app}}, read and accept the terms of use and the privacy policy.",
+    "terms": "Terms of use",
+    "privacy": "Privacy policy",
+    "accept": "I accept"
+  },
+  "suspended": {
+    "title": "This account is suspended",
+    "body": "The account {{name}} can't be used for now. If you think this is a mistake, write to us and we'll look into it.",
+    "goTo": "Go to {{name}}"
+  },
+  "live": {
+    "online": "Live",
+    "offline": "Reconnecting"
+  },
+  "errors": {
+    "network": "Couldn't complete the action. Check your connection and try again.",
+    "server": "Couldn't reach the server. Check your internet connection.",
+    "retry": "Retry"
+  },
+  "auth": {
+    "wrongCredentials": "The email or password is incorrect.",
+    "emailNotVerified": "You haven't confirmed your email yet. We just sent you the link again.",
+    "invalidEmail": "Enter a valid email.",
+    "banned": "This account is suspended. Write to us if you think it's a mistake.",
+    "tooManyAttempts": "Too many attempts. Wait a moment and try again.",
+    "sessionOld": "For your safety, sign in again and do it right away."
+  },
+  "map": {
+    "fit": "Show all",
+    "noPosition": "None of your vehicles has a position yet."
+  },
+  "list": {
+    "count_one": "{{count}} vehicle",
+    "count_other": "{{count}} vehicles",
+    "filtered": "{{shown}} of {{total}}",
+    "all": "All",
+    "searchPlaceholder": "Search by name or plate",
+    "status": {
+      "moving": "Moving",
+      "idle": "Idling",
+      "stopped": "Stopped",
+      "offline": "Offline",
+      "pending": "Waiting for signal",
+      "no_device": "No GPS"
+    },
+    "failed": "Couldn't load your vehicles.",
+    "noMatch": "No vehicle matches the filter.",
+    "clearFilters": "Clear filters",
+    "empty": {
+      "title": "No vehicles yet",
+      "body": "Add your GPS on the web and it will show up here and on the map."
+    },
+    "allGroups": "All groups",
+    "noGroup": "No group",
+    "groupFilter": "Group"
+  },
+  "detail": {
+    "close": "Close",
+    "noDevice": {
+      "title": "No GPS connected",
+      "body": "This vehicle has no device. Connect one on the web to see it on the map."
+    },
+    "pending": {
+      "title": "Waiting for the first signal",
+      "body": "Set up the device so it reports to the platform."
+    },
+    "speed": "Speed",
+    "lastReport": "Last report",
+    "course": "Heading",
+    "engine": "Engine",
+    "engineOn": "On",
+    "engineOff": "Off",
+    "engineEstimated": "estimated from voltage",
+    "vehicleBattery": "Vehicle battery",
+    "deviceBattery": "Device battery",
+    "satellites": "GPS satellites",
+    "cellSignal": "Cell signal",
+    "signalBars": "{{bars}} of 4",
+    "coordinates": "Coordinates",
+    "near": "Near",
+    "findingAddress": "Looking up the address…",
+    "trail": "Trip of the last hour",
+    "parked": {
+      "title": "Parked mode",
+      "on": "Turned on {{since}}. Alerts you if it moves from here.",
+      "off": "Alerts you if the vehicle moves from where it is."
+    }
+  },
+  "account": {
+    "accounts": "Accounts",
+    "current": "Current",
+    "preferences": "Preferences",
+    "server": "Platform",
+    "changeServer": "Change platform",
+    "signOut": "Sign out",
+    "version": "App version {{version}}",
+    "platformVersion": "Version",
+    "terms": "Terms of use",
+    "privacy": "Privacy"
+  },
+  "theme": {
+    "label": "Theme",
+    "system": "Device",
+    "light": "Light",
+    "dark": "Dark"
+  },
+  "language": {
+    "label": "Language",
+    "es": "Español",
+    "en": "English"
+  },
+  "share": {
+    "title": "Share location",
+    "intro": "Create a link so someone without an account can see where {{name}} is. It stops working when it expires, or when you revoke it.",
+    "duration": "Available for",
+    "hours_one": "{{count}} hour",
+    "hours_other": "{{count}} hours",
+    "days_one": "{{count}} day",
+    "days_other": "{{count}} days",
+    "create": "Create and send link",
+    "created": "Link created. Send it now: for security it will not be shown again.",
+    "send": "Send again",
+    "another": "Create another",
+    "message": "Location of {{name}}: {{url}}",
+    "warning": "Anyone with this link will see the live location. Send it only to whoever should see it.",
+    "alive": "Links still working",
+    "none": "None. No one outside can see this vehicle.",
+    "noNote": "Link",
+    "revoke": "Revoke",
+    "expiresOn": "Expires {{date}}",
+    "expiresIn": "Expires in {{duration}}",
+    "notOpened": "not opened",
+    "opened_one": "opened {{count}} time",
+    "opened_other": "opened {{count}} times"
+  },
+  "events": {
+    "title": "Latest events",
+    "none": "No recent events.",
+    "dismiss": "Dismiss alert"
+  },
+  "photo": {
+    "change": "Change photo",
+    "library": "Choose from my photos",
+    "camera": "Take photo",
+    "remove": "Remove photo",
+    "cancel": "Cancel",
+    "noCamera": "Could not open the camera.",
+    "noPermission": "To take the photo, allow camera access in Settings."
+  },
+  "forgot": {
+    "title": "Reset your password",
+    "lead": "Enter your account's email and we'll send you a link to create a new one.",
+    "submit": "Send me the link",
+    "sent": "If that email has an account, the link is on its way. It expires in 1 hour and opens on the web.",
+    "back": "Back to sign in"
+  },
+  "feed": {
+    "all": "All",
+    "alertsOnly": "Alerts only",
+    "empty": "No events yet. They'll show up when a vehicle enters or leaves a geofence or something needs your attention.",
+    "noAlerts": "No alerts yet.",
+    "older": "Show older",
+    "failed": "We couldn't load the events."
+  },
+  "eventNote": {
+    "routeDeviation": "Went {{meters}} m off its route",
+    "noDescription": "no description",
+    "overrev": "Reached {{rpm}} rpm; the limit is {{limit}} rpm",
+    "overheat": "Reached {{temp}} °C; the limit is {{limit}} °C",
+    "batteryLow": "At {{volts}} V; the minimum is {{limit}} V",
+    "fuelTheft": "{{liters}} L left the tank with the engine off",
+    "fuelDrain": "{{liters}} L left the tank while stopped",
+    "fuelRefuel": "{{liters}} L went into the tank",
+    "drivingDaily": "Has been at the wheel for {{time}} this shift; the maximum is {{max}}",
+    "drivingDailyDriver": "{{driver}} has been at the wheel for {{time}} this shift; the maximum is {{max}}",
+    "drivingNonstop": "Has been at the wheel for {{time}} without a break; the maximum is {{max}}",
+    "drivingNonstopDriver": "{{driver}} has been at the wheel for {{time}} without a break; the maximum is {{max}}",
+    "speeding": "Was going {{speed}} km/h; the limit is {{limit}} km/h",
+    "signalLost": "Not reporting for {{time}}",
+    "unauthorizedMovement": "Moved {{meters}} m from where it was parked",
+    "tow": "Moving at {{speed}} km/h with the engine off",
+    "lessThanMinute": "less than a minute",
+    "stayShort": "Stayed {{stayed}}; the minimum is {{min}}",
+    "stayLong": "Has stayed {{stayed}}; the maximum is {{max}}",
+    "bySchedule": "The geofence schedule started",
+    "stayed": "Stayed {{stayed}}"
+  },
+  "summary": {
+    "title": "Summary",
+    "vehicles": "Vehicles",
+    "reporting_one": "{{count}} reporting now",
+    "reporting_other": "{{count}} reporting now",
+    "events": "Events (24 h)",
+    "eventsNote": "alerts and notices of the last day",
+    "users": "Users",
+    "usersNote": "in this account"
+  },
+  "history": {
+    "open": "View trip history",
+    "title": "History",
+    "start": "Start",
+    "end": "End",
+    "noData": {
+      "title": "No movement in this period",
+      "lead": "The device sent no positions on these dates. Try another period."
+    },
+    "tabs": {
+      "trips": "Trips",
+      "stops": "Stops"
+    },
+    "presets": {
+      "today": "Today",
+      "yesterday": "Yesterday",
+      "7d": "7 days",
+      "30d": "30 days",
+      "custom": "Other"
+    },
+    "range": {
+      "previous": "Previous period",
+      "next": "Next period",
+      "from": "From",
+      "to": "To",
+      "earlier": "One day earlier",
+      "later": "One day later",
+      "apply": "Show this period",
+      "endBeforeStart": "The end date must be after the start date.",
+      "tooLong": "The period can't be longer than {{days}} days."
+    },
+    "summary": {
+      "tripAt": "Trip at {{time}}",
+      "wholePeriod": "Show the whole period",
+      "duration": "Duration",
+      "idle": "Idling",
+      "maxSpeed": "Top speed",
+      "avgSpeed": "Average speed",
+      "moving": "Moving",
+      "stopped": "Stopped",
+      "engineOn": "Engine on"
+    },
+    "trips": {
+      "empty": "No trips in this period. The vehicle didn't move.",
+      "max": "max {{speed}} km/h",
+      "idle": "idling {{time}}"
+    },
+    "stops": {
+      "empty": "No stops longer than three minutes in this period.",
+      "engineOn": "engine on {{time}}"
+    },
+    "player": {
+      "play": "Play the trip",
+      "pause": "Pause",
+      "engineOn": "Engine on",
+      "engineOff": "Engine off",
+      "rate": "Playback speed",
+      "moment": "Point in the trip"
+    },
+    "export": {
+      "trip": "Export this trip",
+      "period": "Export the period",
+      "failed": "The file couldn't be downloaded. Check the connection and try again.",
+      "format": {
+        "xlsx": "Excel: totals, trips, stops and positions",
+        "pdf": "PDF: report with the route, trips and stops",
+        "csv": "CSV: all positions",
+        "gpx": "GPX: for navigation devices and other GPS apps",
+        "kml": "KML: for Google Earth"
+      }
+    }
+  },
+  "security": {
+    "lock": {
+      "locked": "Engine locked",
+      "unlocked": "Engine not locked",
+      "lockStart": "Lock the engine",
+      "unlockStart": "Unlock the engine",
+      "unsupported": "This GPS device doesn't support remote locking.",
+      "supportUnknown": "Once the device reports, we'll know whether it supports remote locking."
+    },
+    "note": {
+      "never": "No lock command has ever been sent to this vehicle.",
+      "lockConfirmed": "The device confirmed the cut-off {{when}}.",
+      "lockSent": "The command went out {{when}}; the device doesn't report whether it applied it.",
+      "unlockConfirmed": "The device confirmed it restored the engine {{when}}.",
+      "unlockSent": "The unlock command went out {{when}}; the device doesn't report whether it applied it."
+    },
+    "pending": {
+      "lock": "Lock: {{status}}",
+      "unlock": "Unlock: {{status}}",
+      "expires": "{{note}}. If it can't be sent, it expires in {{minutes}} min.",
+      "sent": "Waiting for the device to confirm it applied it.",
+      "cancel": "Cancel the command"
+    },
+    "lastFailed": {
+      "lock": "The last lock command didn't complete: {{status}}.",
+      "lockNote": "The last lock command didn't complete: {{status}} ({{note}}).",
+      "unlock": "The last unlock command didn't complete: {{status}}.",
+      "unlockNote": "The last unlock command didn't complete: {{status}} ({{note}})."
+    },
+    "recovery": {
+      "title": "Recovery mode",
+      "active": "Turned on {{since}}. The link for the authorities is still valid.",
+      "inactive": "If it was stolen: more frequent reports and a link for the police.",
+      "linkBody": "This link shows live where {{name}} is, no account needed. Give it to the police or to whoever will recover it. It's valid for 72 hours, or until you turn off recovery mode.",
+      "linkLabel": "Link for the authorities",
+      "copyNow": "Send it now: for security it won't be shown again. The case was opened in Incidents.",
+      "send": "Send the link",
+      "message": "Live location of {{name}} (recovery mode): {{url}}",
+      "offTitle": "Turn off recovery mode",
+      "offBody": "The link for the authorities will stop working and the device will go back to its normal reporting rate.",
+      "off": "Turn off",
+      "cancel": "Cancel"
+    },
+    "dialog": {
+      "lockBody": "You're about to cut off the engine of {{name}}. For safety, the command only goes out when the vehicle is under {{speed}} km/h: a moving vehicle's engine is never cut.",
+      "unlockBody": "You're about to restore the engine of {{name}}.",
+      "speedNow": "Speed now",
+      "lastFix": "Last position",
+      "noFix": "no position",
+      "safeNow": "The vehicle is stopped or moving slowly: the command will be sent right away.",
+      "notSafe": "It isn't safe to cut off the engine now. The command will wait and go out on its own as soon as the vehicle drops below {{speed}} km/h. If that doesn't happen within {{minutes}} minutes, it's cancelled.",
+      "typeWord": "To confirm, type {{word}}",
+      "recheck": "Check again",
+      "lock": "Lock",
+      "unlock": "Unlock",
+      "cancel": "Cancel"
+    }
+  },
+  "fuel": {
+    "title": "Fuel",
+    "level": "{{liters}} L of fuel",
+    "tank": "{{capacity}} L tank · read {{when}}",
+    "noTank": "Set up the tank on the web to see the level, consumption and efficiency.",
+    "noLevel": "The device hasn't sent the level in the last 7 days.",
+    "noSensor": "No level sensor: consumption is estimated from the expected rate."
+  },
+  "wizard": {
+    "add": "Add GPS",
+    "title": {
+      "add": "Add my GPS",
+      "setup": "Set up your GPS",
+      "connected": "GPS connected"
+    },
+    "steps": {
+      "vehicle": "Your vehicle",
+      "device": "Your GPS",
+      "setup": "Connection"
+    },
+    "name": "Vehicle name",
+    "namePlaceholder": "White van",
+    "plate": "Plate (optional)",
+    "needName": "Give it a name to recognize it on the map.",
+    "next": "Next",
+    "back": "Back",
+    "close": "Close",
+    "find": "Brand or model of your GPS",
+    "findPlaceholder": "Type to search: FMC920, ST-901, GT06N…",
+    "other": "Another model by {{family}}",
+    "chosen": "{{family}} · port {{port}}",
+    "needModel": "Choose the brand or the model of your GPS.",
+    "empty": "We did not find that model. Type the brand and choose “another model” of it.",
+    "change": "Change",
+    "deviceId": "Device {{idLabel}}",
+    "imeiHint": "15 digits. It's on the device label or its box.",
+    "idHint": "It's on the device label. Usually 10 to 12 digits long.",
+    "badId": "Type the {{idLabel}} exactly as it appears on the device: letters and numbers only, no spaces.",
+    "submit": "Add GPS",
+    "addFailed": "Couldn't add the GPS. Try again.",
+    "server": "Server",
+    "port": "Port",
+    "commandsNote": "These are the usual {{brand}} commands. If your model uses others, look in its manual for how to change the server and port.",
+    "waiting": {
+      "title": "Waiting for the first signal…",
+      "updates": "This screen updates on its own when it reports.",
+      "updatesMinutes": "This screen updates on its own when it reports; you have {{n}} min to connect it."
+    },
+    "reporting": "{{name}} is reporting",
+    "firstSignal": "We received its first signal. From now on you'll see it move on the map.",
+    "showOnMap": "View on the map",
+    "expired": "Time ran out without a signal from this GPS, so it was released. Check the setup and add it again.",
+    "later": "I'll set it up later"
+  },
+  "profile": {
+    "title": "Your details",
+    "edit": "Edit your details",
+    "name": "Your name",
+    "phone": "Phone for SMS",
+    "phoneNote": "With its country code, for example +50499887766. To get by SMS the notifications that include you.",
+    "noPhone": "No phone",
+    "save": "Save",
+    "saved": "Saved.",
+    "remove": "Delete the phone",
+    "badName": "Enter your name, at least 2 letters long.",
+    "badPhone": "Enter the phone number with its country code, for example +50499887766."
+  },
+  "deleteAccount": {
+    "open": "Delete my account",
+    "title": "Delete my account",
+    "intro": "Your user {{email}} will be deleted and, with it, the accounts you own:",
+    "vehicles": "Their vehicles, GPS devices and all trip history.",
+    "people": "Their groups, invited users and activity log.",
+    "final": "The devices will stop reporting to the platform. This can't be undone.",
+    "password": "Your password, to confirm",
+    "typeWord": "Type {{word}} to confirm",
+    "noPassword": "You sign in with another service and have no password. If your session is not recent, sign in again and delete it right away.",
+    "confirm": "Delete permanently",
+    "wrongPassword": "The password is incorrect."
+  },
+  "common": {
+    "close": "Close",
+    "cancel": "Cancel"
+  },
+  "editVehicle": {
+    "title": "Edit vehicle",
+    "name": "Name",
+    "group": "Group",
+    "save": "Save",
+    "gps": "Vehicle's GPS",
+    "unplugTitle": "Remove the GPS",
+    "unplugConfirm": "Remove GPS",
+    "unplugBody": "The device {{id}} will stop reporting to your account and this vehicle's trip history will be deleted. You can connect another GPS later.",
+    "unplugNote": "If you remove it, it stops reporting to your account and this vehicle's trip history is deleted.",
+    "noGps": "This vehicle has no GPS connected. Add one with the + button in Vehicles."
+  },
+  "driver": {
+    "none": "No driver assigned",
+    "since": "Started driving {{when}}.",
+    "sinceKey": "Started driving {{when}} · identified with their key.",
+    "noneNote": "What it drives won't count for any driver.",
+    "select": "Vehicle's driver",
+    "noDriver": "No driver",
+    "assign": "Assign driver",
+    "change": "Change driver",
+    "noDrivers": "Add your drivers on the web, in Drivers, to assign them.",
+    "unknownKey": "Unregistered key",
+    "unknownKeyBody": "The device read the key {{key}} {{when}}, and it doesn't belong to any driver. Add it on the web, in Drivers."
+  },
+  "diag": {
+    "title": "Engine diagnostics",
+    "screenTitle": "{{name}} diagnostics",
+    "faultsActive_one": "{{count}} active fault code",
+    "faultsActive_other": "{{count}} active fault codes",
+    "noData": "This device hasn't sent engine data yet.",
+    "engineHours": "{{hours}} engine hours",
+    "engineHoursRead": "{{hours}} engine hours · read {{when}}",
+    "open": "View diagnostics",
+    "tabs": {
+      "now": "Now",
+      "faults": "Faults"
+    },
+    "nowEmpty": "This device hasn't sent vehicle data in the last seven days. Reading it takes a device with an OBD reader or connected to the vehicle's network (CAN).",
+    "nowNote": "Only what this device reads from the vehicle shows up. Each value shows its latest reading.",
+    "faultsEmpty": "This vehicle hasn't reported fault codes. They show up here, with their explanation, when the device reads them from the vehicle's computer.",
+    "faultsActiveTitle": "Active",
+    "faultsNone": "None: the vehicle reports no faults now.",
+    "faultsSolved": "Resolved",
+    "faultCleared": "{{system}} · from {{from}} to {{to}}",
+    "faultSeen": "{{system}} · since {{from}} · last seen {{last}}"
+  },
+  "incidents": {
+    "title": "Incidents",
+    "open": "Open",
+    "all": "All",
+    "emptyOpen": "No open incidents. A panic button, a tow, device tampering or a parked vehicle that moves shows up here.",
+    "emptyAll": "There haven't been any incidents yet.",
+    "report": "Report",
+    "reportTitle": "Report an incident",
+    "reportLead": "For what the GPS device doesn't report on its own: a theft someone tells you about by phone, a crash, a vehicle being held.",
+    "vehicle": "Vehicle",
+    "what": "What happened?",
+    "statusPriority": "{{status}} · priority",
+    "opened": "Opened {{when}}",
+    "openedAttended": "Opened {{when}} · handled by {{name}}",
+    "attend": "Handle",
+    "showOnMap": "Show on map",
+    "timeline": "Timeline",
+    "addNote": "Add a note",
+    "notePlaceholder": "What was done, who was contacted…",
+    "saveNote": "Save note",
+    "attach": "Attach a photo",
+    "attachPhoto": "Attach photo",
+    "close": "Close incident",
+    "closeHow": "How did it end?",
+    "closeNote": "Closing note (optional)",
+    "closeLead": "A closed incident no longer accepts notes or evidence. If something happens to the vehicle again, a new one is opened.",
+    "platform": "The platform",
+    "photoName": "photo"
+  },
+  "signUp": {
+    "title": "Create your account",
+    "lead": "Free, no card needed. Then add your GPS device in two minutes.",
+    "name": "Your name",
+    "nameMissing": "Enter your name.",
+    "mustAccept": "To create your account you need to accept the terms of use and the privacy policy.",
+    "closed": "Sign-up for new accounts is closed. Only people who received an invitation by email can sign up.",
+    "acceptLabel": "I accept the terms of use and the privacy policy",
+    "acceptBefore": "I accept the ",
+    "acceptMiddle": " and the ",
+    "submit": "Create my account",
+    "haveAccount": "Already have an account? Sign in here"
+  },
+  "checkEmail": {
+    "title": "Check your email",
+    "sentBefore": "We sent an email to ",
+    "sentAfter": ". If the account is new, open it to confirm it and then sign in here with your email and password; if you already had one with that email, it tells you how to sign in.",
+    "slow": "It may take a minute. Check your spam folder too.",
+    "resend": "Resend the link",
+    "signIn": "I confirmed it: sign in"
+  },
+  "services": {
+    "orSignIn": "or sign in with",
+    "orSignUp": "or create your account with",
+    "with": "Continue with {{name}}",
+    "notLinked": "There is already an account with that email, but the service does not confirm it is yours. Sign in with your password.",
+    "noEmail": "The service did not share your email. Allow it when signing in, or use another one.",
+    "cancelled": "You cancelled signing in with the service.",
+    "failed": "Could not sign in with that service. Try again.",
+    "termsBefore": "If you do not have an account yet, it is created when you continue. By doing so you accept the ",
+    "termsLink": "terms of use",
+    "termsMiddle": " and the ",
+    "privacyLink": "privacy policy",
+    "termsAfter": "."
+  },
+  "format": {
+    "noData": "no data",
+    "now": "now",
+    "seconds": "{{n}} s ago",
+    "minutes": "{{n}} min ago",
+    "hours": "{{n}} h ago",
+    "days_one": "{{count}} day ago",
+    "days_other": "{{count}} days ago",
+    "kmh": "{{n}} km/h",
+    "compass": {
+      "n": "north",
+      "ne": "northeast",
+      "e": "east",
+      "se": "southeast",
+      "s": "south",
+      "sw": "southwest",
+      "w": "west",
+      "nw": "northwest"
+    }
+  }
+}

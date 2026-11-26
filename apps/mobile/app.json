@@ -1,0 +1,32 @@
+{
+  "expo": {
+    "name": "OpenGPS",
+    "slug": "opengps",
+    "scheme": "opengps",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "automatic",
+    "icon": "./assets/icon.png",
+    "ios": {
+      "bundleIdentifier": "dev.opengps.app",
+      "supportsTablet": false
+    },
+    "plugins": [
+      "expo-router",
+      "expo-secure-store",
+      "expo-localization",
+      "@maplibre/maplibre-react-native",
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "OpenGPS usa tus fotos solo para la foto de tu perfil.",
+          "cameraPermission": "OpenGPS usa la cámara solo para tomar la foto de tu perfil.",
+          "microphonePermission": false
+        }
+      ]
+    ],
+    "experiments": {
+      "tsconfigPaths": false
+    }
+  }
+}
