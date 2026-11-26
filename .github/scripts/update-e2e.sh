@@ -126,15 +126,16 @@ installed() { # version
   grep -q "image: $REG/opengps:$1$" "$INSTALL/docker-compose.yml" && ! grep -q '^OPENGPS_VERSION=' "$INSTALL/.env"
 }
 # With deploy/caddy, the web app answers through the proxy, on the server's
-# port 80, by the name of PUBLIC_URL and by api. under it.
+# port 80, by the name of PUBLIC_URL and by no other: the web app and the
+# mobile apps use one address.
 through_proxy() { # version
-  local name
   if [ "$WAY" != caddy ]; then return 0; fi
-  for name in localhost api.localhost; do
-    if ! curl -fsS --retry 10 --retry-delay 3 --retry-all-errors -H "Host: $name" http://localhost/api/health | grep -q "\"version\":\"$1\""; then
-      fail "the web app does not answer $1 through Caddy as $name"
-    fi
-  done
+  if ! curl -fsS --retry 10 --retry-delay 3 --retry-all-errors -H "Host: localhost" http://localhost/api/health | grep -q "\"version\":\"$1\""; then
+    fail "the web app does not answer $1 through Caddy as localhost"
+  fi
+  if curl -sS -H "Host: api.localhost" http://localhost/api/health | grep -q '"version"'; then
+    fail "Caddy still takes api.localhost to the web app"
+  fi
 }
 
 mkdir -p "$INSTALL"

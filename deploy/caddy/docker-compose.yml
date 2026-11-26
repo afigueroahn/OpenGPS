@@ -174,10 +174,9 @@ services:
     security_opt:
       - no-new-privileges:true
 
-  # The proxy with HTTPS. Caddy gets the certificate of each of its sites and
-  # renews it by itself, and takes them to http://opengps:3000. Each site has
-  # its own certificate: the one of api. waits for its DNS record without
-  # holding the domain's back. An http:// site gets no certificate.
+  # The proxy with HTTPS. Caddy gets the certificate of its site and renews it
+  # by itself, and takes it to http://opengps:3000. An http:// site gets no
+  # certificate.
   caddy:
     image: caddy:2.11.9
     restart: unless-stopped
@@ -187,19 +186,14 @@ services:
         condition: service_started
     environment:
       PUBLIC_URL: ${PUBLIC_URL}
-    # The sites Caddy serves come from PUBLIC_URL: that address, and api. under its domain. An IP has no
-    # name to put api. under. As a variable of the service, changing PUBLIC_URL restarts Caddy.
+    # The site Caddy serves is the address of PUBLIC_URL: the web app and the mobile apps use the same
+    # one. As a variable of the service, changing PUBLIC_URL restarts Caddy.
     command:
       - /bin/sh
       - -c
       - |
-        address="$${PUBLIC_URL%/}"
-        host="$${address#*://}"
-        case "$${host%%[:/]*}" in
-          *[!0-9.]*) SITES="$$address, $${address%%://*}://api.$$host" ;;
-          *) SITES="$$address" ;;
-        esac
-        export SITES
+        SITE="$${PUBLIC_URL%/}"
+        export SITE
         exec caddy run --config /etc/caddy/Caddyfile --adapter caddyfile
     ports:
       - "80:80"
@@ -217,9 +211,9 @@ services:
 
 configs:
   caddyfile:
-    # {$$SITES} reaches Caddy as {$SITES}: its own way of reading a variable.
+    # {$$SITE} reaches Caddy as {$SITE}: its own way of reading a variable.
     content: |
-      {$$SITES} {
+      {$$SITE} {
         reverse_proxy opengps:3000
       }
 
