@@ -4,7 +4,7 @@
 import { generateKeyPairSync, randomBytes, verify } from "node:crypto";
 import http from "node:http";
 import type { AddressInfo } from "node:net";
-import { APP_OAUTH_RETURN, APP_OAUTH_START, APP_SCHEME, LEGAL_VERSION } from "@opengps/shared";
+import { APP_OAUTH_PAGE, APP_OAUTH_RETURN, APP_OAUTH_START, APP_SCHEME, LEGAL_VERSION } from "@opengps/shared";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { appleClientSecret } from "../src/core/oauth";
 import { type Harness, type TestUser, createHarness } from "./harness";
@@ -82,8 +82,11 @@ async function through(person: { email: string; name: string; verified?: boolean
   expect(back.status).toBe(302);
   return { location: String(back.headers.location), cookie: cookiesOf(back.headers["set-cookie"]) };
 }
-/** The app's trip, as the system's browser follows it: from the platform to the service, back, and on to the app's address. */
-async function throughApp(person: { email: string; name: string; verified?: boolean }, query: string): Promise<string> {
+/**
+ * The app's trip, as the system's browser follows it: from the platform to the service and back. Where the way back
+ * leads (the page to confirm on, or the app's address) and the browser's cookie.
+ */
+async function throughApp(person: { email: string; name: string; verified?: boolean }, query: string): Promise<{ location: string; cookie: string }> {
   const start = await h.request("GET", `${APP_OAUTH_START}?${query}`);
   expect(start.status).toBe(302);
   const there = new URL(String(start.headers.location));
@@ -96,10 +99,21 @@ async function throughApp(person: { email: string; name: string; verified?: bool
   expect(back.status).toBe(302);
   const location = String(back.headers.location);
   expect(location.startsWith(APP_OAUTH_RETURN)).toBe(true);
-  const last = await h.request("GET", location, { cookie: cookiesOf(back.headers["set-cookie"]) });
+  const cookie = cookiesOf(back.headers["set-cookie"]);
+  const last = await h.request("GET", location, { cookie });
   expect(last.status).toBe(302);
-  return String(last.headers.location);
+  return { location: String(last.headers.location), cookie };
 }
+/** The person confirms on the platform's page the account they go back to the app with: the pass the app gets. */
+async function confirmForApp(cookie: string): Promise<string> {
+  const confirmed = await h.request("POST", APP_OAUTH_RETURN, { cookie, body: {} });
+  expect(confirmed.status, JSON.stringify(confirmed.json)).toBe(200);
+  const url = new URL(confirmed.json.url as string);
+  expect(`${url.protocol}//${url.host}`).toBe(`${APP_SCHEME}://oauth`);
+  return url.searchParams.get("token") as string;
+}
+/** How many passes the platform has handed out and not used yet. */
+const passes = async () => Number((await h.db.core.query(`SELECT count(*) AS n FROM auth.verification WHERE identifier LIKE 'one-time-token:%'`)).rows[0].n);
 const signUpThrough = (person: { email: string; name: string; verified?: boolean }) => through(person, { requestSignUp: true, newUserCallbackURL: "/", additionalData: { legalVersion: LEGAL_VERSION } });
 async function meOf(cookie: string) {
   const me = await h.request("GET", "/api/me", { cookie });
@@ -208,16 +222,19 @@ describe("services to sign in with", () => {
     expect(accounts.rows.map((r) => r.providerId)).toEqual(["credential", "custom"]);
   });
 
-  it("the mobile app gets the new session with a pass that works once (ADR-0013)", async () => {
+  it("the mobile app gets the new session with a pass that works once, after the person confirms (ADR-0013, ADR-0014)", async () => {
     const email = `oidc-${rand()}@prueba.test`;
-    // Signing up from the app, with the terms it showed: the system's browser starts the trip at the platform...
-    const toApp = await throughApp({ email, name: "Desde la App" }, `provider=custom&legalVersion=${LEGAL_VERSION}`);
-    const appUrl = new URL(toApp);
-    expect(`${appUrl.protocol}//${appUrl.host}`).toBe(`${APP_SCHEME}://oauth`);
-    const token = appUrl.searchParams.get("token") as string;
+    const before = await passes();
+    // Signing up from the app, with the terms it showed: the system's browser starts the trip at the platform and
+    // comes back to the page where the person confirms. Until then there is no pass.
+    const trip = await throughApp({ email, name: "Desde la App" }, `provider=custom&legalVersion=${LEGAL_VERSION}`);
+    expect(trip.location).toBe(APP_OAUTH_PAGE);
+    expect(await passes()).toBe(before);
+    const token = await confirmForApp(trip.cookie);
     expect(token.length).toBeGreaterThan(20);
+    expect(await passes()).toBe(before + 1);
 
-    // ...and the app exchanges the pass for its own cookie, without the browser's: it is the same person.
+    // The app exchanges the pass for its own cookie, without the browser's: it is the same person.
     const exchanged = await h.request("POST", "/api/auth/one-time-token/verify", { body: { token } });
     expect(exchanged.status, JSON.stringify(exchanged.json)).toBe(200);
     const me = await meOf(cookiesOf(exchanged.headers["set-cookie"]));
@@ -227,14 +244,14 @@ describe("services to sign in with", () => {
     // A pass works only once.
     expect((await h.request("POST", "/api/auth/one-time-token/verify", { body: { token } })).status).toBe(400);
     // Afterwards, signing in from the app without the terms finds the same person.
-    const again = new URL(await throughApp({ email, name: "Desde la App" }, "provider=custom"));
-    const second = await h.request("POST", "/api/auth/one-time-token/verify", { body: { token: again.searchParams.get("token") } });
+    const again = await throughApp({ email, name: "Desde la App" }, "provider=custom");
+    const second = await h.request("POST", "/api/auth/one-time-token/verify", { body: { token: await confirmForApp(again.cookie) } });
     expect((await meOf(cookiesOf(second.headers["set-cookie"]))).json.user.id).toBe(me.json.user.id);
   });
 
   it("the app hears why the service did not let the person in, and nobody else gets a pass", async () => {
-    // Someone without an account, signing in without the terms: the reason reaches the app.
-    expect(await throughApp({ email: `oidc-${rand()}@prueba.test`, name: "Nadie" }, "provider=custom")).toBe(`${APP_SCHEME}://oauth?error=signup_disabled`);
+    // Someone without an account, signing in without the terms: the reason reaches the app, without the page.
+    expect((await throughApp({ email: `oidc-${rand()}@prueba.test`, name: "Nadie" }, "provider=custom")).location).toBe(`${APP_SCHEME}://oauth?error=signup_disabled`);
     // A service the platform does not have.
     expect(String((await h.request("GET", `${APP_OAUTH_START}?provider=github`)).headers.location)).toBe(`${APP_SCHEME}://oauth?error=unknown_provider`);
     // Without a session there is no pass.
@@ -243,6 +260,16 @@ describe("services to sign in with", () => {
     const old = await h.signUp("Sesión Vieja");
     await h.db.core.query(`UPDATE auth.session SET "createdAt" = now() - interval '10 minutes' WHERE "userId" = $1`, [old.userId]);
     expect(String((await h.request("GET", APP_OAUTH_RETURN, as(old))).headers.location)).toBe(`${APP_SCHEME}://oauth?error=no_session`);
+    expect((await h.request("POST", APP_OAUTH_RETURN, { ...as(old), body: {} })).status).toBe(401);
+    // Confirming without the session gives nothing either.
+    expect((await h.request("POST", APP_OAUTH_RETURN, { body: {} })).status).toBe(401);
+    // Another website cannot confirm for the person, even with a fresh session from a trip it started (ADR-0014).
+    const before = await passes();
+    const trip = await throughApp({ email: `oidc-${rand()}@prueba.test`, name: "Sin Confirmar" }, `provider=custom&legalVersion=${LEGAL_VERSION}`);
+    expect(trip.location).toBe(APP_OAUTH_PAGE);
+    expect((await h.request("POST", APP_OAUTH_RETURN, { cookie: trip.cookie, body: {}, origin: "https://pagina-ajena.example" })).status).toBe(403);
+    expect(await passes()).toBe(before);
+    expect((await meOf(trip.cookie)).status).toBe(200);
     // Only the platform hands out passes: asking for one from outside does not work.
     const fresh = await h.signUp("Sesión Nueva");
     expect((await h.request("GET", "/api/auth/one-time-token/generate", as(fresh))).status).toBe(400);

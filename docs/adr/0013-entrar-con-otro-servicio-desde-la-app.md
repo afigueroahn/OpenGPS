@@ -1,6 +1,6 @@
 # ADR-0013: Entrar con otro servicio desde la app móvil
 
-- **Estado:** Aceptada
+- **Estado:** Aceptada. Superseded by ADR-0014 en un punto: la vuelta ya no entrega el pase sin que la persona lo confirme
 - **Fecha:** 2026-11-26
 - **Decide:** Angel Figueroa (@afigueroahn)
 

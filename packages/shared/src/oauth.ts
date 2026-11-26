@@ -16,8 +16,13 @@ export const APP_SCHEME = "opengps";
  * comes back.
  */
 export const APP_OAUTH_START = "/api/app/oauth/start";
-/** Where the service sends the person back: the platform turns the new session into a pass for the app. */
+/**
+ * Where the service sends the person back (GET), and where the web page asks for the pass once the person
+ * confirms (POST): the platform turns the new session into a pass for the app.
+ */
 export const APP_OAUTH_RETURN = "/api/app/oauth";
+/** The web page where the person confirms the account they go back to the app with, before the pass exists (ADR-0014). */
+export const APP_OAUTH_PAGE = "/app-sign-in";
 /** A pass is handed only for a session this young: one that the trip to the service just created. */
 export const APP_OAUTH_FRESH_S = 5 * 60;
 

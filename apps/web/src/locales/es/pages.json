@@ -67,6 +67,15 @@
       "submit": "Guardar y entrar"
     }
   },
+  "appSignIn": {
+    "title": "Entrar a la app",
+    "lead": "Vas a entrar a la app con la cuenta <b>{{email}}</b>.",
+    "confirm": "Volver a la app",
+    "cancel": "Cancelar",
+    "notYou": "Si no estabas entrando desde la app, no sigas: cancela o cierra esta página.",
+    "failed": "No se pudo volver a la app. Inténtalo de nuevo.",
+    "expired": "Esta entrada ya no sirve. Vuelve a la app e inténtalo de nuevo."
+  },
   "delivery": {
     "done": "Entregado",
     "doneAt": "El {{date}}.",

@@ -7,6 +7,7 @@ import {
   alertRuleSchema,
   API_VERSION,
   type ApiError,
+  APP_OAUTH_PAGE,
   APP_OAUTH_RETURN,
   APP_OAUTH_START,
   APP_SCHEME,
@@ -481,14 +482,22 @@ export async function buildApp(deps: AppDeps): Promise<App> {
     }
   });
 
-  // The way back: the session the trip just created becomes a one-time pass, and the person goes to the app's
-  // address with it. An error the service gave goes to the app as it came.
+  // The way back: with the session the trip just created, the person confirms on the web's page which account
+  // goes back to the app (ADR-0014). An error the service gave goes to the app as it came.
   app.get<{ Querystring: { error?: string; error_description?: string } }>(APP_OAUTH_RETURN, async (request, reply) => {
-    const back = (params: Record<string, string>) => toApp(reply, params);
     const { error, error_description: description } = request.query;
-    if (error) return back({ error: error.slice(0, 100), ...(description ? { error_description: description.slice(0, 500) } : {}) });
+    if (error) return toApp(reply, { error: error.slice(0, 100), ...(description ? { error_description: description.slice(0, 500) } : {}) });
+    if (!(await auth.canGoBackToApp(request.headers))) return toApp(reply, { error: "no_session" });
+    return reply.redirect(APP_OAUTH_PAGE, 302);
+  });
+
+  // The person confirmed on that page: only now the session becomes a one-time pass, and the page takes the person
+  // to the app's address with it. Another website cannot ask for it: it does not get the session's cookie, and
+  // the platform turns away its requests.
+  app.post(APP_OAUTH_RETURN, async (request) => {
     const token = await auth.appPass(request.headers);
-    return back(token ? { token } : { error: "no_session" });
+    if (!token) throw unauthorized();
+    return { url: `${APP_SCHEME}://oauth?${new URLSearchParams({ token })}` };
   });
 
   // ─── With a session ────────────────────────────────────────────────────────
