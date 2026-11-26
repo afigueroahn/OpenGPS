@@ -622,7 +622,7 @@
         "password": "Password",
         "from": "Sender",
         "fromNote": "Who appears as the author of the emails. The domain must be authorized with your provider.",
-        "fromPlaceholder": "OpenGPS <alerts@example.com>",
+        "fromPlaceholder": "OpenGPS <no-reply@opengps.dev>",
         "saveFirst": "Save before testing",
         "test": "Send a test email",
         "reset": "Your own mail server stops being used and its details and saved password are deleted. The platform stops sending email.",

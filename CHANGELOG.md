@@ -13,7 +13,8 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/).
   `no-reply@localhost` (en Dokploy, el nombre interno del compose) y Correo aparecía
   encendido sin un servidor con qué enviar. Mientras nadie lo encienda ni lo apague en la
   consola, Correo sigue al servidor de correo, así que una instalación que ya envía
-  correos los sigue enviando (#112).
+  correos los sigue enviando. El ejemplo del remitente pasa a ser
+  `OpenGPS <no-reply@opengps.dev>` (#112).
 
 ## [0.8.0] - 2026-11-26
 

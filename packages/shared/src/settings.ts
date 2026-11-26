@@ -101,7 +101,7 @@ export interface MailSettings {
   user: string;
   /** A key is saved. The key never comes back to the admin console. */
   hasPassword: boolean;
-  /** Sender: "OpenGPS <avisos@ejemplo.com>". */
+  /** Sender: "OpenGPS <no-reply@opengps.dev>". */
   from: string;
 }
 
