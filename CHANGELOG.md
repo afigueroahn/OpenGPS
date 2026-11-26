@@ -14,6 +14,16 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/).
   `pnpm typecheck` y `pnpm test` la revisan también. Todavía no está en la App Store
   (ADR-0015, ADR-0016, ADR-0017, ADR-0018, #111).
 
+### Corregido
+
+- En una instalación nueva, el remitente del servidor de correo viene vacío y el canal
+  Correo, apagado. Antes el remitente traía el nombre de la plataforma con
+  `no-reply@localhost` (en Dokploy, el nombre interno del compose) y Correo aparecía
+  encendido sin un servidor con qué enviar. Mientras nadie lo encienda ni lo apague en la
+  consola, Correo sigue al servidor de correo, así que una instalación que ya envía
+  correos los sigue enviando. El ejemplo del remitente pasa a ser
+  `OpenGPS <no-reply@opengps.dev>` (#112).
+
 ### Seguridad
 
 - La auditoría de dependencias fuerza las versiones corregidas de `zod`, `glob` y

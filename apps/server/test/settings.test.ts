@@ -361,6 +361,40 @@ describe("platform settings", () => {
     expect(log.rows[0]?.detail).toEqual({ section: "mail" });
   });
 
+  it("a new platform has no sender written, and email is off until there is a mail server", async () => {
+    // Whatever the platform is called: Dokploy, for one, gives it the name of its compose.
+    expect(loadConfig({ ...process.env, APP_NAME: "opengps-opengps-skdmgp" }).smtp.from).toBe("");
+    const before = (await view()).channels;
+    const channelsWith = (email: boolean) => {
+      const { hasToken: _token, ...sms } = before.sms;
+      const { headerNames: _headers, ...webhook } = before.webhook;
+      return { email: { enabled: email }, sms, webhook, push: before.push };
+    };
+    const offered = async () => (await h.request("GET", "/api/notifications", as(customer))).json.options.channels as string[];
+
+    // As it comes: no sender, and email off, so the accounts cannot choose it.
+    expect((await admin("DELETE", "/api/admin/settings/mail")).status).toBe(200);
+    const fresh = (await admin("DELETE", "/api/admin/settings/channels")).json.settings as PlatformSettings;
+    expect(fresh.mail).toMatchObject({ custom: false, from: "" });
+    expect(fresh.channels.email).toEqual({ enabled: false });
+    expect(await offered()).not.toContain("email");
+
+    // While the console has not chosen, email follows the mail server.
+    const mail = { custom: true, host: "smtp.ejemplo.com", port: 587, security: "starttls", user: "u", password: "otra-clave-99", from: "A <a@ejemplo.com>" };
+    expect((await save("mail", mail)).json.settings.channels.email).toEqual({ enabled: true });
+    expect(await offered()).toContain("email");
+    expect((await save("mail", { ...mail, custom: false })).json.settings.channels.email).toEqual({ enabled: false });
+
+    // What the owner chose stays, with or without a mail server.
+    expect((await save("channels", channelsWith(true))).status).toBe(200);
+    expect((await save("mail", { ...mail, custom: false })).json.settings.channels.email).toEqual({ enabled: true });
+    expect((await save("channels", channelsWith(false))).status).toBe(200);
+    expect((await save("mail", mail)).json.settings.channels.email).toEqual({ enabled: false });
+
+    expect((await admin("DELETE", "/api/admin/settings/mail")).status).toBe(200);
+    expect((await save("channels", channelsWith(before.email.enabled))).status).toBe(200);
+  });
+
   it("a key encrypted with another server secret is not read, and breaks nothing", () => {
     const sealed = createVault("un-secreto-del-servidor-de-32-caracteres!").seal("clave");
     expect(createVault("un-secreto-del-servidor-de-32-caracteres!").open(sealed)).toBe("clave");

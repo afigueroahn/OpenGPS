@@ -182,7 +182,8 @@ export function createSettings(deps: { db: Db; bus: Bus; config: Config }): Sett
     const d = CHANNELS_DEFAULT;
     const s = stored.channels;
     return {
-      email: { ...d.email, ...s?.email },
+      // Until the console turns email on or off, it follows the mail server: on when there is one to send with.
+      email: s?.email ?? { enabled: mail().custom },
       sms: { enabled: d.sms.enabled, accountSid: d.sms.accountSid, from: d.sms.from, monthlyCap: d.sms.monthlyCap, token: null, ...s?.sms },
       webhook: { enabled: s?.webhook?.enabled ?? d.webhook.enabled, method: s?.webhook?.method ?? d.webhook.method, call: s?.webhook?.call ?? null },
       push: { ...d.push, ...s?.push },
