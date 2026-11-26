@@ -622,7 +622,7 @@
         "password": "Clave",
         "from": "Remitente",
         "fromNote": "Quién aparece como autor de los correos. El dominio debe estar autorizado en tu proveedor.",
-        "fromPlaceholder": "OpenGPS <avisos@ejemplo.com>",
+        "fromPlaceholder": "OpenGPS <no-reply@opengps.dev>",
         "saveFirst": "Guarda antes de probar",
         "test": "Enviar un correo de prueba",
         "reset": "Se deja de usar el servidor de correo propio y se borran sus datos y su clave guardada. La plataforma deja de enviar correos.",
