@@ -5,6 +5,22 @@ import { z } from "zod";
 /** Services people can sign in and sign up with, besides email and password. `custom` is any other that speaks OpenID Connect. */
 export const OAUTH_PROVIDERS = ["google", "github", "facebook", "apple", "custom"] as const;
 export type OAuthProvider = (typeof OAUTH_PROVIDERS)[number];
+/**
+ * The mobile app's own address: the platform sends the person back there after signing in with a service, with
+ * a one-time pass the app exchanges for its session (ADR-0013).
+ */
+export const APP_SCHEME = "opengps";
+/**
+ * Where the app opens the system's browser to sign in with a service: `?provider=` and, to sign up as well,
+ * `&legalVersion=` with the terms the app showed. The trip starts in the browser, which has to be the one that
+ * comes back.
+ */
+export const APP_OAUTH_START = "/api/app/oauth/start";
+/** Where the service sends the person back: the platform turns the new session into a pass for the app. */
+export const APP_OAUTH_RETURN = "/api/app/oauth";
+/** A pass is handed only for a session this young: one that the trip to the service just created. */
+export const APP_OAUTH_FRESH_S = 5 * 60;
+
 /** How someone signs in: with their email and password, or with one of those services. */
 export const SIGN_IN_METHODS = ["email", ...OAUTH_PROVIDERS] as const;
 export type SignInMethod = (typeof SIGN_IN_METHODS)[number];

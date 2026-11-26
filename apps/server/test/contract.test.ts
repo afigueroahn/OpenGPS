@@ -42,7 +42,7 @@ describe("API contract", () => {
     expect((await h.request("GET", "/api/health", {})).status).toBe(200);
     expect((await h.request("GET", "/api/config", {})).status).toBe(200);
     // All the read routes that need a session: without one, 401.
-    const reads = documented().filter((r) => r.startsWith("GET ") && !["/api/health", "/api/config", "/api/auth/*", "/api/invitations/:id", "/api/v1", "/api/v1/openapi.json"].includes(r.slice(4)));
+    const reads = documented().filter((r) => r.startsWith("GET ") && !["/api/health", "/api/config", "/api/auth/*", "/api/app/oauth/start", "/api/app/oauth", "/api/invitations/:id", "/api/v1", "/api/v1/openapi.json"].includes(r.slice(4)));
     for (const route of reads) {
       const url = route.slice(4).replace(":id", "0195b8a0-0000-7000-8000-000000000000");
       const res = await h.request("GET", url, {});
