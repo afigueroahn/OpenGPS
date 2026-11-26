@@ -253,34 +253,41 @@ export async function cancelCommand(deps: ModuleDeps, actor: Actor, vehicleId: s
 
 // ─── Sending and confirmation ────────────────────────────────────────────────
 
-/** Tries to send a waiting order. If it is not safe or the device is not there, notes why and keeps waiting. */
+/**
+ * Tries to send a waiting order. If it is not safe or the device is not there, notes why and keeps waiting.
+ *
+ * The request that creates an order and the next position (or the periodic check) can try to send it at the
+ * same moment. So the order is held while it is sent: whoever finds it held leaves it, and the device
+ * receives it only once. Everything that changes the order is written with that same hold.
+ */
 export async function dispatch(deps: ModuleDeps, commandId: string, target: Target): Promise<void> {
-  const r = await deps.db.core.query<{ kind: CommandKind; attempts: number }>(`SELECT kind, attempts FROM gps.commands WHERE id = $1 AND status = 'waiting' AND finished_at IS NULL`, [commandId]);
-  const command = r.rows[0];
-  if (!command) return;
-  const wait = (note: string) => deps.db.core.query(`UPDATE gps.commands SET note = $2 WHERE id = $1 AND status = 'waiting'`, [commandId, note]);
+  const outcome = await withTransaction(deps.db.core, async (client): Promise<CommandKind | "failed" | null> => {
+    const r = await client.query<{ kind: CommandKind; attempts: number }>(
+      `SELECT kind, attempts FROM gps.commands WHERE id = $1 AND status = 'waiting' AND finished_at IS NULL FOR UPDATE SKIP LOCKED`,
+      [commandId],
+    );
+    const command = r.rows[0];
+    if (!command) return null;
 
-  if (command.kind === "lock") {
-    const check = lockSafety({ speedKmh: target.speedKmh, ignition: target.ignition, fixAgeS: ageOf(target.fixTime) });
-    if (!check.safe) {
-      await wait(storedText(deps, check.reason as Say));
-      return;
+    if (command.kind === "lock") {
+      const check = lockSafety({ speedKmh: target.speedKmh, ignition: target.ignition, fixAgeS: ageOf(target.fixTime) });
+      if (!check.safe) {
+        await client.query(`UPDATE gps.commands SET note = $2 WHERE id = $1`, [commandId, storedText(deps, check.reason as Say)]);
+        return null;
+      }
     }
-  }
-  try {
-    await deps.traccar.sendCommand(target.traccarId, command.kind === "lock" ? "engineStop" : "engineResume");
-  } catch (err) {
-    const attempts = command.attempts + 1;
-    if (attempts >= MAX_ATTEMPTS) {
-      await deps.db.core.query(`UPDATE gps.commands SET status = 'failed', finished_at = now(), attempts = $2, note = $3 WHERE id = $1`, [commandId, attempts, (err as Error).message]);
-      await annotate(deps, target, "command", say("antitheft.entry.sendFailed"));
-    } else {
-      await deps.db.core.query(`UPDATE gps.commands SET attempts = $2, note = $3 WHERE id = $1`, [commandId, attempts, storedText(deps, say("antitheft.command.retrying", { error: (err as Error).message }))]);
+    try {
+      await deps.traccar.sendCommand(target.traccarId, command.kind === "lock" ? "engineStop" : "engineResume");
+    } catch (err) {
+      const attempts = command.attempts + 1;
+      if (attempts >= MAX_ATTEMPTS) {
+        await client.query(`UPDATE gps.commands SET status = 'failed', finished_at = now(), attempts = $2, note = $3 WHERE id = $1`, [commandId, attempts, (err as Error).message]);
+        return "failed";
+      }
+      await client.query(`UPDATE gps.commands SET attempts = $2, note = $3 WHERE id = $1`, [commandId, attempts, storedText(deps, say("antitheft.command.retrying", { error: (err as Error).message }))]);
+      return null;
     }
-    return;
-  }
-  const signal = LOCK_SIGNAL[target.modelId];
-  await withTransaction(deps.db.core, async (client) => {
+    const signal = LOCK_SIGNAL[target.modelId];
     // Without data that confirms it, the order ends here: sent, without knowing whether the device applied it.
     await client.query(
       `UPDATE gps.commands SET status = 'sent', sent_at = now(), attempts = attempts + 1, note = $2, finished_at = CASE WHEN $3 THEN NULL ELSE now() END WHERE id = $1`,
@@ -291,15 +298,18 @@ export async function dispatch(deps: ModuleDeps, commandId: string, target: Targ
        ON CONFLICT (vehicle_id) DO UPDATE SET lock_state = EXCLUDED.lock_state, lock_confirmed = false, lock_changed_at = now()`,
       [target.vehicleId, command.kind === "lock" ? "locked" : "unlocked"],
     );
+    return command.kind;
   });
+  if (outcome === "failed") await annotate(deps, target, "command", say("antitheft.entry.sendFailed"));
+  if (outcome === null || outcome === "failed") return;
   await recordEvent(deps, target, {
-    type: command.kind === "lock" ? "engine_locked" : "engine_unlocked",
+    type: outcome === "lock" ? "engine_locked" : "engine_unlocked",
     at: Date.now(),
     lat: target.lat,
     lon: target.lon,
     speedKmh: target.speedKmh,
   });
-  await annotate(deps, target, "command", say(command.kind === "lock" ? "antitheft.entry.lockSent" : "antitheft.entry.unlockSent"));
+  await annotate(deps, target, "command", say(outcome === "lock" ? "antitheft.entry.lockSent" : "antitheft.entry.unlockSent"));
   deps.bus.emit("security", { orgId: target.orgId, groupId: target.groupId, vehicleId: target.vehicleId });
 }
 
