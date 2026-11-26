@@ -9,11 +9,11 @@
 // that speaks OpenID Connect). Those change from the console: the library is
 // built again with them, without restarting.
 import { randomBytes } from "node:crypto";
-import { LEGAL_VERSION, type Language, PASSWORD_MAX, PASSWORD_MIN } from "@opengps/shared";
+import { APP_OAUTH_FRESH_S, LEGAL_VERSION, type Language, PASSWORD_MAX, PASSWORD_MIN } from "@opengps/shared";
 import { betterAuth } from "better-auth";
 import { APIError, createAuthMiddleware, getOAuthState } from "better-auth/api";
 import { fromNodeHeaders } from "better-auth/node";
-import { admin, genericOAuth, organization } from "better-auth/plugins";
+import { admin, genericOAuth, oneTimeToken, organization } from "better-auth/plugins";
 import type { IncomingHttpHeaders } from "node:http";
 import type { Config } from "./config";
 import { type Access, claimPlatformOwner, firstAccountWithoutMail, isPlatformOwner, resolveAccess } from "./core/access";
@@ -247,6 +247,9 @@ export function createAuth(config: Config, db: Db, mailer: Mailer, beforeUserDel
         }),
         admin(),
         genericOAuth({ config: customProviders() }),
+        // The pass that takes a session from the system's browser to the mobile app (ADR-0013): it lasts a minute,
+        // is kept hashed, works once, and only the platform hands it out.
+        oneTimeToken({ expiresIn: 1, storeToken: "hashed", disableClientRequest: true }),
       ],
 
       hooks: {
@@ -351,6 +354,20 @@ export function createAuth(config: Config, db: Db, mailer: Mailer, beforeUserDel
     return { userId: user.id, userName: user.name, email: user.email, platformAdmin, language, ...access };
   }
 
+  /**
+   * A one-time pass for the mobile app, from the session the trip to another service just left in the system's
+   * browser (ADR-0013). An older session is not handed over: a page that opens this in a browser where someone
+   * already had a session gets nothing.
+   */
+  async function appPass(headers: IncomingHttpHeaders): Promise<string | null> {
+    const h = fromNodeHeaders(headers);
+    const result = await auth.api.getSession({ headers: h });
+    if (!result) return null;
+    if (Date.now() - new Date(result.session.createdAt).getTime() > APP_OAUTH_FRESH_S * 1000) return null;
+    const { token } = await auth.api.generateOneTimeToken({ headers: h });
+    return token;
+  }
+
   /** Accepts an invitation with the session of whoever received it. Returns the id of the accepted invitation. */
   async function acceptInvitation(headers: IncomingHttpHeaders, invitationId: string): Promise<void> {
     try {
@@ -391,5 +408,6 @@ export function createAuth(config: Config, db: Db, mailer: Mailer, beforeUserDel
     ensureOrganization,
     acceptInvitation,
     setActiveAccount,
+    appPass,
   };
 }

@@ -7,6 +7,9 @@ import {
   alertRuleSchema,
   API_VERSION,
   type ApiError,
+  APP_OAUTH_RETURN,
+  APP_OAUTH_START,
+  APP_SCHEME,
   attachDeviceSchema,
   createVehicleSchema,
   EXPORT_FORMATS,
@@ -35,7 +38,7 @@ import {
   issueSay,
 } from "@opengps/shared";
 import { fromNodeHeaders } from "better-auth/node";
-import Fastify, { type FastifyInstance, type FastifyRequest } from "fastify";
+import Fastify, { type FastifyInstance, type FastifyReply, type FastifyRequest } from "fastify";
 import { z } from "zod";
 import { type Auth, CLIENT_IP_HEADER, OWN_ORIGIN_HEADER, type SessionContext } from "../auth";
 import type { Bus } from "../bus";
@@ -446,6 +449,46 @@ export async function buildApp(deps: AppDeps): Promise<App> {
       if (cookies.length > 0) reply.header("set-cookie", cookies);
       return reply.send(response.body ? await response.text() : null);
     },
+  });
+
+  // The mobile app signs in with another service in the system's browser (ADR-0013). The trip starts here, in that
+  // browser, because the session library checks that the browser that comes back is the one that left. Whoever
+  // has no account yet gets one, with the terms the app showed next to the buttons.
+  const toApp = (reply: FastifyReply, params: Record<string, string>) => reply.redirect(`${APP_SCHEME}://oauth?${new URLSearchParams(params)}`, 302);
+  app.get<{ Querystring: { provider?: string; legalVersion?: string } }>(APP_OAUTH_START, async (request, reply) => {
+    const { provider, legalVersion } = request.query;
+    if (!signInButtons(config).some((b) => b.id === provider)) return toApp(reply, { error: "unknown_provider" });
+    try {
+      const { headers, response } = await auth.auth.api.signInSocial({
+        headers: fromNodeHeaders(request.headers),
+        returnHeaders: true,
+        body: {
+          provider: provider as string,
+          disableRedirect: true,
+          callbackURL: APP_OAUTH_RETURN,
+          errorCallbackURL: APP_OAUTH_RETURN,
+          newUserCallbackURL: APP_OAUTH_RETURN,
+          ...(legalVersion ? { requestSignUp: true, additionalData: { legalVersion } } : {}),
+        },
+      });
+      const cookies = headers.getSetCookie();
+      if (cookies.length > 0) reply.header("set-cookie", cookies);
+      if (!response.url) return toApp(reply, { error: "oauth_failed" });
+      return reply.redirect(response.url, 302);
+    } catch (err) {
+      console.error("[session] could not start the trip to the service for the app:", (err as Error).message);
+      return toApp(reply, { error: "oauth_failed" });
+    }
+  });
+
+  // The way back: the session the trip just created becomes a one-time pass, and the person goes to the app's
+  // address with it. An error the service gave goes to the app as it came.
+  app.get<{ Querystring: { error?: string; error_description?: string } }>(APP_OAUTH_RETURN, async (request, reply) => {
+    const back = (params: Record<string, string>) => toApp(reply, params);
+    const { error, error_description: description } = request.query;
+    if (error) return back({ error: error.slice(0, 100), ...(description ? { error_description: description.slice(0, 500) } : {}) });
+    const token = await auth.appPass(request.headers);
+    return back(token ? { token } : { error: "no_session" });
   });
 
   // ─── With a session ────────────────────────────────────────────────────────

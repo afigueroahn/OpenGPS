@@ -6,6 +6,14 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Sin publicar]
 
+### Agregado
+
+- La app móvil puede entrar y registrarse con los servicios que tenga la plataforma
+  (Google, GitHub, Facebook, Apple u OpenID Connect). La app abre el servicio en la ventana
+  de inicio de sesión del sistema y la plataforma le devuelve un pase de un solo uso, que
+  dura un minuto, para cambiarlo por la sesión: `GET /api/app/oauth/start`,
+  `GET /api/app/oauth` y `POST /api/auth/one-time-token/verify` (ADR-0013, #101).
+
 ## [0.7.1] - 2026-11-26
 
 ### Corregido
