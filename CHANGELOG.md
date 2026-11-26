@@ -6,6 +6,8 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Sin publicar]
 
+## [0.7.0] - 2026-11-25
+
 ### Eliminado
 
 - `api.<dominio>` ya no hace falta: la web y las apps usan una sola dirección, la de
