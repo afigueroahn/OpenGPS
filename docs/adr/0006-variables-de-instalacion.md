@@ -1,6 +1,6 @@
 # ADR-0006: Variables de instalación, solo las que hacen falta
 
-- **Estado:** Aceptada
+- **Estado:** Aceptada. Superseded by ADR-0012 en un punto: Caddy ya no atiende `api.` bajo el dominio
 - **Fecha:** 2026-11-25
 - **Decide:** Angel Figueroa (@afigueroahn)
 

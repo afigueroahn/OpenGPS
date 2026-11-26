@@ -6,6 +6,13 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Sin publicar]
 
+### Eliminado
+
+- `api.<dominio>` ya no hace falta: la web y las apps usan una sola dirección, la de
+  `PUBLIC_URL`, y la API para las apps es `https://<dominio>/api`. `deploy/caddy/` deja de
+  atender `api.` bajo el dominio, y la guía ya no lo pide como registro DNS ni como nombre
+  del túnel de Cloudflare. Quien lo haya creado puede borrarlo (ADR-0012, #91).
+
 ## [0.6.0] - 2026-11-25
 
 ### Cambiado

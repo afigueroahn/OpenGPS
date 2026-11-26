@@ -145,8 +145,7 @@ Con Dokploy o con Coolify, prepara el servidor como digan ellos y sigue en «Apu
 
 | Nombre | Para qué | Cómo |
 |---|---|---|
-| `tu-dominio.com` | La web | Con el túnel, lo crea Cloudflare al agregarlo como nombre público del túnel. Con otro proxy, un registro A hacia la IP del servidor |
-| `api.tu-dominio.com` | La API para las apps, que también responde en `https://tu-dominio.com/api` | Igual que el anterior |
+| `tu-dominio.com` | La web y la API que usan las apps (`https://tu-dominio.com/api`) | Con el túnel, lo crea Cloudflare al agregarlo como nombre público del túnel. Con otro proxy, un registro A hacia la IP del servidor |
 | `gw.tu-dominio.com` | La entrada de los equipos GPS | Siempre un registro A **directo** a la IP del servidor: en Cloudflare, «solo DNS» (nube gris). Cloudflare no transporta las conexiones de los equipos |
 | `www.tu-dominio.com` | Opcional: redirige al dominio | En Cloudflare, una regla de redirección hacia `https://tu-dominio.com` |
 
@@ -232,8 +231,6 @@ Caddy pone el dominio con HTTPS: pide el certificado él solo la primera vez y l
 
    Aparece el contenedor `caddy`. A los pocos segundos de levantar, `https://tu-dominio.com` abre con su certificado. Si no, `docker compose logs caddy` dice por qué no pudo conseguirlo.
 
-4. Opcional: para que la API responda también en `api.tu-dominio.com`, crea su registro DNS hacia el servidor. Caddy ya atiende ese nombre: consigue su certificado cuando el registro existe y, mientras no exista, lo sigue intentando sin afectar al dominio.
-
 Esta forma pide Docker Compose 2.23.1 o posterior (`docker compose version`), porque la configuración de Caddy va dentro del compose.
 
 ## Con Docker Compose y un túnel de Cloudflare
@@ -242,7 +239,7 @@ El túnel lleva el dominio con HTTPS hasta la plataforma sin abrir los puertos 8
 
 1. El dominio tiene que estar en tu cuenta de Cloudflare.
 2. En Cloudflare, **Zero Trust → Networks → Tunnels**, crea un túnel: tipo *Cloudflared*, entorno *Docker*. Copia su token: es el texto largo que va después de `--token` en el comando que muestra Cloudflare. No hace falta ejecutar ese comando.
-3. En el túnel, agrega dos nombres públicos (*public hostnames*): `tu-dominio.com` y `api.tu-dominio.com`, los dos con servicio **HTTP** y dirección **`opengps:3000`**. Cloudflare crea solo sus registros DNS. Si ya había registros con esos nombres, bórralos antes.
+3. En el túnel, agrega un nombre público (*public hostname*): `tu-dominio.com`, con servicio **HTTP** y dirección **`opengps:3000`**. Cloudflare crea solo su registro DNS. Si ya había un registro con ese nombre, bórralo antes.
 4. En el servidor, con el compose `docker-compose.cloudflare.yml` descargado como `docker-compose.yml`, genera las variables:
 
    ```bash

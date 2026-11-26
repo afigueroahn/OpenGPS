@@ -10,7 +10,7 @@ La forma exacta de cada dato vive en [packages/shared/src](../packages/shared/sr
 
 | Tema | Regla |
 |---|---|
-| Dirección | `https://api.<dominio>/api` para las apps; la web usa `https://<dominio>/api` |
+| Dirección | `https://<dominio>/api`, la misma para la web y las apps |
 | Formato | JSON en UTF-8, en peticiones y respuestas |
 | Sesión | Cookie de sesión de 30 días. Sin sesión, las rutas responden 401, salvo las marcadas como públicas |
 | Cuenta activa | Cada sesión trabaja sobre una cuenta. Se cambia con `POST /api/accounts/active` |
