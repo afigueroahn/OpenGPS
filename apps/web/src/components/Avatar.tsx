@@ -1,7 +1,6 @@
 // The person's round mark: their photo, or their initials when they have none
 // or it cannot be loaded. Size and colors come from whoever places it. The
-// photo goes without a background, so a transparent one shows what is behind,
-// inside a white ring.
+// photo goes alone, without a background: a transparent one shows what is behind.
 import clsx from "clsx";
 import { useState } from "react";
 
@@ -35,7 +34,7 @@ export function Avatar({
       className={clsx(
         "flex shrink-0 items-center justify-center overflow-hidden rounded-full font-semibold",
         className,
-        photo ? "border-2 border-white" : fill,
+        !photo && fill,
       )}
     >
       {photo ? <img src={photo} alt="" draggable={false} onError={() => setFailed(photo)} className="h-full w-full object-cover" /> : initialsOf(name) || "?"}

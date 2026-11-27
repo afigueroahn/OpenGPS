@@ -9,6 +9,8 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/).
 ### Cambiado
 
 - En la consola, el logo de arriba de la barra lateral lleva al inicio (#134).
+- El avatar con foto ya no lleva el aro blanco: se ve solo la foto, y si tiene fondo
+  transparente deja ver lo que hay detrás, en la web y en la app (#131).
 
 ## [0.10.0] - 2026-11-27
 
