@@ -2,11 +2,12 @@ import "@fontsource-variable/instrument-sans";
 import "@fontsource-variable/jetbrains-mono";
 import "./styles.css";
 import "./lib/i18n";
-import { APP_OAUTH_PAGE } from "@opengps/shared";
+import { APP_OAUTH_PAGE, APP_PASSKEY_PAGE } from "@opengps/shared";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { StrictMode, Suspense, lazy } from "react";
 import { createRoot } from "react-dom/client";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router";
+import { AppPasskey } from "./routes/app-passkey";
 import { AppSignIn } from "./routes/app-sign-in";
 import { CheckEmail, ForgotPassword, Login, Register, ResetPassword } from "./routes/auth";
 import { Invitation } from "./routes/invitation";
@@ -50,6 +51,7 @@ createRoot(document.getElementById("root") as HTMLElement).render(
           <Route path="/reset-password" element={<ResetPassword />} />
           <Route path="/invitation" element={<Invitation />} />
           <Route path={APP_OAUTH_PAGE} element={<AppSignIn />} />
+          <Route path={APP_PASSKEY_PAGE} element={<AppPasskey />} />
           <Route path="/terms" element={<LegalPage doc="terms" />} />
           <Route path="/privacy" element={<LegalPage doc="privacy" />} />
           <Route

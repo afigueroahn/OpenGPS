@@ -2,6 +2,7 @@
 // session cookie the app keeps; the system's own cookie jar is never used.
 import {
   APP_OAUTH_PAGE,
+  APP_PASSKEY_PAGE,
   APP_OAUTH_START,
   type AccountSummary,
   type CreateVehicleInput,
@@ -281,6 +282,8 @@ export function oauthStartUrl(provider: OAuthProvider, legalVersion: string | nu
 
 /** The platform's page where the person signs in with a passkey and confirms the way back to the app (ADR-0020). */
 export const passkeyPageUrl = (): string => `${getSaved().server}${APP_OAUTH_PAGE}?via=passkey`;
+/** The platform's page where the person signs in again and creates a passkey (ADR-0023). */
+export const passkeyCreateUrl = (): string => `${getSaved().server}${APP_PASSKEY_PAGE}`;
 
 export const auth = {
   /**

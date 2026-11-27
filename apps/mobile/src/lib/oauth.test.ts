@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { problemOf, readAppReturn, readQuery, writeQuery } from "./oauth";
+import { problemOf, readAppReturn, readPasskeyReturn, readQuery, writeQuery } from "./oauth";
 
 describe("coming back to the app from another service", () => {
   it("brings the pass to exchange for the session", () => {
@@ -15,6 +15,24 @@ describe("coming back to the app from another service", () => {
     expect(readAppReturn("https://ejemplo.com/oauth?token=abc")).toBeNull();
     expect(readAppReturn("opengps://otra?token=abc")).toBeNull();
     expect(readAppReturn("no es una dirección")).toBeNull();
+  });
+});
+
+describe("coming back to the app from creating a passkey", () => {
+  it("says it was created", () => {
+    expect(readPasskeyReturn("opengps://passkey?created=1")).toEqual({ created: true });
+  });
+
+  it("brings the reason when it was not", () => {
+    expect(readPasskeyReturn("opengps://passkey?error=access_denied")).toEqual({ error: "access_denied" });
+    expect(readPasskeyReturn("opengps://passkey?error=unavailable")).toEqual({ error: "unavailable" });
+    expect(readPasskeyReturn("opengps://passkey")).toEqual({ error: "failed" });
+  });
+
+  it("ignores any other address", () => {
+    expect(readPasskeyReturn("opengps://oauth?token=abc")).toBeNull();
+    expect(readPasskeyReturn("opengps://passkeys?created=1")).toBeNull();
+    expect(readPasskeyReturn("https://ejemplo.com/passkey?created=1")).toBeNull();
   });
 });
 

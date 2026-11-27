@@ -23,6 +23,13 @@ export const APP_OAUTH_START = "/api/app/oauth/start";
 export const APP_OAUTH_RETURN = "/api/app/oauth";
 /** The web page where the person confirms the account they go back to the app with, before the pass exists (ADR-0014). */
 export const APP_OAUTH_PAGE = "/app-sign-in";
+/**
+ * The web page where the person creates a passkey from the mobile app (ADR-0023), in the system's sign-in window and
+ * without the app's session: they sign in again there, so the session is fresh.
+ */
+export const APP_PASSKEY_PAGE = "/app-passkey";
+/** Where that page sends the person back to the app: `?created=1`, or `?error=` with the reason. */
+export const APP_PASSKEY_RETURN = `${APP_SCHEME}://passkey`;
 /** A pass is handed only for a session this young: one that the trip to the service just created. */
 export const APP_OAUTH_FRESH_S = 5 * 60;
 
