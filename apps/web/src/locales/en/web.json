@@ -417,6 +417,11 @@
         "secret": "Client secret",
         "scopes": "Scopes it asks for",
         "scopesNote": "Separated by spaces. openid and email are needed."
+      },
+      "passkeys": {
+        "title": "Passkeys",
+        "note": "Sign in without a password, with Face ID, a fingerprint, Windows Hello or a security key. Each person creates theirs in their profile.",
+        "noHttps": "This address does not allow them: passkeys need HTTPS and a domain."
       }
     },
     "channels": {
@@ -1073,5 +1078,29 @@
     "myVehicles": "My vehicles",
     "error": "Something went wrong. Try again.",
     "newVersion": "New version: {{version}}"
+  },
+  "passkeys": {
+    "title": "Passkeys",
+    "lead": "Sign in without a password, with Face ID, Touch ID, Windows Hello, your fingerprint or a security key. Each passkey stays on your device or in your keychain (iCloud, Google) and only works on this platform.",
+    "name": "Name",
+    "namePlaceholder": "E.g. Ana’s iPhone",
+    "unnamed": "Unnamed passkey",
+    "create": "Create passkey",
+    "created": "Created {{date}}",
+    "createdSynced": "Created {{date}} · synced",
+    "delete": "Delete {{name}}",
+    "deleteTitle": "Delete the passkey?",
+    "deleteBody": "“{{name}}” will no longer sign you in here. Delete it from your device or keychain too.",
+    "deleteConfirm": "Delete",
+    "noBrowser": "This browser cannot use passkeys.",
+    "signIn": "Sign in with a passkey",
+    "errors": {
+      "cancelled": "It was cancelled or timed out. Try again.",
+      "already": "This device already has a passkey for your account.",
+      "device": "The device could not use the passkey. Try again or sign in another way.",
+      "notFresh": "For your security, sign in again to create a passkey, then repeat this step.",
+      "unknown": "That passkey is no longer on this platform. Sign in another way and delete it from your device.",
+      "failed": "The passkey could not be checked. Try again."
+    }
   }
 }

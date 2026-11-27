@@ -64,7 +64,7 @@ describe("where a platform can have passkeys", () => {
 
 describe("passkeys", () => {
   it("a person registers one and signs in with it, with the same session as always", async () => {
-    expect((await h.request("GET", "/api/config")).json.passkeys).toBe(true);
+    expect((await h.request("GET", "/api/config")).json).toMatchObject({ passkeys: true, passkeysSupported: true });
     const key = softPasskey();
     expect((await register(ana, key, "iPhone de Ana")).status).toBe(200);
 
@@ -147,7 +147,8 @@ describe("passkeys", () => {
     expect(general.passkeysEnabled).toBe(true);
     expect((await admin("PUT", "/api/admin/settings/general", { ...general, passkeysEnabled: false })).status).toBe(200);
     try {
-      expect((await h.request("GET", "/api/config")).json.passkeys).toBe(false);
+      // Off, but the address would allow them: the console can turn them on again.
+      expect((await h.request("GET", "/api/config")).json).toMatchObject({ passkeys: false, passkeysSupported: true });
       const off = await h.request("GET", "/api/auth/passkey/generate-register-options", as(ana));
       expect(off.status).toBe(404);
       expect(off.json.error.code).toBe("passkeys_off");
@@ -162,7 +163,7 @@ describe("passkeys", () => {
     const before = h.config.publicUrl;
     h.config.publicUrl = "http://192.168.1.118:3000";
     try {
-      expect((await h.request("GET", "/api/config")).json.passkeys).toBe(false);
+      expect((await h.request("GET", "/api/config")).json).toMatchObject({ passkeys: false, passkeysSupported: false });
       expect((await h.request("GET", "/api/auth/passkey/generate-authenticate-options")).status).toBe(404);
     } finally {
       h.config.publicUrl = before;

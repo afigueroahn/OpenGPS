@@ -1,14 +1,15 @@
 // Session screens: sign in, create account, confirm email and password.
 import { useQueryClient } from "@tanstack/react-query";
 import i18n, { sayShared } from "../lib/i18n";
-import { MailCheck } from "lucide-react";
-import { type FormEvent, type ReactNode, useState } from "react";
+import { Fingerprint, MailCheck } from "lucide-react";
+import { type FormEvent, type ReactNode, useEffect, useRef, useState } from "react";
 import { Trans, useTranslation } from "react-i18next";
 import { Link, Navigate, useLocation, useNavigate, useSearchParams } from "react-router";
 import { BrandMark } from "../components/BrandMark";
 import { LanguageSwitch } from "../components/LanguageSwitch";
 import { Button, Field, Logo, Notice } from "../components/ui";
 import { ApiRequestError, auth, authMessage, safeNext } from "../lib/api";
+import { passkeyMessage, passkeysInBrowser, signInWithPasskey } from "../lib/passkeys";
 import { type OAuthProvider, PASSWORD_POLICY_DEFAULT, passwordHint, passwordProblem } from "@opengps/shared";
 import { useConfig, useMe } from "../lib/session";
 
@@ -169,6 +170,40 @@ function ServiceButtons({ from, next }: { from: "login" | "signup"; next: string
   );
 }
 
+/**
+ * Signing in with a passkey (ADR-0020): with the button, or by choosing one among the browser's suggestions on the
+ * email field. Only where the platform has passkeys and the browser can use them.
+ */
+function usePasskeySignIn(enter: () => Promise<void>) {
+  const offered = (useConfig().data?.passkeys ?? false) && passkeysInBrowser();
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const run = async (autofill: boolean) => {
+    if (!autofill) {
+      setBusy(true);
+      setError(null);
+    }
+    try {
+      if (await signInWithPasskey({ autofill })) await enter();
+    } catch (err) {
+      // A request the button replaced says nothing, and does not hide what the button's own says.
+      const message = passkeyMessage(err);
+      if (message !== null) setError(message);
+      // After the button, the browser's suggestions are offered again.
+      if (!autofill) void run(true);
+    } finally {
+      if (!autofill) setBusy(false);
+    }
+  };
+  // The latest run is kept so the suggestions are offered once, when the screen opens.
+  const latest = useRef(run);
+  latest.current = run;
+  useEffect(() => {
+    if (offered) void latest.current(true);
+  }, [offered]);
+  return { offered, busy, error, start: () => void run(false) };
+}
+
 export function Login() {
   const redirect = useRedirectIfSignedIn();
   const [params] = useSearchParams();
@@ -180,6 +215,11 @@ export function Login() {
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
   const { t } = useTranslation();
+  const enter = async () => {
+    await queryClient.invalidateQueries({ queryKey: ["me"] });
+    navigate(next ?? "/", { replace: true });
+  };
+  const passkey = usePasskeySignIn(enter);
   if (redirect) return redirect;
 
   const submit = async (e: FormEvent) => {
@@ -188,8 +228,7 @@ export function Login() {
     setError(null);
     try {
       await auth.signIn({ email: email.trim(), password });
-      await queryClient.invalidateQueries({ queryKey: ["me"] });
-      navigate(next ?? "/", { replace: true });
+      await enter();
     } catch (err) {
       if (err instanceof ApiRequestError && err.code === "EMAIL_NOT_VERIFIED") {
         navigate("/check-email", { state: { email: email.trim(), resent: true, next } });
@@ -217,7 +256,16 @@ export function Login() {
         {linkFailed && <Notice tone="error">{t("pages.auth.login.linkFailed")}</Notice>}
         {service && <Notice tone="error">{service}</Notice>}
         {params.has("reset") && <Notice tone="success">{t("pages.auth.login.passwordChanged")}</Notice>}
-        <Field label={t("pages.auth.email")} type="email" autoComplete="email" required value={email} onChange={(e) => setEmail(e.target.value)} autoFocus />
+        <Field
+          label={t("pages.auth.email")}
+          type="email"
+          // "webauthn" lets the browser suggest the saved passkeys here too.
+          autoComplete={passkey.offered ? "email webauthn" : "email"}
+          required
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          autoFocus
+        />
         <Field
           label={t("pages.auth.password")}
           type="password"
@@ -234,6 +282,14 @@ export function Login() {
           <TextLink to="/forgot-password">{t("pages.auth.login.forgot")}</TextLink>
         </p>
       </form>
+      {passkey.offered && (
+        <div className="mt-6 space-y-2.5">
+          <Button type="button" variant="secondary" size="lg" full loading={passkey.busy} onClick={passkey.start}>
+            <Fingerprint size={18} aria-hidden="true" /> {t("passkeys.signIn")}
+          </Button>
+          {passkey.error && <Notice tone="error">{passkey.error}</Notice>}
+        </div>
+      )}
       <div className="mt-6">
         <ServiceButtons from="login" next={next} />
       </div>

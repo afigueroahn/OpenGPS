@@ -100,6 +100,8 @@ export interface PublicConfig {
   signIn: { id: OAuthProvider; name: string }[];
   /** People can register passkeys and sign in with them (ADR-0020): the platform has HTTPS and a domain name, and the console did not turn them off. */
   passkeys: boolean;
+  /** The platform's address allows passkeys (HTTPS and a domain name), whether or not the console has them on. */
+  passkeysSupported: boolean;
   /** What is required of a new password. */
   passwordPolicy: PasswordPolicy;
   /** Maximum size of a file uploaded by a user, in MB. */
