@@ -12,6 +12,9 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/).
   política de la plataforma. «Cerrar la sesión en los demás dispositivos», marcada de entrada,
   cierra las otras sesiones y deja abierta la de esa pestaña. Quien entra con otro servicio o
   con una passkey recibe en su correo el enlace para crear una (ADR-0028, #162).
+- Lo mismo en la app para iPhone y Android: en Cuenta, «Contraseña» abre una pantalla para
+  cambiarla, con «Cerrar la sesión en los demás dispositivos» encendido de entrada; la app
+  sigue dentro con la sesión nueva. Quien no tiene contraseña pide ahí el enlace (#163).
 
 ## [0.13.0] - 2026-11-27
 

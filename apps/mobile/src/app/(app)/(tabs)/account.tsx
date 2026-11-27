@@ -89,6 +89,9 @@ export default function AccountScreen() {
           </Card>
         )}
       </Pressable>
+      <Card style={styles.password}>
+        <LinkRow label={t("password.title")} {...(me.user.hasPassword ? {} : { value: t("password.none") })} onPress={() => router.push("/password")} last testID="password" />
+      </Card>
       <PasskeysSection />
 
       <SectionTitle text={t("account.accounts")} />
@@ -163,6 +166,7 @@ const styles = StyleSheet.create({
   content: { padding: 16, paddingBottom: 40 },
   profile: { flexDirection: "row", alignItems: "center", gap: 14, paddingVertical: 8 },
   who: { flex: 1, gap: 2 },
+  password: { marginTop: 10 },
   name: { fontFamily: FONT.bold, fontSize: 20 },
   email: { fontFamily: FONT.regular, fontSize: 14 },
   accountRow: { flexDirection: "row", alignItems: "center", paddingVertical: 14, gap: 12 },

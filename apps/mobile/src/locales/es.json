@@ -428,6 +428,20 @@
     "badName": "Escribe tu nombre, de al menos 2 letras.",
     "badPhone": "Escribe el teléfono con su código de país, por ejemplo +50499887766."
   },
+  "password": {
+    "title": "Contraseña",
+    "none": "Sin contraseña",
+    "current": "Contraseña actual",
+    "new": "Contraseña nueva",
+    "others": "Cerrar la sesión en los demás dispositivos",
+    "save": "Cambiar contraseña",
+    "changed": "Listo: tu contraseña cambió.",
+    "changedOthers": "Listo: tu contraseña cambió y cerramos tu sesión en los demás dispositivos.",
+    "wrongCurrent": "La contraseña actual no es correcta.",
+    "noneLead": "Entras con otro servicio o con una passkey, así que no tienes contraseña. Si quieres una, te enviamos a tu correo un enlace para crearla.",
+    "send": "Enviar enlace",
+    "sent": "Te enviamos el enlace a {{email}}. Ábrelo para crear tu contraseña."
+  },
   "deleteAccount": {
     "open": "Eliminar mi cuenta",
     "title": "Eliminar mi cuenta",

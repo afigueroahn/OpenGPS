@@ -317,6 +317,9 @@ export const auth = {
     api<unknown>("/api/auth/send-verification-email", { method: "POST", body: { email, callbackURL: VERIFIED_PAGE }, anonymous: true }),
   /** Deletes the person and the accounts they own. Asks for their password; whoever has none, a recent session. */
   deleteAccount: (password: string | null) => api<unknown>("/api/auth/delete-user", { method: "POST", body: password ? { password } : {} }),
+  /** With the current one. Closing the other sessions keeps the app's, with a new cookie that `api` saves (ADR-0028). */
+  changePassword: (currentPassword: string, newPassword: string, revokeOtherSessions: boolean) =>
+    api<unknown>("/api/auth/change-password", { method: "POST", body: { currentPassword, newPassword, revokeOtherSessions } }),
 };
 
 // ─── Session messages ────────────────────────────────────────────────────────
