@@ -51,6 +51,21 @@ export const CLIENT_IP_HEADER = "x-real-ip";
  */
 export const OWN_ORIGIN_HEADER = "x-own-origin";
 
+/** The session library names its cookies with this prefix; on https they also carry __Secure-. */
+const COOKIE_PREFIX = "gps";
+
+/**
+ * Set-Cookie headers that make a browser forget the platform's cookies it brought, without ending the session: once
+ * the mobile app has the pass, the session is the app's, and on Android the sign-in window shares Chrome's cookies
+ * (ADR-0025).
+ */
+export function forgetSessionCookies(cookieHeader: string | undefined): string[] {
+  const names = (cookieHeader ?? "").split(";").map((pair) => pair.split("=")[0]?.trim() ?? "");
+  return [...new Set(names)]
+    .filter((name) => name.replace(/^__Secure-/, "").startsWith(`${COOKIE_PREFIX}.`))
+    .map((name) => `${name}=; Max-Age=0; Path=/; HttpOnly; SameSite=Lax${name.startsWith("__Secure-") ? "; Secure" : ""}`);
+}
+
 /** What is needed to delete the data of someone who deletes their account. */
 export type BeforeUserDelete = (userId: string) => Promise<void>;
 
@@ -237,7 +252,7 @@ export function createAuth(config: Config, db: Db, mailer: Mailer, beforeUserDel
       },
 
       advanced: {
-        cookiePrefix: "gps",
+        cookiePrefix: COOKIE_PREFIX,
         ipAddress: { ipAddressHeaders: [CLIENT_IP_HEADER] },
       },
 

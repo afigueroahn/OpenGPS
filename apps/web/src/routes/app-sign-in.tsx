@@ -3,6 +3,7 @@
 import { APP_SCHEME } from "@opengps/shared";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Fingerprint } from "lucide-react";
+import { useState } from "react";
 import { Trans, useTranslation } from "react-i18next";
 import { useSearchParams } from "react-router";
 import { Button, Notice, Spinner } from "../components/ui";
@@ -16,12 +17,19 @@ const backWithout = (error: string) => window.location.assign(`${APP_SCHEME}://o
 
 /**
  * The app opens this page with ?via=passkey to sign in with a passkey (ADR-0020), here, in the system's window,
- * where the passkeys are. Once in, the page asks to confirm the way back as always.
+ * where the passkeys are. Once in, the page asks to confirm the way back as always. It asks for the passkey even if
+ * the browser already has a session: on Android the window shares Chrome's, older than the pass allows (ADR-0025).
  */
-function PasskeyForApp() {
+function PasskeyForApp(props: { onIn: () => void }) {
   const { t } = useTranslation();
   const queryClient = useQueryClient();
-  const go = useMutation({ mutationFn: () => signInWithPasskey(), onSuccess: () => queryClient.invalidateQueries({ queryKey: ["me"] }) });
+  const go = useMutation({
+    mutationFn: () => signInWithPasskey(),
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ["me"] });
+      props.onIn();
+    },
+  });
   const problem = go.isError ? passkeyMessage(go.error) : null;
   return (
     <AuthLayout title={t("pages.appSignIn.passkeyTitle")} lead={t("pages.appSignIn.passkeyLead")}>
@@ -43,6 +51,7 @@ export function AppSignIn() {
   const config = useConfig();
   const [params] = useSearchParams();
   const { t } = useTranslation();
+  const [passkeyIn, setPasskeyIn] = useState(false);
   const pass = useMutation({ mutationFn: appPass, onSuccess: ({ url }) => window.location.assign(url) });
   const title = t("pages.appSignIn.title");
 
@@ -53,7 +62,7 @@ export function AppSignIn() {
       </AuthLayout>
     );
   }
-  if (!me.data && params.get("via") === "passkey" && config.data?.passkeys && passkeysInBrowser()) return <PasskeyForApp />;
+  if (!passkeyIn && params.get("via") === "passkey" && config.data?.passkeys && passkeysInBrowser()) return <PasskeyForApp onIn={() => setPasskeyIn(true)} />;
   const expired = !me.data || (pass.error instanceof ApiRequestError && pass.error.status === 401);
   if (expired) {
     return (
