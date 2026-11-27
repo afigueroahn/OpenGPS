@@ -6,6 +6,8 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Sin publicar]
 
+## [0.12.0] - 2026-11-27
+
 ### Agregado
 
 - La app para iPhone tiene «Passkeys» en Cuenta, como el perfil de la web: muestra cada passkey
