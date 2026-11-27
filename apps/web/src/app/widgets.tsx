@@ -111,9 +111,9 @@ export function AccountMenu({ me }: { me: Me }) {
         aria-haspopup="menu"
         aria-expanded={open}
         aria-label={t("map.account.menu")}
-        className="flex h-8 w-8 items-center justify-center overflow-hidden rounded-full bg-ink-3 text-[12px] hover:bg-white/20"
+        className="group flex h-8 w-8 items-center justify-center overflow-hidden rounded-full text-[12px]"
       >
-        <Avatar name={name} photoUrl={me.user.photoUrl} className="h-full w-full" />
+        <Avatar name={name} photoUrl={me.user.photoUrl} className="h-full w-full" fill="bg-ink-3 group-hover:bg-white/20" />
       </button>
       {newVersion && <span aria-hidden className="pointer-events-none absolute -right-0.5 -top-0.5 h-2.5 w-2.5 rounded-full bg-moving" />}
       {open && (

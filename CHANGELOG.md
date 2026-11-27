@@ -14,6 +14,14 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/).
   pasarlo. Si Face ID falla se puede usar el código del iPhone o cerrar sesión. Cerrar
   sesión o cambiar de plataforma lo apaga. Usa `expo-local-authentication` (ADR-0019, #119).
 
+### Corregido
+
+- Una foto de perfil PNG o WebP con fondo transparente conserva la transparencia, en la web
+  y en la app para iPhone: se sube como PNG, y las demás fotos siguen subiendo como JPEG.
+  Antes ambas la convertían a JPEG y el fondo salía blanco. El avatar con foto ya no lleva
+  relleno de color y tiene un aro blanco alrededor; el de las iniciales no cambia. Las
+  fotos ya guardadas no cambian: para la transparencia hay que subirlas de nuevo (#117).
+
 ## [0.9.0] - 2026-11-26
 
 ### Agregado

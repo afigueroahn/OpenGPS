@@ -1,6 +1,6 @@
 // The person's own corner: their photo, and how the platform notes when they
 // last came in and how.
-import { USER_PHOTO_MAX_BYTES } from "@opengps/shared";
+import { USER_PHOTO_MAX_BYTES, photoTypeFor } from "@opengps/shared";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { createPresence, signInMethodOf } from "../src/core/presence";
 import { type Harness, ORIGIN, type TestUser, createHarness } from "./harness";
@@ -82,6 +82,16 @@ describe("profile photo", () => {
     expect((await h.request("DELETE", "/api/me/photo", { cookie: ana.cookie })).status).toBe(204);
     expect(await photoUrlOf(ana)).toBeNull();
     expect((await photoOf(ana)).statusCode).toBe(404);
+  });
+});
+
+describe("type the web and the apps send the photo as", () => {
+  it("keeps a picture that may be transparent as PNG, and sends any other as JPEG", () => {
+    expect(photoTypeFor("image/png")).toBe("image/png");
+    expect(photoTypeFor("image/webp")).toBe("image/png");
+    expect(photoTypeFor("image/jpeg")).toBe("image/jpeg");
+    // A phone's own format, which the platform does not take, goes as JPEG too.
+    expect(photoTypeFor("image/heic")).toBe("image/jpeg");
   });
 });
 
