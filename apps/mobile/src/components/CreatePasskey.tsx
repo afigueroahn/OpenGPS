@@ -12,7 +12,8 @@ import { Card, LinkRow, Notice } from "./ui";
 
 export function CreatePasskey() {
   const { t } = useTranslation();
-  const passkeys = useConfig().data?.passkeys ?? false;
+  // Only where the platform has the page for it: one from before it (ADR-0023) would show its home instead.
+  const passkeys = useConfig().data?.passkeysFromApp === true;
   const [busy, setBusy] = useState(false);
   const [said, setSaid] = useState<{ text: string; tone: "note" | "error" } | null>(null);
   if (!passkeys) return null;

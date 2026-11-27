@@ -40,14 +40,16 @@ Para crearlas desde la app hay tres condiciones (#140):
 
 Volver a entrar en la ventana del sistema.
 
-- **El botón:** la app tiene «Crear passkey» en Cuenta, si la plataforma tiene passkeys.
+- **El botón:** la app tiene «Crear passkey» en Cuenta, si la plataforma dice que se puede
+  (`passkeysFromApp`).
 - **La ventana:** abre `/app-passkey` en modo efímero, sin la sesión de la app ni la del
   navegador.
 - **La página:** sin sesión, lleva a entrar de las formas de siempre y vuelve. Ya dentro, crea
   la passkey con un nombre que se puede cambiar. Después cierra esa sesión del navegador y
   vuelve a `opengps://passkey?created=1`, o a `?error=` con la razón (`access_denied`,
   `unavailable`).
-- **La plataforma** no cambia.
+- **La plataforma** solo suma `passkeysFromApp` en `GET /api/config`. Una plataforma anterior no
+  tiene la página, y sin esa marca la app no ofrece el botón.
 
 ## Consecuencias
 

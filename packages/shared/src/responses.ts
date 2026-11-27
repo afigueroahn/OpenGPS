@@ -102,6 +102,11 @@ export interface PublicConfig {
   passkeys: boolean;
   /** The platform's address allows passkeys (HTTPS and a domain name), whether or not the console has them on. */
   passkeysSupported: boolean;
+  /**
+   * The mobile app can create passkeys here: the platform has passkeys and the page for it (`/app-passkey`, ADR-0023).
+   * Older platforms do not send it, and the app then does not offer it.
+   */
+  passkeysFromApp: boolean;
   /** What is required of a new password. */
   passwordPolicy: PasswordPolicy;
   /** Maximum size of a file uploaded by a user, in MB. */

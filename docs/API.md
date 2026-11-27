@@ -62,7 +62,7 @@ Las versiones anteriores a la 3 se retiraron sin convivencia, porque aún no hab
 | Ruta | Quién | Devuelve |
 |---|---|---|
 | `GET /api/health` | Pública | `{ ok, version, ingest, live }`; 503 si la base no responde |
-| `GET /api/config` | Pública | `PublicConfig`: nombre, mapa base, servidor de equipos, versión de los términos, los servicios con que se puede entrar (`signIn`, en el orden de sus botones), si hay passkeys (`passkeys`) y si la dirección las permite aunque estén apagadas (`passkeysSupported`), `apiVersion` y `version`: la de la plataforma, la de su release (`0.1.0`) o la del repositorio con `-dev` si se construyó desde el código |
+| `GET /api/config` | Pública | `PublicConfig`: nombre, mapa base, servidor de equipos, versión de los términos, los servicios con que se puede entrar (`signIn`, en el orden de sus botones), si hay passkeys (`passkeys`) si la dirección las permite aunque estén apagadas (`passkeysSupported`), si la app puede crearlas ahí (`passkeysFromApp`; una plataforma anterior no lo manda), `apiVersion` y `version`: la de la plataforma, la de su release (`0.1.0`) o la del repositorio con `-dev` si se construyó desde el código |
 
 ### Sesión y cuenta
 

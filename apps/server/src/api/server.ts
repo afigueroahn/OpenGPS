@@ -406,6 +406,7 @@ export async function buildApp(deps: AppDeps): Promise<App> {
     signIn: signInButtons(config),
     passkeys: passkeysAvailable(config),
     passkeysSupported: passkeyParty(config.publicUrl) !== null,
+    passkeysFromApp: passkeysAvailable(config),
     passwordPolicy: config.passwordPolicy,
     maxUploadMb: config.maxUploadMb,
   });
