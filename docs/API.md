@@ -498,8 +498,9 @@ Las rutas bajo `/api/auth/` las atiende la librería de sesión. Las que usan la
 | `POST /api/auth/passkey/delete-passkey` | Borrar una propia: `id` |
 | `GET /api/auth/verify-email` | Enlace del correo de verificación |
 | `POST /api/auth/send-verification-email` | Volver a enviar el correo de verificación |
-| `POST /api/auth/request-password-reset` | Pedir el correo para cambiar la contraseña |
-| `POST /api/auth/reset-password` | Cambiar la contraseña con el enlace del correo |
+| `POST /api/auth/change-password` | Cambiar la contraseña propia: `currentPassword`, `newPassword` y `revokeOtherSessions`, que cierra las demás sesiones de la persona; la de la petición sigue con una cookie nueva. La nueva cumple `passwordPolicy` o responde 400 con `code: "password_policy"`. Con la actual equivocada responde 400 con `code: "INVALID_PASSWORD"`; sin contraseña (`me.user.hasPassword` en falso), con `code: "CREDENTIAL_ACCOUNT_NOT_FOUND"` (ADR-0028) |
+| `POST /api/auth/request-password-reset` | Pedir el correo para cambiar la contraseña: `email` y `redirectTo`. A quien no tiene contraseña, el enlace le crea una |
+| `POST /api/auth/reset-password` | Cambiar la contraseña con el enlace del correo. Cierra todas las sesiones de la persona |
 | `POST /api/auth/delete-user` | Eliminar la cuenta propia, con la contraseña; quien no tiene contraseña (`me.user.hasPassword` en falso), sin ella y con una sesión de menos de un día. Quien administra la plataforma no puede: responde 403 con `code: "PLATFORM_OWNER"` |
 
 Las rutas `/api/auth/passkey/*` solo responden si `GET /api/config` dice `passkeys: true`: la plataforma tiene HTTPS y un nombre de dominio (o es `localhost`), y la consola no las apagó (`passkeysEnabled` en la sección `general`). Si no, responden 404 con `code: "passkeys_off"`. Cada passkey pide Face ID, huella o PIN, y es del dominio de `PUBLIC_URL`: si la instalación cambia de dominio, dejan de servir (ADR-0020).

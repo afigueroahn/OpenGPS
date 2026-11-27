@@ -166,6 +166,20 @@
         "cancel": "Cancel",
         "phone": "Phone",
         "phoneNote": "With its country code, for example +50499887766."
+      },
+      "password": {
+        "title": "Password",
+        "lead": "To change it, type the one you use now and the new one.",
+        "current": "Current password",
+        "new": "New password",
+        "others": "Sign out on your other devices",
+        "save": "Change password",
+        "changed": "Done: your password changed.",
+        "changedOthers": "Done: your password changed and you are signed out on your other devices.",
+        "wrongCurrent": "The current password is incorrect.",
+        "noneLead": "You sign in with another service or a passkey, so you have no password. If you want one, we'll email you a link to create it.",
+        "send": "Send link",
+        "sent": "We sent the link to {{email}}. Open it to create your password."
       }
     },
     "roles": {

@@ -590,4 +590,7 @@ export const auth = {
   /** Deletes the user and the accounts they own. Asks for their password; whoever has none, a recent session. */
   deleteAccount: (password: string | null) => api("/api/auth/delete-user", { method: "POST", body: password ? { password } : {} }),
   resetPassword: (token: string, newPassword: string) => api("/api/auth/reset-password", { method: "POST", body: { token, newPassword } }),
+  /** With the current one. Closing the other sessions keeps this one, with a new cookie (ADR-0028). */
+  changePassword: (currentPassword: string, newPassword: string, revokeOtherSessions: boolean) =>
+    api("/api/auth/change-password", { method: "POST", body: { currentPassword, newPassword, revokeOtherSessions } }),
 };

@@ -215,6 +215,23 @@ describe("services to sign in with", () => {
     expect((await h.db.core.query(`SELECT 1 FROM auth."user" WHERE id = $1`, [me.json.user.id])).rowCount).toBe(0);
   });
 
+  it("whoever has no password cannot change one, and creates it with the link sent to their email (ADR-0028)", async () => {
+    const email = `oidc-${rand()}@prueba.test`;
+    const made = await signUpThrough({ email, name: "Crea su Contraseña" });
+    expect((await meOf(made.cookie)).json.user.hasPassword).toBe(false);
+    const change = await h.request("POST", "/api/auth/change-password", { cookie: made.cookie, body: { currentPassword: "", newPassword: "su-clave-nueva" } });
+    expect(change.status).toBe(400);
+    expect(change.json.code).toBe("CREDENTIAL_ACCOUNT_NOT_FOUND");
+
+    const asked = await h.request("POST", "/api/auth/request-password-reset", { cookie: made.cookie, body: { email, redirectTo: "/reset-password" } });
+    expect(asked.status).toBe(200);
+    await h.settle();
+    const link = new URL(h.mails.findLast((m) => m.to === email)?.url as string);
+    const token = link.pathname.split("/").at(-1) as string;
+    expect((await h.request("POST", "/api/auth/reset-password", { body: { token, newPassword: "su-clave-nueva" } })).status).toBe(200);
+    expect((await h.request("POST", "/api/auth/sign-in/email", { body: { email, password: "su-clave-nueva" } })).status).toBe(200);
+  });
+
   it("someone who already has an account comes in with the same email once the service confirmed it", async () => {
     const ana = await h.signUp("Ana con Contraseña");
     const unconfirmed = await through({ email: ana.email, name: "Ana", verified: false });

@@ -6,6 +6,13 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Sin publicar]
 
+### Agregado
+
+- Cambiar la contraseña desde el perfil de la web, con la actual y la nueva, que cumple la
+  política de la plataforma. «Cerrar la sesión en los demás dispositivos», marcada de entrada,
+  cierra las otras sesiones y deja abierta la de esa pestaña. Quien entra con otro servicio o
+  con una passkey recibe en su correo el enlace para crear una (ADR-0028, #162).
+
 ## [0.13.0] - 2026-11-27
 
 ### Agregado
