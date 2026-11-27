@@ -574,5 +574,18 @@
       "w": "west",
       "nw": "northwest"
     }
+  },
+  "lock": {
+    "toggle": "Unlock with {{method}}",
+    "toggleNote": "When the app opens, and when you come back after 5 minutes away.",
+    "confirm": "Confirm to unlock with {{method}}",
+    "title": "The app is locked",
+    "body": "Unlock it to see your account.",
+    "unlockWith": "Unlock with {{method}}",
+    "unlock": "Unlock",
+    "prompt": "Unlock the app",
+    "cancel": "Cancel",
+    "passcode": "Use passcode",
+    "failed": "It was not unlocked. Try again or sign out."
   }
 }
