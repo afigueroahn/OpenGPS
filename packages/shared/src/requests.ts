@@ -327,6 +327,7 @@ export type DashboardInput = z.input<typeof dashboardSchema>;
 const optionalCount = z.number().int().min(1).max(100_000).nullable().default(null);
 const optionalEmail = z.union([z.literal(""), z.email(v("validation.emailInvalid"))]).default("");
 export const generalSettingsSchema = z.object({
+  appName: z.string().trim().min(1, v("validation.appName")).max(60),
   registrationOpen: z.boolean(),
   passkeysEnabled: z.boolean().default(true),
   newAccountMaxVehicles: optionalCount,

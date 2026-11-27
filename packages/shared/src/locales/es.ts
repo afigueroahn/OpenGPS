@@ -640,6 +640,7 @@ export const es = {
     giveName: "Ponle un nombre",
     personName: "Escribe tu nombre, de al menos 2 letras",
     accountName: "Escribe el nombre de la cuenta, de al menos 2 letras",
+    appName: "Escribe el nombre de la plataforma",
     dayNeeded: "Elige al menos un día",
     vehicleNeeded: "Elige al menos un vehículo",
     groupNeeded: "Elige al menos un grupo",

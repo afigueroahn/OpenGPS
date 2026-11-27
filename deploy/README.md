@@ -171,7 +171,7 @@ Las opcionales:
 |---|---|---|
 | `POSTGRES_USER` | `postgres` | El único usuario de la base, para la plataforma, los equipos y las copias. Letras, números y `_` |
 | `POSTGRES_DB` | `opengps` | El nombre de la base de la plataforma; la de los equipos es siempre `traccar` |
-| `APP_NAME` | `OpenGPS` | El nombre de la plataforma en la web, los correos y los avisos |
+| `APP_NAME` | `OpenGPS` | El nombre con que nace la plataforma: en la web, la app, los correos, los avisos y las passkeys. Después se cambia en la consola, en Ajustes. Dokploy no lo pasa, porque escribe ahí el nombre interno del compose |
 | `UPDATE_REPOSITORY` | `afigueroahn/OpenGPS` | El repositorio de GitHub cuyas releases son las versiones nuevas: el dueño las ve en Administración → Sistema → Actualizaciones. Vacío, la plataforma no consulta |
 | `COMPOSE_PROJECT_NAME` | `opengps` | Solo con Docker Compose: el nombre del grupo de contenedores |
 | `WEB_PORT` | `3000` | Solo con `docker-compose/`: el puerto del servidor donde responde la web |
@@ -358,7 +358,7 @@ En la web, menú de tu perfil → **Administración**, grupo **Sistema**:
 
 1. **Canales de aviso → Correo:** el servidor de correo saliente (servidor, puerto, seguridad, usuario, contraseña y remitente). Pruébalo con «Enviar prueba». El remitente conviene que sea de un dominio cuyo correo tenga SPF y DKIM, o los mensajes caen en no deseado. Si tienes Twilio, escribe sus datos; si tienes otro sistema (por ejemplo una pasarela de SMS), configúralo en Personalizado.
 2. **Ajustes:**
-   - registro abierto o solo por invitación, idioma por defecto y política de contraseñas;
+   - el nombre de la plataforma, registro abierto o solo por invitación, idioma por defecto y política de contraseñas;
    - las passkeys (Face ID, huella, Windows Hello o una llave física), encendidas de fábrica. Solo funcionan con HTTPS y un dominio, no en HTTP ni con una IP. Son del dominio de la plataforma: si cambia, las de cada persona dejan de servir;
    - cuotas y módulos de las cuentas nuevas;
    - el estilo del mapa y el servicio de direcciones (dirección, identificación y espera entre consultas), que viene encendido con el público y gratuito de OpenStreetMap: una consulta por segundo. Vacío lo apaga;

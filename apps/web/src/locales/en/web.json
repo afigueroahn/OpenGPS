@@ -542,6 +542,9 @@
         "title": "Reset to factory values"
       },
       "general": {
+        "platform": "The platform",
+        "appName": "Platform name",
+        "appNameNote": "It shows on the web, the app, emails, notifications and the passkeys created from now on.",
         "signup": "Sign-up and new accounts",
         "registrationOpen": "Open sign-up",
         "registrationOpenNote": "Anyone can create an account. When it is off, only people who got an invitation by email can sign up.",

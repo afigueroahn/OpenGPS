@@ -47,6 +47,8 @@ export function passwordHint(policy: PasswordPolicy): SharedSay {
 }
 
 export interface GeneralSettings {
+  /** Name of the platform: title, emails, notifications and passkeys. From the console; at first, APP_NAME or "OpenGPS" (ADR-0022). */
+  appName: string;
   /** Anyone can create an account. When off, only those with an invitation can sign up. */
   registrationOpen: boolean;
   /** People can register passkeys and sign in with them. They also need HTTPS and a domain name (ADR-0020). */

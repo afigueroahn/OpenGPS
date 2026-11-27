@@ -138,6 +138,8 @@ export function createSettings(deps: { db: Db; bus: Bus; config: Config }): Sett
   const factory = {
     smtp: { ...config.smtp },
     general: {
+      // APP_NAME, or "OpenGPS" without it: what the platform is called until the console changes it (ADR-0022).
+      appName: config.appName,
       registrationOpen: config.registrationOpen,
       passkeysEnabled: config.passkeysEnabled,
       newAccountMaxVehicles: config.newAccount.maxVehicles,
@@ -276,6 +278,8 @@ export function createSettings(deps: { db: Db; bus: Bus; config: Config }): Sett
   /** Passes what is in effect to the configuration the rest of the backend reads. */
   function apply(): void {
     const g = general();
+    // First: the automatic name the address service is told comes from it.
+    config.appName = g.appName;
     config.registrationOpen = g.registrationOpen;
     config.passkeysEnabled = g.passkeysEnabled;
     config.newAccount = { maxVehicles: g.newAccountMaxVehicles, maxUsers: g.newAccountMaxUsers, modules: g.newAccountModules };

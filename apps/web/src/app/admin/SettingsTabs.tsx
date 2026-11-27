@@ -186,6 +186,7 @@ const fromForm = (f: GeneralForm): GeneralSettings => ({
   legalEntity: f.legalEntity.trim(),
   legalCountry: f.legalCountry.trim(),
   legalContactEmail: f.legalContactEmail.trim(),
+  appName: f.appName.trim(),
 });
 
 export function GeneralTab() {
@@ -219,6 +220,11 @@ function GeneralForm({ current }: { current: GeneralSettings }) {
 
   return (
     <form onSubmit={submit} className="space-y-4" noValidate>
+      <Card title={t("admin.settings.general.platform")}>
+        <Row title={t("admin.settings.general.appName")} note={t("admin.settings.general.appNameNote")}>
+          <input className={field} aria-label={t("admin.settings.general.appName")} maxLength={60} value={form.appName} onChange={(e) => set("appName", e.target.value)} />
+        </Row>
+      </Card>
       <Card title={t("admin.settings.general.signup")}>
         <Row title={t("admin.settings.general.registrationOpen")} note={t("admin.settings.general.registrationOpenNote")}>
           <Switch label={t("admin.settings.general.registrationOpen")} checked={form.registrationOpen} onChange={(on) => set("registrationOpen", on)} />
