@@ -6,6 +6,8 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Sin publicar]
 
+## [0.11.0] - 2026-11-27
+
 ### Agregado
 
 - La app para iPhone crea passkeys: «Crear passkey» en Cuenta abre la plataforma en la
