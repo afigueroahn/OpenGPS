@@ -6,6 +6,8 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Sin publicar]
 
+## [0.10.0] - 2026-11-27
+
 ### Agregado
 
 - La app para iPhone entra con passkeys: «Entrar con passkey» abre la plataforma en la
@@ -21,7 +23,7 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/).
 - La plataforma acepta passkeys (FIDO2/WebAuthn): registrar varias por persona, entrar con
   ellas sin contraseña, y nombrarlas y borrarlas. Cada una pide Face ID, huella o PIN, y la
   sesión que abren es la de siempre. Solo funcionan con HTTPS y un dominio, y la consola las
-  puede apagar. La web y la app las usarán en sus propias entregas (ADR-0020, #123).
+  puede apagar (ADR-0020, #123).
 
 ### Corregido
 
