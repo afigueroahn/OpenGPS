@@ -2,6 +2,7 @@
 // SimpleWebAuthn, with the platform's routes under /api/auth/passkey/. The
 // browser or the system shows Face ID, Touch ID, Windows Hello, the fingerprint,
 // a security key or the QR code to use another phone.
+import type { Passkey } from "@opengps/shared";
 import {
   browserSupportsWebAuthn,
   browserSupportsWebAuthnAutofill,
@@ -13,16 +14,6 @@ import {
 } from "@simplewebauthn/browser";
 import { api, ApiRequestError, authMessage } from "./api";
 import i18n from "./i18n";
-
-/** A passkey of the person, as the platform lists it. Only its public key is kept there. */
-export interface Passkey {
-  id: string;
-  name?: string | null;
-  createdAt: string;
-  /** "multiDevice" when it can be synced (iCloud Keychain, Google Password Manager). */
-  deviceType: "singleDevice" | "multiDevice";
-  backedUp: boolean;
-}
 
 /** Whether this browser can use passkeys at all. */
 export const passkeysInBrowser = (): boolean => browserSupportsWebAuthn();

@@ -1,5 +1,5 @@
 // The person's account: who they are (and their photo, which they change
-// here), which account they are using, their language and theme, the
+// here), their passkeys, which account they are using, their language and theme, the
 // platform, and signing out.
 import { type Language, type ThemeMode } from "@opengps/shared";
 import { useQueryClient } from "@tanstack/react-query";
@@ -9,7 +9,7 @@ import { Check } from "lucide-react-native";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Linking, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
-import { CreatePasskey } from "../../../components/CreatePasskey";
+import { PasskeysSection } from "../../../components/Passkeys";
 import { ProfilePhoto } from "../../../components/ProfilePhoto";
 import { SummaryCard } from "../../../components/SummaryCard";
 import { Button, Card, LinkRow, Row, SectionTitle, Segmented } from "../../../components/ui";
@@ -89,7 +89,7 @@ export default function AccountScreen() {
           </Card>
         )}
       </Pressable>
-      <CreatePasskey />
+      <PasskeysSection />
 
       <SectionTitle text={t("account.accounts")} />
       <Card>

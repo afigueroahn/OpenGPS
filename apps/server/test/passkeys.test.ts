@@ -129,6 +129,25 @@ describe("passkeys", () => {
     expect((await signIn(second)).status).toBe(200);
   });
 
+  it("an old session, like the app's, lists, renames and deletes them, but only a fresh one registers them", async () => {
+    const caro = await h.signUp("Caro Passkey");
+    expect((await register(caro, softPasskey(), "iPhone")).status).toBe(200);
+    // The app's session lasts 30 days and is almost always more than a day old.
+    await h.db.core.query(`UPDATE auth.session SET "createdAt" = now() - interval '3 days' WHERE "userId" = $1`, [caro.userId]);
+
+    const options = await h.request("GET", "/api/auth/passkey/generate-register-options", as(caro));
+    expect(options.status).toBe(403);
+    expect(options.json.code).toBe("SESSION_NOT_FRESH");
+
+    const [iphone] = await listOf(caro);
+    expect(iphone?.name).toBe("iPhone");
+    const id = iphone?.id as string;
+    expect((await h.request("POST", "/api/auth/passkey/update-passkey", { ...as(caro), body: { id, name: "iPhone de Caro" } })).status).toBe(200);
+    expect((await listOf(caro)).map((p) => p.name)).toEqual(["iPhone de Caro"]);
+    expect((await h.request("POST", "/api/auth/passkey/delete-passkey", { ...as(caro), body: { id } })).status).toBe(200);
+    expect(await listOf(caro)).toEqual([]);
+  });
+
   it("deleting the account deletes its passkeys", async () => {
     const leaving = await h.signUp("Se Va");
     const key = softPasskey();

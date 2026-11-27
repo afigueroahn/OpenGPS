@@ -504,6 +504,6 @@ Las rutas bajo `/api/auth/` las atiende la librería de sesión. Las que usan la
 
 Las rutas `/api/auth/passkey/*` solo responden si `GET /api/config` dice `passkeys: true`: la plataforma tiene HTTPS y un nombre de dominio (o es `localhost`), y la consola no las apagó (`passkeysEnabled` en la sección `general`). Si no, responden 404 con `code: "passkeys_off"`. Cada passkey pide Face ID, huella o PIN, y es del dominio de `PUBLIC_URL`: si la instalación cambia de dominio, dejan de servir (ADR-0020).
 
-La app crea passkeys en la página `/app-passkey`, que abre en la ventana de inicio de sesión del sistema en modo efímero. Ahí la persona vuelve a entrar y crea la passkey. La página cierra esa sesión y vuelve a `opengps://passkey?created=1`, o a `opengps://passkey?error=` con `access_denied` (canceló) o `unavailable` (la plataforma o el navegador no tienen passkeys) (ADR-0023).
+La app crea passkeys en la página `/app-passkey`, que abre en la ventana de inicio de sesión del sistema en modo efímero. Ahí la persona vuelve a entrar y crea la passkey. La página cierra esa sesión y vuelve a `opengps://passkey?created=1`, o a `opengps://passkey?error=` con `access_denied` (canceló) o `unavailable` (la plataforma o el navegador no tienen passkeys) (ADR-0023). Las ve, renombra y borra con su propia sesión y las rutas de arriba, que no piden una sesión de menos de un día (ADR-0024).
 
 Las rutas `/api/auth/organization/*` y `/api/auth/admin/*` no están disponibles: responden 404. Las cuentas, los usuarios y los roles se administran con las rutas de este documento.

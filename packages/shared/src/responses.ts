@@ -174,3 +174,16 @@ export interface Me {
 export interface ApiError {
   error: { code: string; message: string };
 }
+
+/**
+ * A passkey of the person, as the platform lists it (ADR-0020), for the web and the app to show and manage. Only its
+ * public key is kept there.
+ */
+export interface Passkey {
+  id: string;
+  name?: string | null;
+  createdAt: string;
+  /** "multiDevice" when it can be synced (iCloud Keychain, Google Password Manager). */
+  deviceType: "singleDevice" | "multiDevice";
+  backedUp: boolean;
+}

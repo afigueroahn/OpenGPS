@@ -21,6 +21,7 @@ import {
   LEGAL_VERSION,
   type Me,
   type OAuthProvider,
+  type Passkey,
   type PublicConfig,
   type ShareInput,
   type ShareLink,
@@ -284,6 +285,10 @@ export function oauthStartUrl(provider: OAuthProvider, legalVersion: string | nu
 export const passkeyPageUrl = (): string => `${getSaved().server}${APP_OAUTH_PAGE}?via=passkey`;
 /** The platform's page where the person signs in again and creates a passkey (ADR-0023). */
 export const passkeyCreateUrl = (): string => `${getSaved().server}${APP_PASSKEY_PAGE}`;
+/** The person's passkeys, with the app's own session: only creating one needs a fresh session (ADR-0024). */
+export const listPasskeys = () => api<Passkey[]>("/api/auth/passkey/list-user-passkeys");
+export const renamePasskey = (id: string, name: string) => api<unknown>("/api/auth/passkey/update-passkey", { method: "POST", body: { id, name } });
+export const deletePasskey = (id: string) => api<unknown>("/api/auth/passkey/delete-passkey", { method: "POST", body: { id } });
 
 export const auth = {
   /**

@@ -1,6 +1,6 @@
 // Your own corner of the panel: who you are in this account, how you see the
 // platform and what you can do about your privacy.
-import { type Me, USER_PHOTO_TYPES } from "@opengps/shared";
+import { type Me, type Passkey, USER_PHOTO_TYPES } from "@opengps/shared";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Camera, DoorOpen, FileText, KeyRound, LogOut, Pencil, Phone, Plus, ShieldCheck, Trash2 } from "lucide-react";
 import { type ReactNode, useRef, useState } from "react";
@@ -13,7 +13,7 @@ import { ApiRequestError, auth, deletePhoto, leaveAccount, renameAccount, saveSe
 import { formatDateTime } from "../../lib/format";
 import i18n, { LANGUAGE_CHOICE_OPEN } from "../../lib/i18n";
 import { squarePhoto } from "../../lib/image";
-import { type Passkey, createPasskey, deletePasskey, listPasskeys, passkeyMessage, passkeysInBrowser, renamePasskey } from "../../lib/passkeys";
+import { createPasskey, deletePasskey, listPasskeys, passkeyMessage, passkeysInBrowser, renamePasskey } from "../../lib/passkeys";
 import { useConfig } from "../../lib/session";
 import { ConfirmDialog, errorText } from "../widgets";
 import { DeleteAccountDialog } from "../PrivacyDialogs";
