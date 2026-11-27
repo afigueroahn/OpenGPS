@@ -1,6 +1,6 @@
 // The person's round mark: their photo, or their initials when they have none
 // or it cannot be loaded. Same rules as the web app's (apps/web/src/components/Avatar.tsx):
-// the photo goes without a background, inside a white ring.
+// the photo goes alone, without a background.
 // The photo is served only with the session, so it goes with the cookie the app keeps.
 import { useState } from "react";
 import { Image, StyleSheet, Text, View } from "react-native";
@@ -28,14 +28,13 @@ export function Avatar(props: { name: string; photoUrl: string | null; size?: nu
   const photo = uri && uri !== failed ? uri : null;
   return (
     <View
-      style={[styles.avatar, { width: size, height: size, borderRadius: size / 2 }, photo ? styles.ring : { backgroundColor: theme.primary }]}
+      style={[styles.avatar, { width: size, height: size, borderRadius: size / 2 }, !photo && { backgroundColor: theme.primary }]}
       testID="avatar"
     >
       {photo ? (
         <Image
           source={{ uri: photo, headers: cookie ? { Cookie: cookie } : {} }}
-          // Rounded too, so the corners of the picture do not cover the ring.
-          style={[StyleSheet.absoluteFill, { borderRadius: size / 2 - RING }]}
+          style={StyleSheet.absoluteFill}
           onError={() => setFailed(photo)}
           accessibilityIgnoresInvertColors
           testID="avatar-photo"
@@ -47,11 +46,7 @@ export function Avatar(props: { name: string; photoUrl: string | null; size?: nu
   );
 }
 
-/** Width of the white ring around a photo. */
-const RING = 2;
-
 const styles = StyleSheet.create({
   avatar: { alignItems: "center", justifyContent: "center", overflow: "hidden" },
-  ring: { borderWidth: RING, borderColor: "#ffffff" },
   initials: { fontFamily: FONT.bold },
 });

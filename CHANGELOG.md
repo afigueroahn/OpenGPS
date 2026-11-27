@@ -13,6 +13,8 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/).
   «OpenGPS». Con Dokploy salía el nombre interno del compose (`opengps-opengps-…`): su compose
   ya no pasa `APP_NAME`, y al actualizar la plataforma se llama «OpenGPS» hasta que el dueño
   la renombre (ADR-0022, #133).
+- El avatar con foto ya no lleva el aro blanco: se ve solo la foto, y si tiene fondo
+  transparente deja ver lo que hay detrás, en la web y en la app (#131).
 
 ## [0.10.0] - 2026-11-27
 
