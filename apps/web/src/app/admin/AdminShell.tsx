@@ -183,9 +183,9 @@ export function AdminShell({ me, sections, current, children }: { me: Me; sectio
               aria-haspopup="menu"
               aria-expanded={userMenu}
               aria-label={t("admin.user.menu")}
-              className="flex h-9 w-9 items-center justify-center overflow-hidden rounded-full bg-ink/[0.08] text-[12.5px] text-ink hover:bg-ink/[0.14]"
+              className="group flex h-9 w-9 items-center justify-center overflow-hidden rounded-full text-[12.5px] text-ink"
             >
-              <Avatar name={me.user.name} photoUrl={me.user.photoUrl} className="h-full w-full" />
+              <Avatar name={me.user.name} photoUrl={me.user.photoUrl} className="h-full w-full" fill="bg-ink/[0.08] group-hover:bg-ink/[0.14]" />
             </button>
             {userMenu && (
               <div role="menu" className="absolute right-0 top-11 z-30 w-64 rounded-[14px] border border-line bg-surface p-1.5 shadow-2xl">

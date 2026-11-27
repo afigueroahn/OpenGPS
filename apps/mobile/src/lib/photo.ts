@@ -1,7 +1,9 @@
 // Pictures chosen on the phone. The person's photo: the system's own editor
 // cuts it square, and it travels small, as the web app sends it
-// (apps/web/src/lib/image.ts): 256 pixels a side, JPEG at 85%. A photo as
-// evidence of an incident goes whole, only reduced.
+// (apps/web/src/lib/image.ts): 256 pixels a side, as a PNG when it may have a
+// transparent background and otherwise as a JPEG at 85%. A photo as evidence
+// of an incident goes whole, only reduced.
+import { photoTypeFor } from "@opengps/shared";
 import { ImageManipulator, SaveFormat } from "expo-image-manipulator";
 import * as ImagePicker from "expo-image-picker";
 
@@ -34,8 +36,8 @@ async function pick(from: "library" | "camera", options: ImagePicker.ImagePicker
   return result.canceled ? null : (result.assets[0] ?? null);
 }
 
-/** A photo from the library or the camera, cut square and small. null if the person cancels. */
-export async function pickPhoto(from: "library" | "camera"): Promise<Blob | null> {
+/** A photo from the library or the camera, cut square and small, with its type. null if the person cancels. */
+export async function pickPhoto(from: "library" | "camera"): Promise<{ data: Blob; type: "image/png" | "image/jpeg" } | null> {
   const asset = await pick(from, { mediaTypes: ["images"], allowsEditing: true, aspect: [1, 1], quality: 1 });
   if (!asset) return null;
   // The editor already cuts it square; the middle square is taken anyway, so it never comes out stretched.
@@ -44,8 +46,10 @@ export async function pickPhoto(from: "library" | "camera"): Promise<Blob | null
     .crop({ originX: (asset.width - side) / 2, originY: (asset.height - side) / 2, width: side, height: side })
     .resize({ width: PHOTO_SIZE, height: PHOTO_SIZE })
     .renderAsync();
-  const saved = await image.saveAsync({ format: SaveFormat.JPEG, compress: 0.85 });
-  return await (await fetch(saved.uri)).blob();
+  // The editor gives a PNG back as a PNG, and the rest, the camera's photos too, as JPEG.
+  const type = photoTypeFor(asset.mimeType ?? "image/jpeg");
+  const saved = await image.saveAsync(type === "image/png" ? { format: SaveFormat.PNG } : { format: SaveFormat.JPEG, compress: 0.85 });
+  return { data: await (await fetch(saved.uri)).blob(), type };
 }
 
 /** A photo from the library or the camera, whole, as evidence of an incident. null if the person cancels. */

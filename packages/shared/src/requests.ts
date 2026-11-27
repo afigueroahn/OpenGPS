@@ -543,10 +543,16 @@ export const userSettingsSchema = z.object({
   theme: z.enum(THEME_MODES).optional(),
   language: z.enum(LANGUAGES).nullable().optional(),
 });
-/** The person's photo: the web app sends it already cut to a small square. */
+/** The person's photo: the web app and the mobile apps send it already cut to a small square. */
 export const USER_PHOTO_TYPES = ["image/jpeg", "image/png", "image/webp"] as const;
 export type UserPhotoType = (typeof USER_PHOTO_TYPES)[number];
 export const USER_PHOTO_MAX_BYTES = 512 * 1024;
+/**
+ * The type the photo is sent as, from the type of the picture the person chose: a PNG or a WebP may have a
+ * transparent background, which only PNG keeps; any other picture goes as JPEG, lighter.
+ */
+export const photoTypeFor = (picture: string): "image/png" | "image/jpeg" =>
+  picture === "image/png" || picture === "image/webp" ? "image/png" : "image/jpeg";
 
 /** The account's own name, as its people and the platform's console see it. */
 export const accountNameSchema = z.object({
