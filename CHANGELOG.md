@@ -6,6 +6,13 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Sin publicar]
 
+### Cambiado
+
+- Al confirmar «Volver a la app», la plataforma borra la cookie de la sesión en ese navegador,
+  sin cerrar la sesión, que pasa a la app. En Android la ventana de inicio de sesión comparte
+  cookies con Chrome, y la sesión ya no queda abierta ahí. «Entrar con passkey» desde la app pide
+  siempre la passkey, aunque el navegador ya tenga una sesión de la web (ADR-0025, #150).
+
 ## [0.12.0] - 2026-11-27
 
 ### Agregado

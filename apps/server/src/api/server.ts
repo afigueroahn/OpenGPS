@@ -41,7 +41,7 @@ import {
 import { fromNodeHeaders } from "better-auth/node";
 import Fastify, { type FastifyInstance, type FastifyReply, type FastifyRequest } from "fastify";
 import { z } from "zod";
-import { type Auth, CLIENT_IP_HEADER, OWN_ORIGIN_HEADER, type SessionContext } from "../auth";
+import { type Auth, CLIENT_IP_HEADER, forgetSessionCookies, OWN_ORIGIN_HEADER, type SessionContext } from "../auth";
 import type { Bus } from "../bus";
 import type { Config } from "../config";
 import { listAccounts, listRoles, requirePermission, requireUnrestricted } from "../core/access";
@@ -502,10 +502,12 @@ export async function buildApp(deps: AppDeps): Promise<App> {
 
   // The person confirmed on that page: only now the session becomes a one-time pass, and the page takes the person
   // to the app's address with it. Another website cannot ask for it: it does not get the session's cookie, and
-  // the platform turns away its requests.
-  app.post(APP_OAUTH_RETURN, async (request) => {
+  // the platform turns away its requests. The browser forgets the session, which goes on in the app (ADR-0025).
+  app.post(APP_OAUTH_RETURN, async (request, reply) => {
     const token = await auth.appPass(request.headers);
     if (!token) throw unauthorized();
+    const forget = forgetSessionCookies(request.headers.cookie);
+    if (forget.length > 0) reply.header("set-cookie", forget);
     return { url: `${APP_SCHEME}://oauth?${new URLSearchParams({ token })}` };
   });
 
