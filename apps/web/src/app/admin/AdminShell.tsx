@@ -106,7 +106,10 @@ export function AdminShell({ me, sections, current, children }: { me: Me; sectio
 
   const brand = (compact: boolean) => (
     <div className={clsx("flex h-[60px] shrink-0 items-center border-b border-line", compact ? "justify-center px-0" : "px-5")}>
-      <Logo iconOnly={compact} />
+      {/* The brand takes home, as on any site. */}
+      <Link to="/" aria-label={t("admin.home")} title={t("admin.home")} className="rounded-md">
+        <Logo iconOnly={compact} />
+      </Link>
     </div>
   );
 
