@@ -428,6 +428,20 @@
     "badName": "Enter your name, at least 2 letters long.",
     "badPhone": "Enter the phone number with its country code, for example +50499887766."
   },
+  "password": {
+    "title": "Password",
+    "none": "No password",
+    "current": "Current password",
+    "new": "New password",
+    "others": "Sign out on your other devices",
+    "save": "Change password",
+    "changed": "Done: your password changed.",
+    "changedOthers": "Done: your password changed and you are signed out on your other devices.",
+    "wrongCurrent": "The current password is incorrect.",
+    "noneLead": "You sign in with another service or a passkey, so you have no password. If you want one, we'll email you a link to create it.",
+    "send": "Send link",
+    "sent": "We sent the link to {{email}}. Open it to create your password."
+  },
   "deleteAccount": {
     "open": "Delete my account",
     "title": "Delete my account",

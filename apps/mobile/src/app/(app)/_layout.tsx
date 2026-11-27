@@ -47,6 +47,7 @@ export default function AppLayout() {
           <Stack.Screen name="incident" options={{ presentation: "modal" }} />
           <Stack.Screen name="report-incident" options={{ presentation: "modal" }} />
           <Stack.Screen name="profile" options={{ presentation: "modal" }} />
+          <Stack.Screen name="password" options={{ presentation: "modal" }} />
           <Stack.Screen name="delete-account" options={{ presentation: "modal" }} />
         </Stack>
         <AlertBanner />
