@@ -26,8 +26,8 @@ export const APP_OAUTH_PAGE = "/app-sign-in";
 /** A pass is handed only for a session this young: one that the trip to the service just created. */
 export const APP_OAUTH_FRESH_S = 5 * 60;
 
-/** How someone signs in: with their email and password, or with one of those services. */
-export const SIGN_IN_METHODS = ["email", ...OAUTH_PROVIDERS] as const;
+/** How someone signs in: with their email and password, a passkey (ADR-0020), or one of those services. */
+export const SIGN_IN_METHODS = ["email", "passkey", ...OAUTH_PROVIDERS] as const;
 export type SignInMethod = (typeof SIGN_IN_METHODS)[number];
 /** Each one as the owner of the platform connected it. Secrets never come back: only whether one is stored. */
 export interface OAuthSettings {

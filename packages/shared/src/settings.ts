@@ -49,6 +49,8 @@ export function passwordHint(policy: PasswordPolicy): SharedSay {
 export interface GeneralSettings {
   /** Anyone can create an account. When off, only those with an invitation can sign up. */
   registrationOpen: boolean;
+  /** People can register passkeys and sign in with them. They also need HTTPS and a domain name (ADR-0020). */
+  passkeysEnabled: boolean;
   /** Quotas and modules each new account starts with. Without a quota, there is no limit. */
   newAccountMaxVehicles: number | null;
   newAccountMaxUsers: number | null;

@@ -182,7 +182,7 @@ Todo lo demás se configura desde la consola de la plataforma, con la primera cu
 
 ## Con Docker Compose, en un puerto del servidor
 
-La forma más simple: la web responde en un puerto del servidor, en HTTP. Sirve para una red interna, o para poner delante tu propio proxy con HTTPS.
+La forma más simple: la web responde en un puerto del servidor, en HTTP. Sirve para una red interna, o para poner delante tu propio proxy con HTTPS. En HTTP no hay passkeys: necesitan HTTPS y un dominio.
 
 En el servidor, en la carpeta con los archivos de la versión:
 
@@ -359,6 +359,7 @@ En la web, menú de tu perfil → **Administración**, grupo **Sistema**:
 1. **Canales de aviso → Correo:** el servidor de correo saliente (servidor, puerto, seguridad, usuario, contraseña y remitente). Pruébalo con «Enviar prueba». El remitente conviene que sea de un dominio cuyo correo tenga SPF y DKIM, o los mensajes caen en no deseado. Si tienes Twilio, escribe sus datos; si tienes otro sistema (por ejemplo una pasarela de SMS), configúralo en Personalizado.
 2. **Ajustes:**
    - registro abierto o solo por invitación, idioma por defecto y política de contraseñas;
+   - las passkeys (Face ID, huella, Windows Hello o una llave física), encendidas de fábrica. Solo funcionan con HTTPS y un dominio, no en HTTP ni con una IP. Son del dominio de la plataforma: si cambia, las de cada persona dejan de servir;
    - cuotas y módulos de las cuentas nuevas;
    - el estilo del mapa y el servicio de direcciones (dirección, identificación y espera entre consultas), que viene encendido con el público y gratuito de OpenStreetMap: una consulta por segundo. Vacío lo apaga;
    - el servicio de rutas, que traza por calles las rutas del simulador y viene encendido con el público de OSRM sobre datos de OpenStreetMap: una consulta por segundo y sin garantía de disponibilidad. Vacío lo apaga, y las rutas se trazan con líneas rectas;

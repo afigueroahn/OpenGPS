@@ -17,6 +17,7 @@ interface OpenedBy {
 export function signInMethodOf(ctx: OpenedBy | null): SignInMethod | null {
   const path = ctx?.path ?? "";
   if (path === "/sign-in/email" || path === "/sign-up/email" || path === "/verify-email") return "email";
+  if (path === "/passkey/verify-authentication") return "passkey";
   // Back from another service, or a mobile app that brings the token it got from one.
   const provider = path.startsWith("/callback/") ? (ctx?.params?.id ?? path.slice("/callback/".length)) : path === "/sign-in/social" ? ctx?.body?.provider : undefined;
   return OAUTH_PROVIDERS.find((p) => p === provider) ?? null;

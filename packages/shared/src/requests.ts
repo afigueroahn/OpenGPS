@@ -328,6 +328,7 @@ const optionalCount = z.number().int().min(1).max(100_000).nullable().default(nu
 const optionalEmail = z.union([z.literal(""), z.email(v("validation.emailInvalid"))]).default("");
 export const generalSettingsSchema = z.object({
   registrationOpen: z.boolean(),
+  passkeysEnabled: z.boolean().default(true),
   newAccountMaxVehicles: optionalCount,
   newAccountMaxUsers: optionalCount,
   newAccountModules: z.array(z.enum(ALL_MODULES as [ModuleKey, ...ModuleKey[]])).max(ALL_MODULES.length).default([]),

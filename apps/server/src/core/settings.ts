@@ -139,6 +139,7 @@ export function createSettings(deps: { db: Db; bus: Bus; config: Config }): Sett
     smtp: { ...config.smtp },
     general: {
       registrationOpen: config.registrationOpen,
+      passkeysEnabled: config.passkeysEnabled,
       newAccountMaxVehicles: config.newAccount.maxVehicles,
       newAccountMaxUsers: config.newAccount.maxUsers,
       newAccountModules: [...config.newAccount.modules],
@@ -276,6 +277,7 @@ export function createSettings(deps: { db: Db; bus: Bus; config: Config }): Sett
   function apply(): void {
     const g = general();
     config.registrationOpen = g.registrationOpen;
+    config.passkeysEnabled = g.passkeysEnabled;
     config.newAccount = { maxVehicles: g.newAccountMaxVehicles, maxUsers: g.newAccountMaxUsers, modules: g.newAccountModules };
     config.mapStyleUrl = g.mapStyleUrl;
     config.geocoder.url = g.geocoderUrl.replace(/\/+$/, "");

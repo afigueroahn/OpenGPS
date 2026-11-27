@@ -1,7 +1,7 @@
 // The marks of the services people can sign in with, as their own buttons
 // show them. Another service has no mark of its own: a key stands for it.
 import type { OAuthProvider, SignInMethod } from "@opengps/shared";
-import { KeyRound, Mail } from "lucide-react";
+import { Fingerprint, KeyRound, Mail } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
 export function BrandMark({ id, size = 18 }: { id: OAuthProvider; size?: number }) {
@@ -49,7 +49,15 @@ export function SignInMethodIcon({ method, size = 15 }: { method: SignInMethod |
   const label = t(`admin.accounts.signIn.${method === null || method === "custom" ? "other" : method}`);
   return (
     <span role="img" aria-label={label} title={label} className="inline-flex shrink-0 items-center text-muted">
-      {method === "email" ? <Mail size={size} aria-hidden="true" /> : method === null ? <KeyRound size={size} aria-hidden="true" /> : <BrandMark id={method} size={size} />}
+      {method === "email" ? (
+        <Mail size={size} aria-hidden="true" />
+      ) : method === "passkey" ? (
+        <Fingerprint size={size} aria-hidden="true" />
+      ) : method === null ? (
+        <KeyRound size={size} aria-hidden="true" />
+      ) : (
+        <BrandMark id={method} size={size} />
+      )}
     </span>
   );
 }

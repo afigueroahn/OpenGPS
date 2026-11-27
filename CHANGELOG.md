@@ -8,6 +8,10 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/).
 
 ### Agregado
 
+- La plataforma acepta passkeys (FIDO2/WebAuthn): registrar varias por persona, entrar con
+  ellas sin contraseña, y nombrarlas y borrarlas. Cada una pide Face ID, huella o PIN, y la
+  sesión que abren es la de siempre. Solo funcionan con HTTPS y un dominio, y la consola las
+  puede apagar. La web y la app las usarán en sus propias entregas (ADR-0020, #123).
 - La app para iPhone se puede desbloquear con Face ID, o con Touch ID según el iPhone. Se
   enciende en Cuenta, junto a tus datos, y viene apagado. Encendido, la app pide Face ID al
   abrirse y al volver a ella tras 5 minutos fuera, y no muestra nada de la cuenta hasta

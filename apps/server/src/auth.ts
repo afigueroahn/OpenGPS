@@ -18,6 +18,7 @@ import type { IncomingHttpHeaders } from "node:http";
 import type { Config } from "./config";
 import { type Access, claimPlatformOwner, firstAccountWithoutMail, isPlatformOwner, resolveAccess } from "./core/access";
 import { appleClientSecret, discoveryOf, oauthReady } from "./core/oauth";
+import { passkeyPlugin } from "./core/passkeys";
 import { writeMail } from "./core/mail-templates";
 import { createPresence, recordSignIn, signInMethodOf } from "./core/presence";
 import { recordConsent } from "./core/privacy";
@@ -250,6 +251,8 @@ export function createAuth(config: Config, db: Db, mailer: Mailer, beforeUserDel
         // The pass that takes a session from the system's browser to the mobile app (ADR-0013): it lasts a minute,
         // is kept hashed, works once, and only the platform hands it out.
         oneTimeToken({ expiresIn: 1, storeToken: "hashed", disableClientRequest: true }),
+        // Passkeys (ADR-0020): the API only lets their routes through while the platform has them.
+        passkeyPlugin(config),
       ],
 
       hooks: {
