@@ -6,6 +6,10 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Sin publicar]
 
+### Cambiado
+
+- En la consola, el logo de arriba de la barra lateral lleva al inicio (#134).
+
 ## [0.10.0] - 2026-11-27
 
 ### Agregado
