@@ -98,6 +98,8 @@ export interface PublicConfig {
   registrationOpen: boolean;
   /** The other services people can sign in and sign up with, in the order their buttons go. */
   signIn: { id: OAuthProvider; name: string }[];
+  /** People can register passkeys and sign in with them (ADR-0020): the platform has HTTPS and a domain name, and the console did not turn them off. */
+  passkeys: boolean;
   /** What is required of a new password. */
   passwordPolicy: PasswordPolicy;
   /** Maximum size of a file uploaded by a user, in MB. */

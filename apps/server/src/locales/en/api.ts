@@ -13,6 +13,7 @@ const en: SameShape<typeof es> = {
     origin: "Origin not allowed",
     accountSuspended: "This account is suspended. Write to us to review it.",
     registrationClosed: "Sign-up for new accounts is closed. You need an invitation to get in.",
+    passkeysOff: "This platform has no passkeys: they need HTTPS and a domain, and to be turned on in the console.",
     notYourAccount: "You don't belong to that account",
     tooManyLookups: "Too many requests. Wait a moment.",
     shareGone: "This link is no longer available",

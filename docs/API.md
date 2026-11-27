@@ -62,7 +62,7 @@ Las versiones anteriores a la 3 se retiraron sin convivencia, porque aún no hab
 | Ruta | Quién | Devuelve |
 |---|---|---|
 | `GET /api/health` | Pública | `{ ok, version, ingest, live }`; 503 si la base no responde |
-| `GET /api/config` | Pública | `PublicConfig`: nombre, mapa base, servidor de equipos, versión de los términos, los servicios con que se puede entrar (`signIn`, en el orden de sus botones), `apiVersion` y `version`: la de la plataforma, la de su release (`0.1.0`) o la del repositorio con `-dev` si se construyó desde el código |
+| `GET /api/config` | Pública | `PublicConfig`: nombre, mapa base, servidor de equipos, versión de los términos, los servicios con que se puede entrar (`signIn`, en el orden de sus botones), si hay passkeys (`passkeys`), `apiVersion` y `version`: la de la plataforma, la de su release (`0.1.0`) o la del repositorio con `-dev` si se construyó desde el código |
 
 ### Sesión y cuenta
 
@@ -489,10 +489,19 @@ Las rutas bajo `/api/auth/` las atiende la librería de sesión. Las que usan la
 | `GET /api/auth/callback/:provider` | La dirección de regreso que se registra en cada servicio |
 | `POST /api/auth/one-time-token/verify` | La app móvil cambia el pase de `POST /api/app/oauth` (`{ token }`) por la cookie de su sesión. Un pase sirve una sola vez: el segundo intento responde 400. `GET /api/auth/one-time-token/generate` no se puede usar desde fuera: responde 400 |
 | `POST /api/auth/sign-out` | Cerrar sesión |
+| `GET /api/auth/passkey/generate-register-options` | Opciones para crear una passkey (WebAuthn), con una sesión de menos de un día. Deja una cookie con el reto, que vuelve en la verificación |
+| `POST /api/auth/passkey/verify-registration` | Guarda la passkey: `response`, lo que devolvió el navegador, y `name`, opcional |
+| `GET /api/auth/passkey/generate-authenticate-options` | Opciones para entrar con una passkey, sin sesión ni correo. Deja una cookie con el reto |
+| `POST /api/auth/passkey/verify-authentication` | Entrar con una passkey: `response`. Abre la misma sesión que el correo y la contraseña |
+| `GET /api/auth/passkey/list-user-passkeys` | Las passkeys propias: `id`, `name`, `createdAt`, `deviceType`, `backedUp` (sincronizada) y `aaguid` |
+| `POST /api/auth/passkey/update-passkey` | Cambiar el nombre de una propia: `id` y `name` |
+| `POST /api/auth/passkey/delete-passkey` | Borrar una propia: `id` |
 | `GET /api/auth/verify-email` | Enlace del correo de verificación |
 | `POST /api/auth/send-verification-email` | Volver a enviar el correo de verificación |
 | `POST /api/auth/request-password-reset` | Pedir el correo para cambiar la contraseña |
 | `POST /api/auth/reset-password` | Cambiar la contraseña con el enlace del correo |
 | `POST /api/auth/delete-user` | Eliminar la cuenta propia, con la contraseña; quien no tiene contraseña (`me.user.hasPassword` en falso), sin ella y con una sesión de menos de un día. Quien administra la plataforma no puede: responde 403 con `code: "PLATFORM_OWNER"` |
+
+Las rutas `/api/auth/passkey/*` solo responden si `GET /api/config` dice `passkeys: true`: la plataforma tiene HTTPS y un nombre de dominio (o es `localhost`), y la consola no las apagó (`passkeysEnabled` en la sección `general`). Si no, responden 404 con `code: "passkeys_off"`. Cada passkey pide Face ID, huella o PIN, y es del dominio de `PUBLIC_URL`: si la instalación cambia de dominio, dejan de servir (ADR-0020).
 
 Las rutas `/api/auth/organization/*` y `/api/auth/admin/*` no están disponibles: responden 404. Las cuentas, los usuarios y los roles se administran con las rutas de este documento.

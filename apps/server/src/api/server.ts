@@ -106,6 +106,7 @@ import type { Mailer } from "../mail";
 import type { Traccar } from "../traccar";
 import type { Backups } from "../core/backups";
 import { signInButtons } from "../core/oauth";
+import { isPasskeyRoute, passkeysAvailable } from "../core/passkeys";
 import type { Settings } from "../core/settings";
 import type { Updates } from "../core/updates";
 import { type LiveHub, createLiveHub } from "./live";
@@ -402,6 +403,7 @@ export async function buildApp(deps: AppDeps): Promise<App> {
     legal: { version: LEGAL_VERSION, ...config.legal },
     registrationOpen: config.registrationOpen,
     signIn: signInButtons(config),
+    passkeys: passkeysAvailable(config),
     passwordPolicy: config.passwordPolicy,
     maxUploadMb: config.maxUploadMb,
   });
@@ -417,6 +419,10 @@ export async function buildApp(deps: AppDeps): Promise<App> {
       const hasBody = request.method !== "GET" && request.body !== undefined && request.body !== null;
       // A form (Apple's) goes as it came; anything else, as JSON.
       const raw = typeof request.body === "string";
+      // Passkeys only while the address allows them and the console has them on (ADR-0020).
+      if (isPasskeyRoute(url.pathname.slice("/api/auth".length)) && !passkeysAvailable(config)) {
+        throw new AppError(404, "passkeys_off", say("api.errors.passkeysOff"));
+      }
       // What the platform settings fix is checked before passing to the session library.
       if (request.method === "POST") {
         const body = (request.body ?? {}) as Record<string, unknown>;

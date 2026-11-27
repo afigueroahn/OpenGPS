@@ -177,6 +177,8 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env) {
     /** Percentage of disk used above which a notification is sent. */
     diskAlertPercent: 70,
     registrationOpen: true,
+    /** People can sign in with passkeys, where the address allows them (ADR-0020). */
+    passkeysEnabled: true,
     passwordPolicy: { ...PASSWORD_POLICY_DEFAULT } as PasswordPolicy,
     newAccount: { maxVehicles: null as number | null, maxUsers: null as number | null, modules: [] as ModuleKey[] },
     defaultLanguage: "es" as Language,

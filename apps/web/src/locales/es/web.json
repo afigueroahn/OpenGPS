@@ -860,6 +860,7 @@
       "noOwner": "sin dueño",
       "signIn": {
         "email": "Entra con su correo",
+        "passkey": "Entra con una passkey",
         "google": "Entra con Google",
         "github": "Entra con GitHub",
         "facebook": "Entra con Facebook",

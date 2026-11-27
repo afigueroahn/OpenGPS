@@ -12,6 +12,7 @@ export default {
     origin: "Origen no autorizado",
     accountSuspended: "Esta cuenta está suspendida. Escríbenos para revisarla.",
     registrationClosed: "El registro de cuentas nuevas está cerrado. Para entrar hace falta una invitación.",
+    passkeysOff: "Esta plataforma no tiene passkeys: necesitan HTTPS y un dominio, y estar encendidas en la consola.",
     notYourAccount: "No perteneces a esa cuenta",
     tooManyLookups: "Demasiadas consultas. Espera un momento.",
     shareGone: "Este enlace ya no está disponible",
