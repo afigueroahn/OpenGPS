@@ -88,7 +88,7 @@ function Gate() {
         <Text style={styles.offline}>{t("errors.server")}</Text>
         <View style={styles.offlineActions}>
           <Button kind="signal" label={t("errors.retry")} busy={me.isFetching} onPress={() => void me.refetch()} testID="retry" />
-          <Button kind="secondary" label={t("signIn.changeServer")} onPress={() => save({ server: null, cookie: "" })} />
+          <Button dark kind="secondary" label={t("signIn.changeServer")} onPress={() => save({ server: null, cookie: "" })} testID="change-server" />
         </View>
       </View>
     );

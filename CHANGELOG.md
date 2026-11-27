@@ -13,6 +13,11 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/).
   la app tiene qué mostrar, sin pasar por la pantalla de la ruedita, salvo que la plataforma
   tarde más de 4 segundos en responder (ADR-0029, #171).
 
+### Corregido
+
+- En la app, cuando no logra conectar con la plataforma, el botón «Cambiar de plataforma» se
+  veía vacío en modo claro: su texto era del mismo azul que el fondo (#173).
+
 ## [0.14.0] - 2026-11-27
 
 ### Agregado
