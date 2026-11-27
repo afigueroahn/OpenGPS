@@ -6,6 +6,13 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Sin publicar]
 
+### Agregado
+
+- La app para iPhone tiene «Passkeys» en Cuenta, como el perfil de la web: muestra cada passkey
+  con su nombre y su fecha, se renombra en su fila y se borra con una confirmación. «Crear
+  passkey» sigue en la misma sección. Renombrar y borrar usan la sesión de la app; crear sigue
+  pidiendo entrar otra vez (ADR-0024, #145).
+
 ## [0.11.0] - 2026-11-27
 
 ### Agregado

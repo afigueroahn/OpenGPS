@@ -1,6 +1,6 @@
 # ADR-0023: Crear passkeys desde la app: volviendo a entrar en la ventana del sistema
 
-- **Estado:** Aceptada
+- **Estado:** Aceptada. Superseded by ADR-0024 en un punto: las passkeys también se ven, renombran y borran en la app
 - **Fecha:** 2026-11-27
 - **Decide:** Angel Figueroa (@afigueroahn)
 

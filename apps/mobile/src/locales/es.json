@@ -443,7 +443,8 @@
   },
   "common": {
     "close": "Cerrar",
-    "cancel": "Cancelar"
+    "cancel": "Cancelar",
+    "save": "Guardar"
   },
   "editVehicle": {
     "title": "Editar vehículo",
@@ -575,6 +576,21 @@
       "w": "oeste",
       "nw": "noroeste"
     }
+  },
+  "passkeys": {
+    "title": "Passkeys",
+    "name": "Nombre",
+    "namePlaceholder": "Ej.: iPhone de Ana",
+    "unnamed": "Passkey sin nombre",
+    "created": "Creada el {{date}}",
+    "createdSynced": "Creada el {{date}} · sincronizada",
+    "rename": "Cambiar el nombre de {{name}}",
+    "delete": "Borrar {{name}}",
+    "deleteTitle": "¿Borrar la passkey?",
+    "deleteBody": "«{{name}}» deja de servir para entrar aquí. Bórrala también de tu dispositivo o de tu llavero.",
+    "deleteConfirm": "Borrar",
+    "none": "Aún no tienes passkeys. Crea una para entrar con Face ID, sin contraseña.",
+    "noneHere": "Aún no tienes passkeys. Créalas en tu perfil, en la web."
   },
   "passkey": {
     "create": "Crear passkey",
