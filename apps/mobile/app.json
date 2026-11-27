@@ -45,7 +45,15 @@
           "microphonePermission": false
         }
       ],
-      "./plugins/allow-http"
+      "./plugins/allow-http",
+      [
+        "expo-splash-screen",
+        {
+          "backgroundColor": "#101623",
+          "image": "./assets/adaptive-icon.png",
+          "imageWidth": 200
+        }
+      ]
     ],
     "experiments": {
       "tsconfigPaths": false
