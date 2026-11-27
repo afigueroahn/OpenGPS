@@ -6,7 +6,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { KeyRound, type LucideIcon, Pencil, Trash2 } from "lucide-react-native";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { ActivityIndicator, Alert, Pressable, StyleSheet, Text, TextInput, View } from "react-native";
+import { ActivityIndicator, Alert, Platform, Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 import { deletePasskey, errorText, listPasskeys, passkeyCreateUrl, renamePasskey } from "../lib/api";
 import { formatDateTime } from "../lib/format";
 import { readPasskeyReturn } from "../lib/oauth";
@@ -73,7 +73,7 @@ function Passkeys({ fromApp }: { fromApp: boolean }) {
         ) : null}
         {list.isSuccess && passkeys.length === 0 ? (
           <View style={[styles.message, fromApp && line(theme.line)]}>
-            <Notice text={t(fromApp ? "passkeys.none" : "passkeys.noneHere")} tone="note" testID="passkeys-none" />
+            <Notice text={t(fromApp ? "passkeys.none" : "passkeys.noneHere", { context: Platform.OS })} tone="note" testID="passkeys-none" />
           </View>
         ) : null}
         {passkeys.map((p, i) => (
@@ -128,7 +128,7 @@ function PasskeyRow(props: { passkey: Passkey; last: boolean; onChange: () => Pr
   };
   const confirmDelete = () => {
     rename.reset();
-    Alert.alert(t("passkeys.deleteTitle"), t("passkeys.deleteBody", { name }), [
+    Alert.alert(t("passkeys.deleteTitle"), t("passkeys.deleteBody", { name, context: Platform.OS }), [
       { text: t("common.cancel"), style: "cancel" },
       { text: t("passkeys.deleteConfirm"), style: "destructive", onPress: () => remove.mutate() },
     ]);
@@ -160,7 +160,7 @@ function PasskeyRow(props: { passkey: Passkey; last: boolean; onChange: () => Pr
             maxLength={60}
             returnKeyType="done"
             editable={!rename.isPending}
-            placeholder={t("passkeys.namePlaceholder")}
+            placeholder={t("passkeys.namePlaceholder", { context: Platform.OS })}
             placeholderTextColor={theme.faint}
             accessibilityLabel={t("passkeys.name")}
             style={[styles.input, { color: theme.ink, borderColor: theme.line, backgroundColor: theme.canvas }]}

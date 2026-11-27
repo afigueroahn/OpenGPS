@@ -6,7 +6,8 @@ import { useRouter } from "expo-router";
 import { ChevronDown } from "lucide-react-native";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { ActionSheetIOS, Pressable, StyleSheet, Text, TextInput, View } from "react-native";
+import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
+import { showChoices } from "../../components/Choices";
 import { ModalScreen } from "../../components/ModalScreen";
 import { Button, Notice } from "../../components/ui";
 import { errorText, reportIncident } from "../../lib/api";
@@ -34,7 +35,7 @@ export default function ReportIncidentScreen() {
   });
   const chooseVehicle = () => {
     const options = [...vehicles.map((v) => (v.plate ? `${v.name} · ${v.plate}` : v.name)), t("common.cancel")];
-    ActionSheetIOS.showActionSheetWithOptions({ title: t("incidents.vehicle"), options, cancelButtonIndex: options.length - 1 }, (i) => {
+    showChoices({ title: t("incidents.vehicle"), options, cancelButtonIndex: options.length - 1 }, (i) => {
       const v = vehicles[i];
       if (v) setVehicleId(v.id);
     });

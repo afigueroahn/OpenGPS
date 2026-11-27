@@ -9,8 +9,9 @@ import { useLocalSearchParams, useRouter } from "expo-router";
 import { ChevronDown, Share2 } from "lucide-react-native";
 import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { ActionSheetIOS, ActivityIndicator, Alert, Pressable, ScrollView, Share, StatusBar, StyleSheet, Text, useWindowDimensions, View } from "react-native";
+import { ActivityIndicator, Alert, Pressable, ScrollView, Share, StatusBar, StyleSheet, Text, useWindowDimensions, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { showChoices } from "../../components/Choices";
 import { Player, RangePicker } from "../../components/history/HistoryControls";
 import { StopList, SummaryBlock, TripList } from "../../components/history/HistoryLists";
 import { Button, Card, Notice, Segmented } from "../../components/ui";
@@ -221,7 +222,7 @@ function ExportButton(props: { vehicleId: string; range: { from: Date; to: Date 
   };
   const choose = () => {
     const options = [...EXPORT_FORMATS.map((f) => t(`history.export.format.${f}`)), t("common.cancel")];
-    ActionSheetIOS.showActionSheetWithOptions({ title: t(`history.export.${props.what}`), options, cancelButtonIndex: options.length - 1 }, (i) => {
+    showChoices({ title: t(`history.export.${props.what}`), options, cancelButtonIndex: options.length - 1 }, (i) => {
       const format = EXPORT_FORMATS[i];
       if (format) void run(format);
     });

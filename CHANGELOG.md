@@ -11,6 +11,10 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/).
 - La app para Android: la misma app que la de iPhone, con el paquete `dev.opengps.app`, el
   ícono adaptado a Android y solo los permisos que usa (sin la ubicación que pedía el mapa).
   Entra también a una plataforma con `http://`, como la de iPhone a una IP (ADR-0026, #153).
+- En Android, elegir de una lista (el grupo, el conductor, el vehículo de un incidente, el
+  formato de exportación, la foto o la evidencia) abre una hoja desde abajo, y la foto de
+  perfil ofrece también la cámara. Los textos de passkeys nombran la huella y el gestor de
+  contraseñas de Google en lugar de Face ID y el llavero (#154).
 
 ### Cambiado
 

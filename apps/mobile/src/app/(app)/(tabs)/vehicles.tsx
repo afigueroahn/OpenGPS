@@ -5,7 +5,8 @@ import { useRouter } from "expo-router";
 import { ChevronDown, FolderTree } from "lucide-react-native";
 import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { ActionSheetIOS, FlatList, Pressable, RefreshControl, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
+import { FlatList, Pressable, RefreshControl, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
+import { showChoices } from "../../../components/Choices";
 import { Button, Centered, StatusDot, text } from "../../../components/ui";
 import { formatSpeed, timeAgo } from "../../../lib/format";
 import { applyFilters, countByStatus, FILTER_STATUSES, type Filters, NO_FILTERS } from "../../../lib/filters";
@@ -126,7 +127,7 @@ function GroupPicker(props: { groups: VehicleGroup[]; value: string; onChange: (
   const choose = () => {
     const values = ["all", ...tree.map((g) => g.id), "none"];
     const options = [t("list.allGroups"), ...tree.map((g) => `${indented(g)} (${g.total})`), t("list.noGroup"), t("common.cancel")];
-    ActionSheetIOS.showActionSheetWithOptions({ title: t("list.groupFilter"), options, cancelButtonIndex: options.length - 1 }, (i) => {
+    showChoices({ title: t("list.groupFilter"), options, cancelButtonIndex: options.length - 1 }, (i) => {
       const value = values[i];
       if (value !== undefined) props.onChange(value);
     });

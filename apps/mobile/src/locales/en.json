@@ -581,6 +581,7 @@
     "title": "Passkeys",
     "name": "Name",
     "namePlaceholder": "E.g. Ana’s iPhone",
+    "namePlaceholder_android": "E.g. Ana’s Android",
     "unnamed": "Unnamed passkey",
     "created": "Created {{date}}",
     "createdSynced": "Created {{date}} · synced",
@@ -588,8 +589,10 @@
     "delete": "Delete {{name}}",
     "deleteTitle": "Delete the passkey?",
     "deleteBody": "“{{name}}” will no longer sign you in here. Delete it from your device or keychain too.",
+    "deleteBody_android": "“{{name}}” will no longer sign you in here. Delete it from your device or Google Password Manager too.",
     "deleteConfirm": "Delete",
     "none": "You have no passkeys yet. Create one to sign in with Face ID, without a password.",
+    "none_android": "You have no passkeys yet. Create one to sign in with your fingerprint or screen lock, without a password.",
     "noneHere": "You have no passkeys yet. Create them in your profile, on the web."
   },
   "passkey": {
