@@ -5,7 +5,6 @@ import { useEffect, useRef } from "react";
 import { StyleSheet, View } from "react-native";
 import { AccountGate } from "../../components/AccountGate";
 import { AlertBanner } from "../../components/AlertBanner";
-import { LockScreen, useAppLock } from "../../components/AppLock";
 import { LiveContext } from "../../components/LiveBadge";
 import { pushAlert } from "../../lib/alerts";
 import { updateSettings } from "../../lib/api";
@@ -21,10 +20,7 @@ export default function AppLayout() {
   // Alerts that arrive live are shown over the screens.
   const live = useLive(me !== null, pushAlert);
   useAdoptPreferences();
-  const lock = useAppLock();
 
-  // Locked, the screens are not drawn at all: neither the tabs nor a sheet left open.
-  if (lock.locked) return <LockScreen onUnlock={lock.unlock} />;
   if (me && (me.needsConsent || me.account.suspended)) return <AccountGate me={me} />;
   return (
     <LiveContext value={live}>

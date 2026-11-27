@@ -1,29 +1,59 @@
 // The page the mobile app's sign-in window shows on coming back from another service (ADR-0014): the person
 // confirms the account they go back to the app with, and only then the platform hands out the pass.
 import { APP_SCHEME } from "@opengps/shared";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { Fingerprint } from "lucide-react";
 import { Trans, useTranslation } from "react-i18next";
+import { useSearchParams } from "react-router";
 import { Button, Notice, Spinner } from "../components/ui";
 import { ApiRequestError, appPass } from "../lib/api";
-import { useMe } from "../lib/session";
+import { passkeyMessage, passkeysInBrowser, signInWithPasskey } from "../lib/passkeys";
+import { useConfig, useMe } from "../lib/session";
 import { AuthLayout } from "./auth";
 
 /** Back to the app without a pass, with the reason: the app tells the person. */
 const backWithout = (error: string) => window.location.assign(`${APP_SCHEME}://oauth?error=${error}`);
 
+/**
+ * The app opens this page with ?via=passkey to sign in with a passkey (ADR-0020), here, in the system's window,
+ * where the passkeys are. Once in, the page asks to confirm the way back as always.
+ */
+function PasskeyForApp() {
+  const { t } = useTranslation();
+  const queryClient = useQueryClient();
+  const go = useMutation({ mutationFn: () => signInWithPasskey(), onSuccess: () => queryClient.invalidateQueries({ queryKey: ["me"] }) });
+  const problem = go.isError ? passkeyMessage(go.error) : null;
+  return (
+    <AuthLayout title={t("pages.appSignIn.passkeyTitle")} lead={t("pages.appSignIn.passkeyLead")}>
+      <div className="space-y-4">
+        {problem && <Notice tone="error">{problem}</Notice>}
+        <Button size="lg" full loading={go.isPending} onClick={() => go.mutate()}>
+          <Fingerprint size={18} aria-hidden="true" /> {t("passkeys.signIn")}
+        </Button>
+        <Button size="lg" full variant="secondary" disabled={go.isPending} onClick={() => backWithout("access_denied")}>
+          {t("pages.appSignIn.cancel")}
+        </Button>
+      </div>
+    </AuthLayout>
+  );
+}
+
 export function AppSignIn() {
   const me = useMe();
+  const config = useConfig();
+  const [params] = useSearchParams();
   const { t } = useTranslation();
   const pass = useMutation({ mutationFn: appPass, onSuccess: ({ url }) => window.location.assign(url) });
   const title = t("pages.appSignIn.title");
 
-  if (me.isLoading) {
+  if (me.isLoading || config.isLoading) {
     return (
       <AuthLayout title={title}>
         <Spinner />
       </AuthLayout>
     );
   }
+  if (!me.data && params.get("via") === "passkey" && config.data?.passkeys && passkeysInBrowser()) return <PasskeyForApp />;
   const expired = !me.data || (pass.error instanceof ApiRequestError && pass.error.status === 401);
   if (expired) {
     return (

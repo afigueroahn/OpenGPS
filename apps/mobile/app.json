@@ -16,13 +16,7 @@
       [
         "expo-secure-store",
         {
-          "faceIDPermission": "OpenGPS usa Face ID solo para desbloquear la app."
-        }
-      ],
-      [
-        "expo-local-authentication",
-        {
-          "faceIDPermission": "OpenGPS usa Face ID solo para desbloquear la app."
+          "faceIDPermission": false
         }
       ],
       "expo-localization",

@@ -29,7 +29,8 @@
     "resend": "Reenviar el enlace de confirmación",
     "resentOk": "Listo, te lo enviamos de nuevo. Puede tardar un minuto; mira también en el correo no deseado.",
     "resendFailed": "No pudimos reenviarlo. Inténtalo en un momento.",
-    "createAccount": "Créala gratis"
+    "createAccount": "Créala gratis",
+    "passkey": "Entrar con passkey"
   },
   "consent": {
     "title": "Actualizamos los términos",
@@ -574,18 +575,5 @@
       "w": "oeste",
       "nw": "noroeste"
     }
-  },
-  "lock": {
-    "toggle": "Desbloquear con {{method}}",
-    "toggleNote": "Al abrir la app y al volver a ella tras 5 minutos fuera.",
-    "confirm": "Confirma para desbloquear con {{method}}",
-    "title": "La app está bloqueada",
-    "body": "Desbloquéala para ver tu cuenta.",
-    "unlockWith": "Desbloquear con {{method}}",
-    "unlock": "Desbloquear",
-    "prompt": "Desbloquear la app",
-    "cancel": "Cancelar",
-    "passcode": "Usar código",
-    "failed": "No se desbloqueó. Vuelve a intentarlo o cierra sesión."
   }
 }
