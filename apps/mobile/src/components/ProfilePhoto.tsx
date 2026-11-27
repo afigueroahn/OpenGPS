@@ -5,11 +5,12 @@ import type { Me } from "@opengps/shared";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Camera } from "lucide-react-native";
 import { useTranslation } from "react-i18next";
-import { ActionSheetIOS, ActivityIndicator, Alert, Platform, Pressable, StyleSheet, View } from "react-native";
+import { ActivityIndicator, Alert, Pressable, StyleSheet, View } from "react-native";
 import { deletePhoto, errorText, uploadPhoto } from "../lib/api";
 import { PhotoError, pickPhoto } from "../lib/photo";
 import { useTheme } from "../lib/theme";
 import { Avatar } from "./Avatar";
+import { showChoices } from "./Choices";
 
 type Choice = "library" | "camera" | "remove";
 
@@ -41,25 +42,18 @@ export function ProfilePhoto(props: { user: Me["user"]; size?: number }) {
       { choice: "camera", label: t("photo.camera") },
       ...(hasPhoto ? [{ choice: "remove" as const, label: t("photo.remove") }] : []),
     ];
-    if (Platform.OS === "ios") {
-      ActionSheetIOS.showActionSheetWithOptions(
-        {
-          title: t("photo.change"),
-          options: [...choices.map((c) => c.label), t("photo.cancel")],
-          cancelButtonIndex: choices.length,
-          ...(hasPhoto ? { destructiveButtonIndex: choices.length - 1 } : {}),
-        },
-        (index) => {
-          const picked = choices[index];
-          if (picked) change.mutate(picked.choice);
-        },
-      );
-    } else {
-      Alert.alert(t("photo.change"), undefined, [
-        ...choices.filter((c) => c.choice !== "camera").map((c) => ({ text: c.label, onPress: () => change.mutate(c.choice) })),
-        { text: t("photo.cancel"), style: "cancel" as const },
-      ]);
-    }
+    showChoices(
+      {
+        title: t("photo.change"),
+        options: [...choices.map((c) => c.label), t("photo.cancel")],
+        cancelButtonIndex: choices.length,
+        ...(hasPhoto ? { destructiveButtonIndex: choices.length - 1 } : {}),
+      },
+      (index) => {
+        const picked = choices[index];
+        if (picked) change.mutate(picked.choice);
+      },
+    );
   };
 
   return (

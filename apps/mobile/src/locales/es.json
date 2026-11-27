@@ -581,6 +581,7 @@
     "title": "Passkeys",
     "name": "Nombre",
     "namePlaceholder": "Ej.: iPhone de Ana",
+    "namePlaceholder_android": "Ej.: Android de Ana",
     "unnamed": "Passkey sin nombre",
     "created": "Creada el {{date}}",
     "createdSynced": "Creada el {{date}} · sincronizada",
@@ -588,8 +589,10 @@
     "delete": "Borrar {{name}}",
     "deleteTitle": "¿Borrar la passkey?",
     "deleteBody": "«{{name}}» deja de servir para entrar aquí. Bórrala también de tu dispositivo o de tu llavero.",
+    "deleteBody_android": "«{{name}}» deja de servir para entrar aquí. Bórrala también de tu dispositivo o del gestor de contraseñas de Google.",
     "deleteConfirm": "Borrar",
     "none": "Aún no tienes passkeys. Crea una para entrar con Face ID, sin contraseña.",
+    "none_android": "Aún no tienes passkeys. Crea una para entrar con tu huella o el bloqueo de pantalla, sin contraseña.",
     "noneHere": "Aún no tienes passkeys. Créalas en tu perfil, en la web."
   },
   "passkey": {

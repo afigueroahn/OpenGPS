@@ -7,7 +7,8 @@ import { useLocalSearchParams, useRouter } from "expo-router";
 import { Paperclip } from "lucide-react-native";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { ActionSheetIOS, ActivityIndicator, Pressable, Share, StyleSheet, Text, TextInput, View } from "react-native";
+import { ActivityIndicator, Pressable, Share, StyleSheet, Text, TextInput, View } from "react-native";
+import { showChoices } from "../../components/Choices";
 import { ModalScreen } from "../../components/ModalScreen";
 import { Button, Card, Notice, SectionTitle } from "../../components/ui";
 import { attendIncident, closeIncident, downloadFile, errorText, evidencePath, getIncident, noteIncident, uploadEvidence } from "../../lib/api";
@@ -77,7 +78,7 @@ function Detail({ incident }: { incident: IncidentDetail }) {
   };
   const attach = () => {
     const options = [t("photo.library"), t("photo.camera"), t("common.cancel")];
-    ActionSheetIOS.showActionSheetWithOptions({ title: t("incidents.attach"), options, cancelButtonIndex: 2 }, (i) => {
+    showChoices({ title: t("incidents.attach"), options, cancelButtonIndex: 2 }, (i) => {
       if (i > 1) return;
       setPhotoProblem(null);
       pickEvidence(i === 0 ? "library" : "camera")

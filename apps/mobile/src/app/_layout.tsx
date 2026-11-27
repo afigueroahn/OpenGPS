@@ -9,6 +9,7 @@ import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { ActivityIndicator, Appearance, Platform, StatusBar, StyleSheet, Text, View } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
+import { ChoicesHost } from "../components/Choices";
 import { Button } from "../components/ui";
 import "../lib/i18n";
 import { queryClient } from "../lib/query";
@@ -29,6 +30,7 @@ export default function RootLayout() {
       <QueryClientProvider client={queryClient}>
         <ThemeSync />
         {fontsLoaded || fontError ? <Gate /> : <Splash />}
+        <ChoicesHost />
       </QueryClientProvider>
     </SafeAreaProvider>
   );

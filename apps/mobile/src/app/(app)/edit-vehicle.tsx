@@ -6,7 +6,8 @@ import { useLocalSearchParams, useRouter } from "expo-router";
 import { ChevronDown } from "lucide-react-native";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { ActionSheetIOS, Alert, Pressable, StyleSheet, Text, View } from "react-native";
+import { Alert, Pressable, StyleSheet, Text, View } from "react-native";
+import { showChoices } from "../../components/Choices";
 import { ModalScreen } from "../../components/ModalScreen";
 import { Button, Card, Field, Notice, SectionTitle } from "../../components/ui";
 import { errorText, removeDevice, updateVehicle } from "../../lib/api";
@@ -59,7 +60,7 @@ function EditForm({ vehicle }: { vehicle: Vehicle }) {
   const chooseGroup = () => {
     const values = [null, ...tree.map((g) => g.id)];
     const options = [t("list.noGroup"), ...tree.map(indented), t("common.cancel")];
-    ActionSheetIOS.showActionSheetWithOptions({ title: t("editVehicle.group"), options, cancelButtonIndex: options.length - 1 }, (i) => {
+    showChoices({ title: t("editVehicle.group"), options, cancelButtonIndex: options.length - 1 }, (i) => {
       if (i < values.length) setGroupId(values[i] ?? null);
     });
   };

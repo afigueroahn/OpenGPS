@@ -5,11 +5,12 @@ import type { Vehicle, VehicleDriver } from "@opengps/shared";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { IdCard, KeyRound } from "lucide-react-native";
 import { useTranslation } from "react-i18next";
-import { ActionSheetIOS, StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 import { errorText, getDrivers, getVehicleDriver, setVehicleDriver } from "../../lib/api";
 import { timeAgo } from "../../lib/format";
 import { useCan } from "../../lib/session";
 import { FONT, useTheme } from "../../lib/theme";
+import { showChoices } from "../Choices";
 import { Button, Card, Notice } from "../ui";
 
 export function DriverCard(props: { vehicle: Vehicle; now: number }) {
@@ -35,7 +36,7 @@ export function DriverCard(props: { vehicle: Vehicle; now: number }) {
   const choose = () => {
     const values = [...active.map((d) => d.id), null];
     const options = [...active.map((d) => (d.id === driver?.id ? `✓ ${d.name}` : d.name)), t("driver.noDriver"), t("common.cancel")];
-    ActionSheetIOS.showActionSheetWithOptions({ title: t("driver.select"), options, cancelButtonIndex: options.length - 1 }, (i) => {
+    showChoices({ title: t("driver.select"), options, cancelButtonIndex: options.length - 1 }, (i) => {
       if (i >= values.length) return;
       const next = values[i] ?? null;
       if (next !== (driver?.id ?? null)) assign.mutate(next);
