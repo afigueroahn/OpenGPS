@@ -6,6 +6,11 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Sin publicar]
 
+### Corregido
+
+- En la app, cuando no logra conectar con la plataforma, el botón «Cambiar de plataforma» se
+  veía vacío en modo claro: su texto era del mismo azul que el fondo (#173).
+
 ## [0.14.0] - 2026-11-27
 
 ### Agregado
