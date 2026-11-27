@@ -171,6 +171,29 @@ describe("platform settings", () => {
     expect(await publicConfig()).toMatchObject({ registrationOpen: true, maxUploadMb: 8, passwordPolicy: { minLength: 8 } });
   });
 
+  it("the platform's name starts as APP_NAME and changes from the console, everywhere at once (ADR-0022)", async () => {
+    const factoryName = loadConfig().appName;
+    const general = (await view()).general;
+    expect(general.appName).toBe(factoryName);
+    expect((await publicConfig()).appName).toBe(factoryName);
+    // It cannot be left empty.
+    expect((await save("general", { ...general, appName: "   " })).status).toBe(400);
+
+    expect((await save("general", { ...general, appName: " Rastreo Norte " })).status).toBe(200);
+    expect((await view()).general.appName).toBe("Rastreo Norte");
+    expect((await publicConfig()).appName).toBe("Rastreo Norte");
+    // The session library picked it up: new passkeys carry it.
+    expect((await admin("GET", "/api/auth/passkey/generate-register-options")).json.rp.name).toBe("Rastreo Norte");
+
+    // Back to the factory values, it is APP_NAME again.
+    const back = await admin("DELETE", "/api/admin/settings/general");
+    expect(back.json.settings.general.appName).toBe(factoryName);
+    expect((await publicConfig()).appName).toBe(factoryName);
+    expect((await admin("GET", "/api/auth/passkey/generate-register-options")).json.rp.name).toBe(factoryName);
+    // The rest of the tests go on with the settings as they were.
+    expect((await save("general", general)).status).toBe(200);
+  });
+
   it("what is saved applies from that moment, and what is invalid is rejected", async () => {
     const general = (await view()).general;
     const saved = await save("general", { ...general, mapStyleUrl: "https://mapas.ejemplo.com/estilo.json", claimWindowMinutes: 30, maxUploadMb: 20, legalEntity: "Rastreo de Prueba S.A.", legalCountry: "Honduras", legalContactEmail: "legal@ejemplo.com", alertEmail: "avisos@ejemplo.com" });

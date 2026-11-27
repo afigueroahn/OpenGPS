@@ -247,9 +247,10 @@ export async function buildApp(deps: AppDeps): Promise<App> {
   // Apple sends the person back with a form; it goes to the session library as it came.
   app.addContentTypeParser("application/x-www-form-urlencoded", { parseAs: "string" }, (_request, body, done) => done(null, body));
 
-  // The services people sign in with change from the console: the session library picks them up then.
+  // The services people sign in with and the platform's name change from the console: the session library picks
+  // them up then. The name goes in its emails and in the passkeys (ADR-0022).
   bus.on("settings_changed", ({ section }) => {
-    if (section === "oauth") auth.reload();
+    if (section === "oauth" || section === "general") auth.reload();
   });
 
   const routes: string[] = [];

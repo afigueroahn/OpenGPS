@@ -543,6 +543,9 @@
         "title": "Restablecer los valores de fábrica"
       },
       "general": {
+        "platform": "La plataforma",
+        "appName": "Nombre de la plataforma",
+        "appNameNote": "Sale en la web, la app, los correos, los avisos y las passkeys que se creen desde ahora.",
         "signup": "Registro y cuentas nuevas",
         "registrationOpen": "Registro abierto",
         "registrationOpenNote": "Cualquiera puede crear una cuenta. Apagado, solo se registra quien recibió una invitación a su correo.",

@@ -8,6 +8,11 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/).
 
 ### Cambiado
 
+- El nombre de la plataforma se cambia en la consola, en Ajustes, y vale desde que se guarda: en
+  la web, la app, los correos, los avisos y las passkeys nuevas. Nace con `APP_NAME`, u
+  «OpenGPS». Con Dokploy salía el nombre interno del compose (`opengps-opengps-…`): su compose
+  ya no pasa `APP_NAME`, y al actualizar la plataforma se llama «OpenGPS» hasta que el dueño
+  la renombre (ADR-0022, #133).
 - En la consola, el logo de arriba de la barra lateral lleva al inicio (#134).
 - El avatar con foto ya no lleva el aro blanco: se ve solo la foto, y si tiene fondo
   transparente deja ver lo que hay detrás, en la web y en la app (#131).

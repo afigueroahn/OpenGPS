@@ -619,6 +619,7 @@ export const en: SameShape<typeof es> = {
     giveName: "Give it a name",
     personName: "Enter your name, at least 2 letters long",
     accountName: "Enter the name of the account, at least 2 letters long",
+    appName: "Enter the name of the platform",
     dayNeeded: "Choose at least one day",
     vehicleNeeded: "Choose at least one vehicle",
     groupNeeded: "Choose at least one group",
