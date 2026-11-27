@@ -75,7 +75,7 @@ Las versiones anteriores a la 3 se retiraron sin convivencia, porque aún no hab
 | `POST /api/app/oauth` | Con sesión | `{}`, desde la página `/app-sign-in` | La persona confirmó (ADR-0014): `{ url }`, la dirección de la app con un pase de un solo uso que dura un minuto (`opengps://oauth?token=…`). La página lleva ahí a la persona. Solo con una sesión creada hace menos de cinco minutos; si no, 401 |
 | `GET /api/me` | Con sesión | | `Me`: persona (con `photoUrl`, la dirección de su foto o `null`), cuenta activa, permisos, grupos que ve, cuentas y preferencias |
 | `PUT /api/me/settings` | Con sesión | `{ name?, theme?, language?, phone? }`: solo cambia lo que se envía. `name` es el nombre de la persona, el mismo en todas sus cuentas; `theme` es `system`, `light` o `dark`; `language` es `es`, `en` o `null` (el de la plataforma); `phone` es el teléfono donde recibe los SMS, con su código de país, o `null` | 204 |
-| `PUT /api/me/photo` | Con sesión | La imagen tal cual (JPG, PNG o WebP, hasta 512 KB), con su tipo en `Content-Type`. La web la manda ya recortada en un cuadrado de 256 px | `{ photoUrl }`. La dirección cambia con cada foto |
+| `PUT /api/me/photo` | Con sesión | La imagen tal cual (JPG, PNG o WebP, hasta 512 KB), con su tipo en `Content-Type`. La web y la app la mandan ya recortada en un cuadrado de 256 px: en PNG si la imagen elegida era PNG o WebP, que puede tener fondo transparente, y si no en JPEG | `{ photoUrl }`. La dirección cambia con cada foto |
 | `GET /api/me/photo` | Con sesión | | La imagen; 404 si la persona no tiene foto |
 | `DELETE /api/me/photo` | Con sesión | | 204 |
 | `PATCH /api/account` | Dueño o administrador de la cuenta | `{ name }` | 204. Cambia el nombre de la cuenta y lo anota en su actividad |

@@ -122,8 +122,12 @@ export const updateSettings = (body: { name?: string; phone?: string | null; the
   api<null>("/api/me/settings", { method: "PUT", body });
 export const acceptTerms = () => api<null>("/api/consent", { method: "POST", body: { version: LEGAL_VERSION } });
 
-/** Replaces the person's photo with a JPEG already cut to size. Returns where the new one is served. */
-export const uploadPhoto = (data: Blob) => api<{ photoUrl: string }>("/api/me/photo", { method: "PUT", file: { data, type: "image/jpeg" } }).then((r) => r.photoUrl);
+/**
+ * Replaces the person's photo with one already cut to size, with its type, as pickPhoto gives it.
+ * Returns where the new one is served.
+ */
+export const uploadPhoto = (photo: { data: Blob; type: string }) =>
+  api<{ photoUrl: string }>("/api/me/photo", { method: "PUT", file: photo }).then((r) => r.photoUrl);
 export const deletePhoto = () => api<null>("/api/me/photo", { method: "DELETE" });
 
 /** Parked mode: the platform warns if the vehicle moves from where it was left. */

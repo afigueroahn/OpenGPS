@@ -172,7 +172,7 @@ function PhotoAndName({ me, children }: { me: Me; children: ReactNode }) {
     <div>
       <div className="flex items-start gap-4">
         <div className="relative shrink-0">
-          <Avatar name={me.user.name} photoUrl={me.user.photoUrl} className="h-14 w-14 bg-ink/[0.08] text-[20px] text-ink" />
+          <Avatar name={me.user.name} photoUrl={me.user.photoUrl} className="h-14 w-14 text-[20px] text-ink" fill="bg-ink/[0.08]" />
           <button
             type="button"
             onClick={pick}
