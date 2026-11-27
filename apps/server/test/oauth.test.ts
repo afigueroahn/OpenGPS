@@ -6,6 +6,7 @@ import http from "node:http";
 import type { AddressInfo } from "node:net";
 import { APP_OAUTH_PAGE, APP_OAUTH_RETURN, APP_OAUTH_START, APP_SCHEME, LEGAL_VERSION } from "@opengps/shared";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
+import { forgetSessionCookies } from "../src/auth";
 import { appleClientSecret } from "../src/core/oauth";
 import { type Harness, type TestUser, createHarness } from "./harness";
 
@@ -110,6 +111,9 @@ async function confirmForApp(cookie: string): Promise<string> {
   expect(confirmed.status, JSON.stringify(confirmed.json)).toBe(200);
   const url = new URL(confirmed.json.url as string);
   expect(`${url.protocol}//${url.host}`).toBe(`${APP_SCHEME}://oauth`);
+  // The browser forgets the session, which is now the app's (ADR-0025).
+  const forgotten = [confirmed.headers["set-cookie"]].flat().filter((c) => typeof c === "string" && /;\s*Max-Age=0/i.test(c));
+  expect(forgotten.map((c) => (c as string).split("=")[0])).toContain("gps.session_token");
   return url.searchParams.get("token") as string;
 }
 /** How many passes the platform has handed out and not used yet. */
@@ -247,6 +251,18 @@ describe("services to sign in with", () => {
     const again = await throughApp({ email, name: "Desde la App" }, "provider=custom");
     const second = await h.request("POST", "/api/auth/one-time-token/verify", { body: { token: await confirmForApp(again.cookie) } });
     expect((await meOf(cookiesOf(second.headers["set-cookie"]))).json.user.id).toBe(me.json.user.id);
+  });
+
+  it("the browser forgets only the platform's cookies, on https too (ADR-0025)", () => {
+    expect(forgetSessionCookies("gps.session_token=a.b; theme=dark; gps.dont_remember=x")).toEqual([
+      "gps.session_token=; Max-Age=0; Path=/; HttpOnly; SameSite=Lax",
+      "gps.dont_remember=; Max-Age=0; Path=/; HttpOnly; SameSite=Lax",
+    ]);
+    expect(forgetSessionCookies("__Secure-gps.session_token=a.b; __Secure-gps.session_token=a.b")).toEqual([
+      "__Secure-gps.session_token=; Max-Age=0; Path=/; HttpOnly; SameSite=Lax; Secure",
+    ]);
+    expect(forgetSessionCookies("gpsx=1; other.gps.session_token=2")).toEqual([]);
+    expect(forgetSessionCookies(undefined)).toEqual([]);
   });
 
   it("the app hears why the service did not let the person in, and nobody else gets a pass", async () => {
