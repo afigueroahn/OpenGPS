@@ -3,13 +3,17 @@
     "name": "OpenGPS",
     "slug": "opengps",
     "scheme": "opengps",
-    "version": "0.1.0",
+    "version": "1.0.0",
     "orientation": "portrait",
     "userInterfaceStyle": "automatic",
     "icon": "./assets/icon.png",
     "ios": {
       "bundleIdentifier": "dev.opengps.app",
-      "supportsTablet": false
+      "buildNumber": "1",
+      "supportsTablet": false,
+      "config": {
+        "usesNonExemptEncryption": false
+      }
     },
     "android": {
       "package": "dev.opengps.app",
@@ -46,6 +50,7 @@
         }
       ],
       "./plugins/allow-http",
+      "./plugins/upload-signing",
       [
         "expo-splash-screen",
         {

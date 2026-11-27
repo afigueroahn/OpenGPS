@@ -156,6 +156,35 @@ pnpm --filter @opengps/mobile android
 
 La primera vez genera `apps/mobile/android`, compila la app, la instala en el emulador y deja Metro en marcha. Las siguientes veces basta con Metro, como en iPhone. Para una plataforma local, `http://10.0.2.2:3000`: el emulador llega a la computadora en esa dirección.
 
+## Publicar las apps
+
+Las apps se compilan y se firman en la Mac, y se suben desde App Store Connect y Play Console (ADR-0030).
+
+**La primera vez:**
+
+- **iPhone:** en Xcode → Ajustes → Cuentas, entra con la cuenta del Apple Developer Program. Su Team ID va en `ios.appleTeamId` de `apps/mobile/app.json`.
+- **Android:** crea la clave de subida fuera del repo, con contraseñas propias, y guarda una copia aparte:
+
+  ```bash
+  "$JAVA_HOME/bin/keytool" -genkeypair -v -storetype PKCS12 -keystore ~/opengps-upload.p12 -alias opengps-upload -keyalg RSA -keysize 2048 -validity 10000
+  ```
+
+  Después agrega en `~/.gradle/gradle.properties`, que no está en el repo:
+
+  ```properties
+  OPENGPS_UPLOAD_STORE_FILE=/Users/TU_USUARIO/opengps-upload.p12
+  OPENGPS_UPLOAD_STORE_PASSWORD=…
+  OPENGPS_UPLOAD_KEY_ALIAS=opengps-upload
+  OPENGPS_UPLOAD_KEY_PASSWORD=…
+  ```
+
+  Sin esos datos, la compilación release se firma con la clave de depuración, que Google Play rechaza.
+
+**Cada envío:** sube `ios.buildNumber` y `android.versionCode` en `apps/mobile/app.json`, y `version` cuando cambie lo que ve la gente. Con las variables de la app para iPhone y para Android ya puestas:
+
+- **Android:** `pnpm --filter @opengps/mobile store:android` deja `apps/mobile/android/app/build/outputs/bundle/release/app-release.aab`, que se sube en Play Console.
+- **iPhone:** `pnpm --filter @opengps/mobile store:ios` deja `apps/mobile/ios/build/OpenGPS.xcarchive`. Se abre en Xcode (Window → Organizer) y se sube con **Distribute App → App Store Connect**.
+
 ## Simulador
 
 Para probar sin equipos, la plataforma trae un simulador en **Administración → Sistema → Simulador**, que solo ve su dueño. Cada equipo simulado se conecta al receptor igual que un GPS real y le envía las tramas de su marca, así que recorre el mismo camino: el receptor lo decodifica, la plataforma lo guarda y sus reglas, alertas y avisos se disparan.

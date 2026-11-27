@@ -8,6 +8,8 @@
     "start": "expo start --dev-client",
     "ios": "expo run:ios",
     "android": "expo run:android",
+    "store:android": "expo prebuild --platform android && cd android && ./gradlew app:bundleRelease",
+    "store:ios": "expo prebuild --platform ios && xcodebuild -workspace ios/OpenGPS.xcworkspace -scheme OpenGPS -configuration Release -destination generic/platform=iOS -archivePath ios/build/OpenGPS.xcarchive -allowProvisioningUpdates archive",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "lint": "oxlint src"
