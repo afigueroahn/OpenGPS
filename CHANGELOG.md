@@ -6,6 +6,8 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Sin publicar]
 
+## [0.10.1] - 2026-11-27
+
 ### Cambiado
 
 - El nombre de la plataforma se cambia en la consola, en Ajustes, y vale desde que se guarda: en
