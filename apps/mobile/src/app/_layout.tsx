@@ -5,6 +5,7 @@ import { JetBrainsMono_500Medium } from "@expo-google-fonts/jetbrains-mono";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
+import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { ActivityIndicator, Appearance, Platform, StatusBar, StyleSheet, Text, View } from "react-native";
@@ -17,6 +18,16 @@ import { useMe } from "../lib/session";
 import { save, useSaved } from "../lib/storage";
 import { barStyleFor, FONT, useTheme } from "../lib/theme";
 
+/**
+ * How long the launch screen waits for the platform to say who the person is. After that the app's own loading
+ * screen, the same color with a spinner, shows until it answers (ADR-0029).
+ */
+const LAUNCH_WAIT_MS = 4000;
+
+// The launch screen, the logo on the app's color, stays until the app has something to show (ADR-0029).
+void SplashScreen.preventAutoHideAsync();
+SplashScreen.setOptions({ fade: true, duration: 250 });
+
 export default function RootLayout() {
   const [fontsLoaded, fontError] = useFonts({
     InstrumentSans_400Regular,
@@ -25,6 +36,10 @@ export default function RootLayout() {
     InstrumentSans_700Bold,
     JetBrainsMono_500Medium,
   });
+  useEffect(() => {
+    const timer = setTimeout(SplashScreen.hide, LAUNCH_WAIT_MS);
+    return () => clearTimeout(timer);
+  }, []);
   return (
     <SafeAreaProvider>
       <QueryClientProvider client={queryClient}>
@@ -58,9 +73,13 @@ function Gate() {
   const cookie = useSaved((s) => s.cookie);
   const me = useMe();
   const signedIn = server !== null && cookie !== "" && Boolean(me.data);
-
   // With a session kept, the platform is asked who it is before showing anything.
-  if (server && cookie && me.isPending) return <Splash />;
+  const waiting = Boolean(server && cookie && me.isPending);
+  useEffect(() => {
+    if (!waiting) SplashScreen.hide();
+  }, [waiting]);
+
+  if (waiting) return <Splash />;
   // The platform does not answer: the session is kept until it does.
   if (server && cookie && me.isError && !me.data) {
     return (

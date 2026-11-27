@@ -6,6 +6,13 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Sin publicar]
 
+### Cambiado
+
+- La app para iPhone y Android abre con su propia pantalla de arranque: el logo de OpenGPS
+  sobre su azul, en lugar de la pantalla blanca de ejemplo de Expo. Sigue a la vista hasta que
+  la app tiene qué mostrar, sin pasar por la pantalla de la ruedita, salvo que la plataforma
+  tarde más de 4 segundos en responder (ADR-0029, #171).
+
 ## [0.14.0] - 2026-11-27
 
 ### Agregado
