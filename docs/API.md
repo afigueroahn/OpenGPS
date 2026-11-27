@@ -62,7 +62,7 @@ Las versiones anteriores a la 3 se retiraron sin convivencia, porque aún no hab
 | Ruta | Quién | Devuelve |
 |---|---|---|
 | `GET /api/health` | Pública | `{ ok, version, ingest, live }`; 503 si la base no responde |
-| `GET /api/config` | Pública | `PublicConfig`: nombre, mapa base, servidor de equipos, versión de los términos, los servicios con que se puede entrar (`signIn`, en el orden de sus botones), si hay passkeys (`passkeys`) y si la dirección las permite aunque estén apagadas (`passkeysSupported`), `apiVersion` y `version`: la de la plataforma, la de su release (`0.1.0`) o la del repositorio con `-dev` si se construyó desde el código |
+| `GET /api/config` | Pública | `PublicConfig`: nombre, mapa base, servidor de equipos, versión de los términos, los servicios con que se puede entrar (`signIn`, en el orden de sus botones), si hay passkeys (`passkeys`) si la dirección las permite aunque estén apagadas (`passkeysSupported`), si la app puede crearlas ahí (`passkeysFromApp`; una plataforma anterior no lo manda), `apiVersion` y `version`: la de la plataforma, la de su release (`0.1.0`) o la del repositorio con `-dev` si se construyó desde el código |
 
 ### Sesión y cuenta
 
@@ -503,5 +503,7 @@ Las rutas bajo `/api/auth/` las atiende la librería de sesión. Las que usan la
 | `POST /api/auth/delete-user` | Eliminar la cuenta propia, con la contraseña; quien no tiene contraseña (`me.user.hasPassword` en falso), sin ella y con una sesión de menos de un día. Quien administra la plataforma no puede: responde 403 con `code: "PLATFORM_OWNER"` |
 
 Las rutas `/api/auth/passkey/*` solo responden si `GET /api/config` dice `passkeys: true`: la plataforma tiene HTTPS y un nombre de dominio (o es `localhost`), y la consola no las apagó (`passkeysEnabled` en la sección `general`). Si no, responden 404 con `code: "passkeys_off"`. Cada passkey pide Face ID, huella o PIN, y es del dominio de `PUBLIC_URL`: si la instalación cambia de dominio, dejan de servir (ADR-0020).
+
+La app crea passkeys en la página `/app-passkey`, que abre en la ventana de inicio de sesión del sistema en modo efímero. Ahí la persona vuelve a entrar y crea la passkey. La página cierra esa sesión y vuelve a `opengps://passkey?created=1`, o a `opengps://passkey?error=` con `access_denied` (canceló) o `unavailable` (la plataforma o el navegador no tienen passkeys) (ADR-0023).
 
 Las rutas `/api/auth/organization/*` y `/api/auth/admin/*` no están disponibles: responden 404. Las cuentas, los usuarios y los roles se administran con las rutas de este documento.

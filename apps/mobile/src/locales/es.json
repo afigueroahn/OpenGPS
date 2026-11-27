@@ -575,5 +575,11 @@
       "w": "oeste",
       "nw": "noroeste"
     }
+  },
+  "passkey": {
+    "create": "Crear passkey",
+    "opening": "Abriendo…",
+    "created": "Passkey creada. La próxima vez entra con «Entrar con passkey».",
+    "failed": "No se pudo crear la passkey. Vuelve a intentarlo."
   }
 }

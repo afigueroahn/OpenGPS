@@ -78,6 +78,13 @@
     "passkeyTitle": "Entra con tu passkey",
     "passkeyLead": "Usa Face ID, la huella o el código QR de otro teléfono para volver a la app con tu cuenta."
   },
+  "appPasskey": {
+    "title": "Crea una passkey",
+    "lead": "Para <b>{{email}}</b>. Usa Face ID, Touch ID o la huella; luego vuelves a la app y entras con «Entrar con passkey».",
+    "unavailable": "Esta plataforma o este navegador no permiten crear passkeys.",
+    "back": "Volver a la app",
+    "signInAgain": "Entrar de nuevo"
+  },
   "delivery": {
     "done": "Entregado",
     "doneAt": "El {{date}}.",

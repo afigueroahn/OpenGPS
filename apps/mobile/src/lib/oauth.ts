@@ -2,7 +2,7 @@
 // says when it sends the person back to the app's address, and how to tell
 // the person what happened. Same reasons as the web app's (routes/auth.tsx).
 // React Native's URL cannot read an address's parts, so they are read by hand.
-import { APP_SCHEME } from "@opengps/shared";
+import { APP_PASSKEY_RETURN, APP_SCHEME } from "@opengps/shared";
 
 /** What came back to the app: a pass to exchange for the session, or why there is none. */
 export type AppReturn = { token: string } | { error: string; description: string | null };
@@ -37,6 +37,15 @@ export function readAppReturn(url: string): AppReturn | null {
   const query = readQuery(rest.slice(rest.indexOf("?") + 1));
   if (query.token) return { token: query.token };
   return { error: query.error ?? "failed", description: query.error_description ?? null };
+}
+
+/** What the platform's page for creating a passkey says when it sends the person back (ADR-0023); null if it is not that address. */
+export function readPasskeyReturn(url: string): { created: true } | { error: string } | null {
+  if (!url.startsWith(APP_PASSKEY_RETURN)) return null;
+  const rest = url.slice(APP_PASSKEY_RETURN.length);
+  if (rest !== "" && !rest.startsWith("?") && !rest.startsWith("/?")) return null;
+  const query = readQuery(rest.slice(rest.indexOf("?") + 1));
+  return query.created === "1" ? { created: true } : { error: query.error ?? "failed" };
 }
 
 /**

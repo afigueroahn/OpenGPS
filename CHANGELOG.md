@@ -6,6 +6,13 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Sin publicar]
 
+### Agregado
+
+- La app para iPhone crea passkeys: «Crear passkey» en Cuenta abre la plataforma en la
+  ventana de inicio de sesión del sistema. Ahí se vuelve a entrar, se crea la passkey con
+  Face ID y se vuelve a la app, que dice si se creó. La sesión de la app no cambia. Solo se
+  ofrece donde la plataforma lo permite: `GET /api/config` suma `passkeysFromApp` (ADR-0023, #141).
+
 ## [0.10.1] - 2026-11-27
 
 ### Cambiado

@@ -78,6 +78,13 @@
     "passkeyTitle": "Sign in with your passkey",
     "passkeyLead": "Use Face ID, your fingerprint or the QR code of another phone to go back to the app with your account."
   },
+  "appPasskey": {
+    "title": "Create a passkey",
+    "lead": "For <b>{{email}}</b>. Use Face ID, Touch ID or your fingerprint; then go back to the app and sign in with “Sign in with a passkey”.",
+    "unavailable": "This platform or this browser cannot create passkeys.",
+    "back": "Back to the app",
+    "signInAgain": "Sign in again"
+  },
   "delivery": {
     "done": "Delivered",
     "doneAt": "On {{date}}.",
