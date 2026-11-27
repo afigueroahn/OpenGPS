@@ -344,6 +344,9 @@ importers:
       '@opengps/shared':
         specifier: workspace:*
         version: link:../../packages/shared
+      '@simplewebauthn/browser':
+        specifier: ^13.3.0
+        version: 13.3.0
       '@tanstack/react-query':
         specifier: ^5.108.2
         version: 5.108.2(@types/react@19.3.0)(react@19.3.1)

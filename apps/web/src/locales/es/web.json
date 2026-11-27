@@ -417,6 +417,11 @@
         "secret": "Secreto del cliente",
         "scopes": "Permisos que pide",
         "scopesNote": "Separados por espacios. Hacen falta openid y email."
+      },
+      "passkeys": {
+        "title": "Passkeys",
+        "note": "Entrar sin contraseña, con Face ID, la huella, Windows Hello o una llave de seguridad. Cada persona crea las suyas en su perfil.",
+        "noHttps": "Esta dirección no las permite: las passkeys necesitan HTTPS y un dominio."
       }
     },
     "channels": {
@@ -1073,5 +1078,29 @@
     "myVehicles": "Mis vehículos",
     "error": "Algo falló. Inténtalo de nuevo.",
     "newVersion": "Versión nueva: {{version}}"
+  },
+  "passkeys": {
+    "title": "Passkeys",
+    "lead": "Entra sin contraseña, con Face ID, Touch ID, Windows Hello, la huella o una llave de seguridad. Cada passkey queda en tu dispositivo o en tu llavero (iCloud, Google) y solo sirve en esta plataforma.",
+    "name": "Nombre",
+    "namePlaceholder": "Ej.: iPhone de Ana",
+    "unnamed": "Passkey sin nombre",
+    "create": "Crear passkey",
+    "created": "Creada el {{date}}",
+    "createdSynced": "Creada el {{date}} · sincronizada",
+    "delete": "Borrar {{name}}",
+    "deleteTitle": "¿Borrar la passkey?",
+    "deleteBody": "«{{name}}» deja de servir para entrar aquí. Bórrala también de tu dispositivo o de tu llavero.",
+    "deleteConfirm": "Borrar",
+    "noBrowser": "Este navegador no puede usar passkeys.",
+    "signIn": "Entrar con passkey",
+    "errors": {
+      "cancelled": "Se canceló o se acabó el tiempo. Vuelve a intentarlo.",
+      "already": "Este dispositivo ya tiene una passkey para tu cuenta.",
+      "device": "El dispositivo no pudo usar la passkey. Vuelve a intentarlo o entra de otra forma.",
+      "notFresh": "Por seguridad, para crear una passkey vuelve a entrar y repite este paso.",
+      "unknown": "Esa passkey ya no está en esta plataforma. Entra de otra forma y bórrala de tu dispositivo.",
+      "failed": "No se pudo comprobar la passkey. Vuelve a intentarlo."
+    }
   }
 }

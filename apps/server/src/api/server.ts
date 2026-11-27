@@ -106,7 +106,7 @@ import type { Mailer } from "../mail";
 import type { Traccar } from "../traccar";
 import type { Backups } from "../core/backups";
 import { signInButtons } from "../core/oauth";
-import { isPasskeyRoute, passkeysAvailable } from "../core/passkeys";
+import { isPasskeyRoute, passkeyParty, passkeysAvailable } from "../core/passkeys";
 import type { Settings } from "../core/settings";
 import type { Updates } from "../core/updates";
 import { type LiveHub, createLiveHub } from "./live";
@@ -404,6 +404,7 @@ export async function buildApp(deps: AppDeps): Promise<App> {
     registrationOpen: config.registrationOpen,
     signIn: signInButtons(config),
     passkeys: passkeysAvailable(config),
+    passkeysSupported: passkeyParty(config.publicUrl) !== null,
     passwordPolicy: config.passwordPolicy,
     maxUploadMb: config.maxUploadMb,
   });

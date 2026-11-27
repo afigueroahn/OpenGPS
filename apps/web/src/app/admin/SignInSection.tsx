@@ -2,7 +2,7 @@
 // password. Whoever runs the platform connects each one here, once: one
 // button per service opens what it needs, with the address the service has to
 // send people back to.
-import { OAUTH_PROVIDERS, type OAuthProvider, type OAuthSettings, type OAuthSettingsInput } from "@opengps/shared";
+import { type GeneralSettings, OAUTH_PROVIDERS, type OAuthProvider, type OAuthSettings, type OAuthSettingsInput } from "@opengps/shared";
 import clsx from "clsx";
 import { ChevronRight } from "lucide-react";
 import { type FormEvent, useEffect, useState } from "react";
@@ -11,6 +11,7 @@ import { useSearchParams } from "react-router";
 import { BrandMark } from "../../components/BrandMark";
 import { Button, CopyText, Modal, Notice, Spinner } from "../../components/ui";
 import { inputClass } from "../reports/kit";
+import { useConfig } from "../../lib/session";
 import { errorText } from "../widgets";
 import { Row, Switch, useSaveSection, useSettings } from "./SettingsTabs";
 
@@ -24,6 +25,26 @@ function inputOf(o: OAuthSettings): OAuthSettingsInput {
     return rest;
   };
   return { google: plain("google"), github: plain("github"), facebook: plain("facebook"), apple: plain("apple"), custom: plain("custom") };
+}
+
+/** Passkeys (ADR-0020), on unless turned off here. Without HTTPS and a domain they cannot work, and the switch says so. */
+function PasskeysSwitch({ general }: { general: GeneralSettings }) {
+  const { t } = useTranslation();
+  const supported = useConfig().data?.passkeysSupported ?? false;
+  const save = useSaveSection("general");
+  return (
+    <section className="rounded-[14px] border border-line bg-surface p-5">
+      <Row title={t("admin.signIn.passkeys.title")} note={t(supported ? "admin.signIn.passkeys.note" : "admin.signIn.passkeys.noHttps")}>
+        <Switch
+          label={t("admin.signIn.passkeys.title")}
+          checked={supported && general.passkeysEnabled}
+          disabled={!supported || save.isPending}
+          onChange={(on) => save.mutate({ ...general, passkeysEnabled: on })}
+        />
+      </Row>
+      {save.isError && <Notice tone="error">{errorText(save.error)}</Notice>}
+    </section>
+  );
 }
 
 export function SignInSection() {
@@ -46,6 +67,7 @@ export function SignInSection() {
   const nameOf = (p: OAuthProvider) => (p === "custom" ? oauth.custom.name || t("admin.signIn.custom.title") : NAME[p]);
   return (
     <div className="space-y-5">
+      <PasskeysSwitch general={settings.data.general} />
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-5">
         {OAUTH_PROVIDERS.map((p) => {
           const on = oauth[p].enabled && oauth[p].hasSecret;

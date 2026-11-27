@@ -8,6 +8,11 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/).
 
 ### Agregado
 
+- En la web, cada persona crea, nombra y borra sus passkeys en su perfil, y entra con una
+  desde el inicio de sesión: con «Entrar con passkey» o eligiéndola entre las sugerencias del
+  navegador en el campo de correo. La consola tiene el interruptor de las passkeys en
+  «Inicio de sesión»; si la dirección no tiene HTTPS y un dominio, no se puede encender y dice
+  por qué. `GET /api/config` suma `passkeysSupported` (#124).
 - La plataforma acepta passkeys (FIDO2/WebAuthn): registrar varias por persona, entrar con
   ellas sin contraseña, y nombrarlas y borrarlas. Cada una pide Face ID, huella o PIN, y la
   sesión que abren es la de siempre. Solo funcionan con HTTPS y un dominio, y la consola las

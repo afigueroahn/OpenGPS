@@ -1,18 +1,21 @@
 // Your own corner of the panel: who you are in this account, how you see the
 // platform and what you can do about your privacy.
 import { type Me, USER_PHOTO_TYPES } from "@opengps/shared";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { Camera, DoorOpen, FileText, LogOut, Pencil, Phone, Plus, ShieldCheck, Trash2 } from "lucide-react";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { Camera, DoorOpen, FileText, KeyRound, LogOut, Pencil, Phone, Plus, ShieldCheck, Trash2 } from "lucide-react";
 import { type ReactNode, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Avatar } from "../../components/Avatar";
 import { LanguageSwitch } from "../../components/LanguageSwitch";
 import { ThemeSwitch } from "../../components/ThemeSwitch";
-import { Button, Field, Spinner } from "../../components/ui";
+import { Button, Field, Notice, Spinner } from "../../components/ui";
 import { ApiRequestError, auth, deletePhoto, leaveAccount, renameAccount, saveSettings, uploadPhoto } from "../../lib/api";
+import { formatDateTime } from "../../lib/format";
 import i18n, { LANGUAGE_CHOICE_OPEN } from "../../lib/i18n";
 import { squarePhoto } from "../../lib/image";
-import { errorText } from "../widgets";
+import { type Passkey, createPasskey, deletePasskey, listPasskeys, passkeyMessage, passkeysInBrowser, renamePasskey } from "../../lib/passkeys";
+import { useConfig } from "../../lib/session";
+import { ConfirmDialog, errorText } from "../widgets";
 import { DeleteAccountDialog } from "../PrivacyDialogs";
 
 function Block({ title, lead, children }: { title: string; lead?: string; children: ReactNode }) {
@@ -213,9 +216,89 @@ function PhotoAndName({ me, children }: { me: Me; children: ReactNode }) {
   );
 }
 
+/** The person's passkeys (ADR-0020), to sign in without a password: they create, rename and delete their own here. */
+function PasskeysBlock() {
+  const { t } = useTranslation();
+  const queryClient = useQueryClient();
+  const list = useQuery({ queryKey: ["passkeys"], queryFn: listPasskeys });
+  const [name, setName] = useState("");
+  const [removing, setRemoving] = useState<Passkey | null>(null);
+  const refresh = () => queryClient.invalidateQueries({ queryKey: ["passkeys"] });
+  const create = useMutation({
+    mutationFn: () => createPasskey(name),
+    onSuccess: async () => {
+      setName("");
+      await refresh();
+    },
+  });
+  const problem = create.isError ? passkeyMessage(create.error) : null;
+  const nameOf = (p: Passkey) => p.name || t("passkeys.unnamed");
+  return (
+    <Block title={t("passkeys.title")} lead={t("passkeys.lead")}>
+      {list.isError && <Notice tone="error">{errorText(list.error)}</Notice>}
+      {list.data && list.data.length > 0 && (
+        <ul className="mb-4 divide-y divide-line rounded-[12px] border border-line">
+          {list.data.map((p) => (
+            <li key={p.id} className="flex items-center gap-3 px-4 py-3">
+              <KeyRound size={18} className="shrink-0 text-muted" aria-hidden="true" />
+              <div className="min-w-0 flex-1">
+                <div className="text-[14.5px] font-medium text-ink">
+                  <EditableName label={t("passkeys.name")} value={nameOf(p)} editable save={(n) => renamePasskey(p.id, n).then(refresh)} inline />
+                </div>
+                <p className="text-[12.5px] text-muted">{t(p.backedUp ? "passkeys.createdSynced" : "passkeys.created", { date: formatDateTime(p.createdAt) })}</p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setRemoving(p)}
+                aria-label={t("passkeys.delete", { name: nameOf(p) })}
+                title={t("passkeys.delete", { name: nameOf(p) })}
+                className="shrink-0 rounded-md p-1.5 text-muted hover:bg-canvas hover:text-danger"
+              >
+                <Trash2 size={15} />
+              </button>
+            </li>
+          ))}
+        </ul>
+      )}
+      {passkeysInBrowser() ? (
+        <form
+          className="flex flex-wrap items-end gap-2"
+          noValidate
+          onSubmit={(e) => {
+            e.preventDefault();
+            create.mutate();
+          }}
+        >
+          <Field className="min-w-0 flex-1 basis-56" label={t("passkeys.name")} placeholder={t("passkeys.namePlaceholder")} value={name} onChange={(e) => setName(e.target.value)} maxLength={60} />
+          <Button type="submit" loading={create.isPending}>
+            <Plus size={16} aria-hidden="true" /> {t("passkeys.create")}
+          </Button>
+        </form>
+      ) : (
+        <Notice tone="info">{t("passkeys.noBrowser")}</Notice>
+      )}
+      {problem && (
+        <div className="mt-3">
+          <Notice tone="error">{problem}</Notice>
+        </div>
+      )}
+      <ConfirmDialog
+        open={removing !== null}
+        title={t("passkeys.deleteTitle")}
+        confirm={t("passkeys.deleteConfirm")}
+        onClose={() => setRemoving(null)}
+        action={() => (removing ? deletePasskey(removing.id).then(refresh) : Promise.resolve())}
+      >
+        {t("passkeys.deleteBody", { name: removing ? nameOf(removing) : "" })}
+      </ConfirmDialog>
+    </Block>
+  );
+}
+
 export function ProfileSection({ me }: { me: Me }) {
   const { t } = useTranslation();
   const queryClient = useQueryClient();
+  const passkeys = useConfig().data?.passkeys ?? false;
   const [deleting, setDeleting] = useState(false);
   const signOut = async () => {
     await auth.signOut().catch(() => {});
@@ -264,6 +347,8 @@ export function ProfileSection({ me }: { me: Me }) {
       )}
 
       <PhoneBlock me={me} />
+
+      {passkeys && <PasskeysBlock />}
 
       <Block title={t("admin.profile.privacy")}>
         <ul className="space-y-2.5">
