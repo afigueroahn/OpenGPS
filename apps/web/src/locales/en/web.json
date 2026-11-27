@@ -28,6 +28,7 @@
   "admin": {
     "title": "Administration",
     "back": "My vehicles",
+    "home": "Go to the home page",
     "groups": {
       "general": "General",
       "modules": "Modules",
