@@ -1,6 +1,7 @@
 // API client. Every call goes to the platform the person chose, with the
 // session cookie the app keeps; the system's own cookie jar is never used.
 import {
+  APP_OAUTH_PAGE,
   APP_OAUTH_START,
   type AccountSummary,
   type CreateVehicleInput,
@@ -277,6 +278,9 @@ const VERIFIED_PAGE = "/login?verified=1";
 export function oauthStartUrl(provider: OAuthProvider, legalVersion: string | null): string {
   return `${getSaved().server}${APP_OAUTH_START}?${writeQuery({ provider, ...(legalVersion ? { legalVersion } : {}) })}`;
 }
+
+/** The platform's page where the person signs in with a passkey and confirms the way back to the app (ADR-0020). */
+export const passkeyPageUrl = (): string => `${getSaved().server}${APP_OAUTH_PAGE}?via=passkey`;
 
 export const auth = {
   /**

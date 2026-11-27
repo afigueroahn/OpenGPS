@@ -29,7 +29,8 @@
     "resend": "Resend the confirmation link",
     "resentOk": "Done, we sent it again. It may take a minute; check your spam folder too.",
     "resendFailed": "We couldn't resend it. Try again in a moment.",
-    "createAccount": "Create one for free"
+    "createAccount": "Create one for free",
+    "passkey": "Sign in with a passkey"
   },
   "consent": {
     "title": "We updated the terms",
@@ -574,18 +575,5 @@
       "w": "west",
       "nw": "northwest"
     }
-  },
-  "lock": {
-    "toggle": "Unlock with {{method}}",
-    "toggleNote": "When the app opens, and when you come back after 5 minutes away.",
-    "confirm": "Confirm to unlock with {{method}}",
-    "title": "The app is locked",
-    "body": "Unlock it to see your account.",
-    "unlockWith": "Unlock with {{method}}",
-    "unlock": "Unlock",
-    "prompt": "Unlock the app",
-    "cancel": "Cancel",
-    "passcode": "Use passcode",
-    "failed": "It was not unlocked. Try again or sign out."
   }
 }

@@ -8,7 +8,7 @@ import { useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Pressable, StyleSheet, Text, type TextInput } from "react-native";
 import { AuthFrame, authStyles } from "../components/AuthFrame";
-import { ServiceButtons } from "../components/ServiceButtons";
+import { PasskeyButton, ServiceButtons } from "../components/ServiceButtons";
 import { Button, Field, Notice } from "../components/ui";
 import { ApiRequestError, auth, authMessage } from "../lib/api";
 import { useConfig } from "../lib/session";
@@ -96,6 +96,7 @@ export default function SignInScreen() {
       <Pressable accessibilityRole="button" onPress={() => router.push({ pathname: "/forgot", params: { email: email.latest().trim() } })} testID="forgot-password">
         <Text style={authStyles.link}>{t("signIn.forgot")}</Text>
       </Pressable>
+      <PasskeyButton />
       <ServiceButtons from="signIn" />
       <Pressable accessibilityRole="button" onPress={() => router.push("/sign-up")} testID="go-sign-up">
         <Text style={authStyles.link}>

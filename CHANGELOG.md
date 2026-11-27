@@ -8,6 +8,11 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/).
 
 ### Agregado
 
+- La app para iPhone entra con passkeys: «Entrar con passkey» abre la plataforma en la
+  ventana de inicio de sesión del sistema, que pide Face ID o el código QR de otro teléfono,
+  y vuelve a la app con la sesión. Sirven las passkeys creadas en la web. El bloqueo de la
+  app con Face ID, que no llegó a publicarse, se quita: lo reemplazan las passkeys, y la app
+  ya no pide el permiso de Face ID (ADR-0021, #125).
 - En la web, cada persona crea, nombra y borra sus passkeys en su perfil, y entra con una
   desde el inicio de sesión: con «Entrar con passkey» o eligiéndola entre las sugerencias del
   navegador en el campo de correo. La consola tiene el interruptor de las passkeys en
@@ -17,11 +22,6 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/).
   ellas sin contraseña, y nombrarlas y borrarlas. Cada una pide Face ID, huella o PIN, y la
   sesión que abren es la de siempre. Solo funcionan con HTTPS y un dominio, y la consola las
   puede apagar. La web y la app las usarán en sus propias entregas (ADR-0020, #123).
-- La app para iPhone se puede desbloquear con Face ID, o con Touch ID según el iPhone. Se
-  enciende en Cuenta, junto a tus datos, y viene apagado. Encendido, la app pide Face ID al
-  abrirse y al volver a ella tras 5 minutos fuera, y no muestra nada de la cuenta hasta
-  pasarlo. Si Face ID falla se puede usar el código del iPhone o cerrar sesión. Cerrar
-  sesión o cambiar de plataforma lo apaga. Usa `expo-local-authentication` (ADR-0019, #119).
 
 ### Corregido
 

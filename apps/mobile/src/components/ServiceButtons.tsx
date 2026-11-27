@@ -8,30 +8,30 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { ActivityIndicator, Linking, Pressable, StyleSheet, Text, View } from "react-native";
-import { auth, authMessage, oauthStartUrl } from "../lib/api";
+import { auth, authMessage, oauthStartUrl, passkeyPageUrl } from "../lib/api";
 import { problemOf, readAppReturn } from "../lib/oauth";
 import { useConfig } from "../lib/session";
 import { useSaved } from "../lib/storage";
 import { FONT } from "../lib/theme";
 import { Notice } from "./ui";
 
-export function ServiceButtons(props: { from: "signIn" | "signUp" }) {
+/**
+ * Signing in through the system's sign-in window (ADR-0013): it opens at the platform and comes back to the app with
+ * a pass the app exchanges for its session. `going` says which button opened it.
+ */
+function useWindowSignIn() {
   const { t } = useTranslation();
   const queryClient = useQueryClient();
-  const server = useSaved((s) => s.server);
-  const buttons = useConfig().data?.signIn ?? [];
-  const [going, setGoing] = useState<OAuthProvider | null>(null);
+  const [going, setGoing] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
-  if (buttons.length === 0) return null;
-
-  const go = async (provider: OAuthProvider) => {
-    setGoing(provider);
+  const open = async (button: string, url: string) => {
+    setGoing(button);
     setError(null);
     try {
       // Loaded only here: an app built before it had this module still opens.
       const WebBrowser = await import("expo-web-browser");
       // Ephemeral: the platform's session does not stay in the phone's browser.
-      const result = await WebBrowser.openAuthSessionAsync(oauthStartUrl(provider, LEGAL_VERSION), "opengps://oauth", { preferEphemeralSession: true });
+      const result = await WebBrowser.openAuthSessionAsync(url, "opengps://oauth", { preferEphemeralSession: true });
       if (result.type !== "success") return;
       const back = readAppReturn(result.url);
       if (!back) return setError(t("services.failed"));
@@ -48,6 +48,42 @@ export function ServiceButtons(props: { from: "signIn" | "signUp" }) {
       setGoing(null);
     }
   };
+  return { going, error, open };
+}
+
+/**
+ * Signing in with a passkey (ADR-0020): the platform's page asks for Face ID or the QR code of another phone in the
+ * system's sign-in window, where the passkeys created on the web are, and the person confirms the way back.
+ */
+export function PasskeyButton() {
+  const { t } = useTranslation();
+  const passkeys = useConfig().data?.passkeys ?? false;
+  const { going, error, open } = useWindowSignIn();
+  if (!passkeys) return null;
+  return (
+    <View style={styles.block}>
+      <Pressable
+        accessibilityRole="button"
+        accessibilityLabel={t("signIn.passkey")}
+        disabled={going !== null}
+        onPress={() => void open("passkey", passkeyPageUrl())}
+        style={({ pressed }) => [styles.button, { opacity: pressed ? 0.8 : 1 }]}
+        testID="passkey"
+      >
+        {going ? <ActivityIndicator color="#ffffff" /> : <Text style={styles.buttonText}>{t("signIn.passkey")}</Text>}
+      </Pressable>
+      {error ? <Notice dark text={error} testID="passkey-error" /> : null}
+    </View>
+  );
+}
+
+export function ServiceButtons(props: { from: "signIn" | "signUp" }) {
+  const { t } = useTranslation();
+  const server = useSaved((s) => s.server);
+  const buttons = useConfig().data?.signIn ?? [];
+  const { going, error, open } = useWindowSignIn();
+  if (buttons.length === 0) return null;
+  const go = (provider: OAuthProvider) => open(provider, oauthStartUrl(provider, LEGAL_VERSION));
 
   return (
     <View style={styles.block} testID="service-buttons">

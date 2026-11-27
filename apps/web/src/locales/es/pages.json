@@ -74,7 +74,9 @@
     "cancel": "Cancelar",
     "notYou": "Si no estabas entrando desde la app, no sigas: cancela o cierra esta página.",
     "failed": "No se pudo volver a la app. Inténtalo de nuevo.",
-    "expired": "Esta entrada ya no sirve. Vuelve a la app e inténtalo de nuevo."
+    "expired": "Esta entrada ya no sirve. Vuelve a la app e inténtalo de nuevo.",
+    "passkeyTitle": "Entra con tu passkey",
+    "passkeyLead": "Usa Face ID, la huella o el código QR de otro teléfono para volver a la app con tu cuenta."
   },
   "delivery": {
     "done": "Entregado",

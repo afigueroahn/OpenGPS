@@ -1,6 +1,6 @@
 # ADR-0019: Desbloquear la app para iPhone con Face ID, con `expo-local-authentication`
 
-- **Estado:** Aceptada
+- **Estado:** Superseded by ADR-0021: la app ya no se bloquea; Face ID llega con las passkeys para entrar
 - **Fecha:** 2026-11-26
 - **Decide:** Angel Figueroa (@afigueroahn)
 
