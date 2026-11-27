@@ -7,14 +7,14 @@ import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { ActivityIndicator, Appearance, StatusBar, StyleSheet, Text, View } from "react-native";
+import { ActivityIndicator, Appearance, Platform, StatusBar, StyleSheet, Text, View } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { Button } from "../components/ui";
 import "../lib/i18n";
 import { queryClient } from "../lib/query";
 import { useMe } from "../lib/session";
 import { save, useSaved } from "../lib/storage";
-import { FONT } from "../lib/theme";
+import { barStyleFor, FONT, useTheme } from "../lib/theme";
 
 export default function RootLayout() {
   const [fontsLoaded, fontError] = useFonts({
@@ -34,12 +34,19 @@ export default function RootLayout() {
   );
 }
 
-/** The system's own parts (the sheet, the keyboard, the status bar) follow the theme the person chose. */
+/**
+ * The system's own parts (the sheet, the keyboard, the status bar) follow the theme the person chose. Android's status
+ * bar does not follow it by itself.
+ */
 function ThemeSync() {
   const theme = useSaved((s) => s.theme);
+  const palette = useTheme();
   useEffect(() => {
     Appearance.setColorScheme(theme === "system" ? "unspecified" : theme);
   }, [theme]);
+  useEffect(() => {
+    if (Platform.OS === "android") StatusBar.setBarStyle(barStyleFor(palette));
+  }, [palette]);
   return null;
 }
 

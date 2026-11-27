@@ -68,6 +68,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 10,
     shadowOffset: { width: 0, height: 4 },
+    elevation: 8,
   },
   text: { flex: 1, gap: 2 },
   title: { fontFamily: FONT.semibold, fontSize: 15, color: "#ffffff" },

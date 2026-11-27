@@ -1,7 +1,7 @@
 // Brand colors and type, the same as the web app's (apps/web/src/styles.css),
 // in a light and a dark palette.
 import type { VehicleStatus } from "@opengps/shared";
-import { useColorScheme } from "react-native";
+import { Platform, type StatusBarStyle, useColorScheme } from "react-native";
 import { useSaved } from "./storage";
 
 export interface Palette {
@@ -91,3 +91,6 @@ export function useTheme(): Palette {
   const dark = mode === "dark" || (mode === "system" && system === "dark");
   return dark ? DARK : LIGHT;
 }
+
+/** The status bar over the app's own screens. iOS's "default" follows the theme; Android's is always light icons. */
+export const barStyleFor = (theme: Palette): StatusBarStyle => (Platform.OS === "ios" ? "default" : theme.dark ? "light-content" : "dark-content");
