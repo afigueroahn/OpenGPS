@@ -137,7 +137,7 @@ export function Segmented<T extends string>(props: { value: T; options: { value:
             accessibilityRole="button"
             accessibilityState={{ selected: on }}
             onPress={() => props.onChange(o.value)}
-            style={[styles.segment, on && { backgroundColor: theme.surface, shadowOpacity: 0.12 }]}
+            style={[styles.segment, on && { backgroundColor: theme.surface, shadowOpacity: 0.12, elevation: 1 }]}
           >
             <Text numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.75} style={[styles.segmentText, { color: on ? theme.ink : theme.muted }]}>
               {o.label}

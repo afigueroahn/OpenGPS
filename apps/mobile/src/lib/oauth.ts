@@ -48,6 +48,9 @@ export function readPasskeyReturn(url: string): { created: true } | { error: str
   return query.created === "1" ? { created: true } : { error: query.error ?? "failed" };
 }
 
+/** Whether an address is one of the ways back from the sign-in window, which the screen that opened it reads. */
+export const isWindowReturn = (url: string) => readAppReturn(url) !== null || readPasskeyReturn(url) !== null;
+
 /**
  * The text to say about a reason: a catalog key, or the platform's own words, which already come in the app's
  * language (the terms, registration closed).

@@ -60,6 +60,7 @@ En la raíz:
 - `node_modules`: las librerías, que `pnpm install` descarga según `pnpm-lock.yaml`. Hay una carpeta por cada parte del proyecto, pero la de la raíz guarda cada librería una sola vez y las demás solo apuntan a ella.
 - `dist`: lo compilado.
 - `apps/mobile/ios`: el proyecto de Xcode de la app, que Expo genera al compilarla.
+- `apps/mobile/android`: el proyecto de Android de la app, que Expo genera al compilarla.
 - Los archivos de variables con valores reales: `apps/server/.env.local` en desarrollo y `deploy/docker-compose/.env` al levantar la plataforma desde el código. Un servidor instalado con la guía no tiene el repositorio: su `.env` está en `/opt/opengps`.
 
 ## Requisitos
@@ -142,6 +143,18 @@ pnpm --filter @opengps/mobile start
 ```
 
 Al abrirla pide la dirección de la plataforma, con `app.opengps.dev` ya escrita. Para una plataforma local, `http://localhost:3000`: el simulador llega a la computadora en `localhost`.
+
+## App para Android
+
+Es la misma app. Se compila con Android Studio, que trae el SDK de Android y el emulador, y con Java 17, que pide React Native 0.83 (el Java de Android Studio es más nuevo): por ejemplo Eclipse Temurin 17, de adoptium.net. En **Device Manager** se crea un teléfono con la imagen **Google Play**: trae Chrome, donde la app entra con otro servicio y con passkeys. Con el emulador abierto:
+
+```bash
+export ANDROID_HOME="$HOME/Library/Android/sdk"
+export JAVA_HOME="$(/usr/libexec/java_home -v 17)"
+pnpm --filter @opengps/mobile android
+```
+
+La primera vez genera `apps/mobile/android`, compila la app, la instala en el emulador y deja Metro en marcha. Las siguientes veces basta con Metro, como en iPhone. Para una plataforma local, `http://10.0.2.2:3000`: el emulador llega a la computadora en esa dirección.
 
 ## Simulador
 

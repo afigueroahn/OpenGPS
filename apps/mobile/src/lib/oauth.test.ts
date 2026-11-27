@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { problemOf, readAppReturn, readPasskeyReturn, readQuery, writeQuery } from "./oauth";
+import { isWindowReturn, problemOf, readAppReturn, readPasskeyReturn, readQuery, writeQuery } from "./oauth";
 
 describe("coming back to the app from another service", () => {
   it("brings the pass to exchange for the session", () => {
@@ -15,6 +15,16 @@ describe("coming back to the app from another service", () => {
     expect(readAppReturn("https://ejemplo.com/oauth?token=abc")).toBeNull();
     expect(readAppReturn("opengps://otra?token=abc")).toBeNull();
     expect(readAppReturn("no es una dirección")).toBeNull();
+  });
+});
+
+describe("the ways back from the sign-in window", () => {
+  it("are told apart from the app's other addresses, which the router opens", () => {
+    expect(isWindowReturn("opengps://oauth?token=abc123")).toBe(true);
+    expect(isWindowReturn("opengps://oauth?error=access_denied")).toBe(true);
+    expect(isWindowReturn("opengps://passkey?created=1")).toBe(true);
+    expect(isWindowReturn("opengps://vehicle?id=1")).toBe(false);
+    expect(isWindowReturn("/history")).toBe(false);
   });
 });
 

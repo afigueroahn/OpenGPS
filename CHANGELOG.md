@@ -6,6 +6,12 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Sin publicar]
 
+### Agregado
+
+- La app para Android: la misma app que la de iPhone, con el paquete `dev.opengps.app`, el
+  ícono adaptado a Android y solo los permisos que usa (sin la ubicación que pedía el mapa).
+  Entra también a una plataforma con `http://`, como la de iPhone a una IP (ADR-0026, #153).
+
 ## [0.12.0] - 2026-11-27
 
 ### Agregado

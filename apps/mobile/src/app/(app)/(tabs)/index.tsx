@@ -13,7 +13,7 @@ import { VehicleMap } from "../../../map/VehicleMap";
 import { getTrack } from "../../../lib/api";
 import { isSheetOpen, select, useSelected } from "../../../lib/selection";
 import { useConfig, useNow } from "../../../lib/session";
-import { useTheme } from "../../../lib/theme";
+import { barStyleFor, useTheme } from "../../../lib/theme";
 import { mergeTrack, TRACK_MINUTES, trackPoint } from "../../../lib/track";
 import { useVehicles } from "../../../lib/vehicles";
 
@@ -38,8 +38,8 @@ export default function MapScreen() {
   useFocusEffect(
     useCallback(() => {
       StatusBar.setBarStyle("dark-content");
-      return () => StatusBar.setBarStyle("default");
-    }, []),
+      return () => StatusBar.setBarStyle(barStyleFor(theme));
+    }, [theme]),
   );
 
   // The trip of the last hour, asked for once per vehicle, with each position that arrives live after it.
@@ -118,6 +118,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.18,
     shadowRadius: 6,
     shadowOffset: { width: 0, height: 2 },
+    elevation: 4,
   },
   empty: { position: "absolute", left: 16, right: 16, bottom: 16, padding: 14, borderRadius: 14 },
 });

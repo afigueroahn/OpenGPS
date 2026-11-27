@@ -3,11 +3,11 @@
 // engine lock and recovery mode (module A), its fuel (module F), parked mode,
 // its latest events and sharing its location.
 import { type Vehicle, vehicleStatus } from "@opengps/shared";
-import { useRouter } from "expo-router";
+import { useFocusEffect, useRouter } from "expo-router";
 import { Pencil, X } from "lucide-react-native";
-import { useEffect } from "react";
+import { useCallback, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+import { Platform, Pressable, ScrollView, StatusBar, StyleSheet, Text, View } from "react-native";
 import { Button, Card, Notice, Row, StatusDot } from "../../components/ui";
 import { DiagCard } from "../../components/vehicle/DiagCard";
 import { DriverCard } from "../../components/vehicle/DriverCard";
@@ -19,7 +19,7 @@ import { ShareCard } from "../../components/vehicle/ShareCard";
 import { decimalMark, formatCoords, formatCourse, formatSpeed, timeAgo } from "../../lib/format";
 import { select, setSheetOpen, useSelected } from "../../lib/selection";
 import { useCan, useMe, useNow } from "../../lib/session";
-import { FONT, useTheme } from "../../lib/theme";
+import { barStyleFor, FONT, useTheme } from "../../lib/theme";
 import { useAddress, useVehicles } from "../../lib/vehicles";
 
 export default function VehicleSheet() {
@@ -41,11 +41,21 @@ export default function VehicleSheet() {
     };
   }, []);
 
+  // On Android the light map stays under the status bar at every height of the sheet, and the bar does not follow it.
+  useFocusEffect(
+    useCallback(() => {
+      if (Platform.OS !== "android") return;
+      StatusBar.setBarStyle("dark-content");
+      return () => StatusBar.setBarStyle(barStyleFor(theme));
+    }, [theme]),
+  );
+
   if (!vehicle) return <View style={[styles.fill, { backgroundColor: theme.surface }]} />;
   const status = vehicleStatus(vehicle, now);
 
   return (
-    <ScrollView style={{ backgroundColor: theme.surface }} contentContainerStyle={styles.content} testID="vehicle-sheet">
+    // On Android the sheet grows with the drag only if the list lets the gesture through.
+    <ScrollView style={{ backgroundColor: theme.surface }} contentContainerStyle={styles.content} nestedScrollEnabled testID="vehicle-sheet">
       <View style={styles.header}>
         <StatusDot color={theme.status[status]} size={14} />
         <View style={styles.title}>
