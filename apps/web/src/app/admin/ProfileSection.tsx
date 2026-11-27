@@ -1,17 +1,17 @@
 // Your own corner of the panel: who you are in this account, how you see the
 // platform and what you can do about your privacy.
-import { type Me, type Passkey, USER_PHOTO_TYPES } from "@opengps/shared";
+import { type Me, PASSWORD_POLICY_DEFAULT, type Passkey, USER_PHOTO_TYPES, passwordHint, passwordProblem } from "@opengps/shared";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Camera, DoorOpen, FileText, KeyRound, LogOut, Pencil, Phone, Plus, ShieldCheck, Trash2 } from "lucide-react";
-import { type ReactNode, useRef, useState } from "react";
+import { Camera, DoorOpen, FileText, KeyRound, LogOut, Mail, Pencil, Phone, Plus, ShieldCheck, Trash2 } from "lucide-react";
+import { type ChangeEvent, type ReactNode, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Avatar } from "../../components/Avatar";
 import { LanguageSwitch } from "../../components/LanguageSwitch";
 import { ThemeSwitch } from "../../components/ThemeSwitch";
 import { Button, Field, Notice, Spinner } from "../../components/ui";
-import { ApiRequestError, auth, deletePhoto, leaveAccount, renameAccount, saveSettings, uploadPhoto } from "../../lib/api";
+import { ApiRequestError, auth, authMessage, deletePhoto, leaveAccount, renameAccount, saveSettings, uploadPhoto } from "../../lib/api";
 import { formatDateTime } from "../../lib/format";
-import i18n, { LANGUAGE_CHOICE_OPEN } from "../../lib/i18n";
+import i18n, { LANGUAGE_CHOICE_OPEN, sayShared } from "../../lib/i18n";
 import { squarePhoto } from "../../lib/image";
 import { createPasskey, deletePasskey, listPasskeys, passkeyMessage, passkeysInBrowser, renamePasskey } from "../../lib/passkeys";
 import { useConfig } from "../../lib/session";
@@ -216,6 +216,86 @@ function PhotoAndName({ me, children }: { me: Me; children: ReactNode }) {
   );
 }
 
+/**
+ * The person's password (ADR-0028): changed here with the current one, closing the other sessions if they want.
+ * Whoever has none gets the link to create one sent to their email.
+ */
+function PasswordBlock({ me }: { me: Me }) {
+  const { t } = useTranslation();
+  const policy = useConfig().data?.passwordPolicy ?? PASSWORD_POLICY_DEFAULT;
+  const [current, setCurrent] = useState("");
+  const [next, setNext] = useState("");
+  const [others, setOthers] = useState(true);
+  const [weak, setWeak] = useState<string | null>(null);
+  const change = useMutation({
+    mutationFn: (closeOthers: boolean) => auth.changePassword(current, next, closeOthers),
+    onSuccess: () => {
+      setCurrent("");
+      setNext("");
+    },
+  });
+  const link = useMutation({ mutationFn: () => auth.requestPasswordReset(me.user.email) });
+
+  if (!me.user.hasPassword) {
+    return (
+      <Block title={t("admin.profile.password.title")} lead={t("admin.profile.password.noneLead")}>
+        {link.isSuccess ? (
+          <Notice tone="success">{t("admin.profile.password.sent", { email: me.user.email })}</Notice>
+        ) : (
+          <Button variant="secondary" loading={link.isPending} onClick={() => link.mutate()}>
+            <Mail size={16} aria-hidden="true" /> {t("admin.profile.password.send")}
+          </Button>
+        )}
+        {link.isError && <p className="mt-2 text-[13px] text-danger">{authMessage(link.error)}</p>}
+      </Block>
+    );
+  }
+
+  const typing = (set: (value: string) => void) => (e: ChangeEvent<HTMLInputElement>) => {
+    set(e.target.value);
+    setWeak(null);
+    change.reset();
+  };
+  const failed = change.error instanceof ApiRequestError && change.error.code === "INVALID_PASSWORD" ? t("admin.profile.password.wrongCurrent") : change.isError ? authMessage(change.error) : null;
+  return (
+    <Block title={t("admin.profile.password.title")} lead={t("admin.profile.password.lead")}>
+      <form
+        className="max-w-[460px] space-y-3"
+        noValidate
+        onSubmit={(e) => {
+          e.preventDefault();
+          const problem = passwordProblem(next, policy);
+          if (problem) return setWeak(sayShared(problem));
+          change.mutate(others);
+        }}
+      >
+        {/* So the browser's password manager knows whose password it saves. */}
+        <input type="email" name="username" autoComplete="username" value={me.user.email} readOnly hidden />
+        <Field label={t("admin.profile.password.current")} type="password" autoComplete="current-password" value={current} onChange={typing(setCurrent)} />
+        <Field
+          label={t("admin.profile.password.new")}
+          type="password"
+          autoComplete="new-password"
+          minLength={policy.minLength}
+          hint={sayShared(passwordHint(policy))}
+          error={weak}
+          value={next}
+          onChange={typing(setNext)}
+        />
+        <label className="flex items-center gap-2.5 text-[14.5px] text-ink">
+          <input type="checkbox" checked={others} onChange={(e) => setOthers(e.target.checked)} className="h-4 w-4 accent-ink" />
+          {t("admin.profile.password.others")}
+        </label>
+        {failed && <Notice tone="error">{failed}</Notice>}
+        {change.isSuccess && <Notice tone="success">{t(change.variables ? "admin.profile.password.changedOthers" : "admin.profile.password.changed")}</Notice>}
+        <Button type="submit" loading={change.isPending} disabled={!current || !next}>
+          {t("admin.profile.password.save")}
+        </Button>
+      </form>
+    </Block>
+  );
+}
+
 /** The person's passkeys (ADR-0020), to sign in without a password: they create, rename and delete their own here. */
 function PasskeysBlock() {
   const { t } = useTranslation();
@@ -347,6 +427,8 @@ export function ProfileSection({ me }: { me: Me }) {
       )}
 
       <PhoneBlock me={me} />
+
+      <PasswordBlock me={me} />
 
       {passkeys && <PasskeysBlock />}
 
