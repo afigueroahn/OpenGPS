@@ -6,6 +6,8 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Sin publicar]
 
+## [0.9.0] - 2026-11-26
+
 ### Agregado
 
 - La app para iPhone entra al repositorio, en `apps/mobile/`: elegir la plataforma, entrar y
