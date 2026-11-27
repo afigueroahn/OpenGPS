@@ -12,6 +12,8 @@ export interface Saved {
   theme: ThemeMode;
   /** null = the device's. */
   language: Language | null;
+  /** Unlock the app with Face ID (ADR-0019). */
+  faceId: boolean;
 }
 
 const THEMES: readonly ThemeMode[] = ["system", "light", "dark"];
@@ -32,6 +34,7 @@ function load(): Saved {
     cookie: read("cookie") ?? "",
     theme: THEMES.find((t) => t === theme) ?? "system",
     language: LANGUAGES.find((l) => l === language) ?? null,
+    faceId: read("faceId") === "1",
   };
 }
 
@@ -42,12 +45,14 @@ export const getSaved = (): Saved => state;
 
 /** Changes what is remembered and tells the screens. */
 export function save(patch: Partial<Saved>): void {
-  const next = { ...state, ...patch };
-  for (const key of Object.keys(patch) as (keyof Saved)[]) {
+  // Without a session Face ID goes off: whoever signs in next on this phone turns it on again.
+  const changes: Partial<Saved> = patch.cookie === "" ? { ...patch, faceId: false } : patch;
+  const next = { ...state, ...changes };
+  for (const key of Object.keys(changes) as (keyof Saved)[]) {
     const value = next[key];
     if (value === state[key]) continue;
-    if (value === null || value === "") void SecureStore.deleteItemAsync(key);
-    else void SecureStore.setItemAsync(key, value);
+    if (value === null || value === "" || value === false) void SecureStore.deleteItemAsync(key);
+    else void SecureStore.setItemAsync(key, value === true ? "1" : value);
   }
   state = next;
   for (const listener of listeners) listener();

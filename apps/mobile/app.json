@@ -13,7 +13,18 @@
     },
     "plugins": [
       "expo-router",
-      "expo-secure-store",
+      [
+        "expo-secure-store",
+        {
+          "faceIDPermission": "OpenGPS usa Face ID solo para desbloquear la app."
+        }
+      ],
+      [
+        "expo-local-authentication",
+        {
+          "faceIDPermission": "OpenGPS usa Face ID solo para desbloquear la app."
+        }
+      ],
       "expo-localization",
       "@maplibre/maplibre-react-native",
       [

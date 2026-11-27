@@ -6,6 +6,14 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Sin publicar]
 
+### Agregado
+
+- La app para iPhone se puede desbloquear con Face ID, o con Touch ID según el iPhone. Se
+  enciende en Cuenta, junto a tus datos, y viene apagado. Encendido, la app pide Face ID al
+  abrirse y al volver a ella tras 5 minutos fuera, y no muestra nada de la cuenta hasta
+  pasarlo. Si Face ID falla se puede usar el código del iPhone o cerrar sesión. Cerrar
+  sesión o cambiar de plataforma lo apaga. Usa `expo-local-authentication` (ADR-0019, #119).
+
 ### Corregido
 
 - Una foto de perfil PNG o WebP con fondo transparente conserva la transparencia, en la web
