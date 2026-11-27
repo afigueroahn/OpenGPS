@@ -9,13 +9,13 @@ import { useLocalSearchParams, useRouter } from "expo-router";
 import { ChevronDown, Share2 } from "lucide-react-native";
 import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { ActivityIndicator, Alert, Pressable, ScrollView, Share, StatusBar, StyleSheet, Text, useWindowDimensions, View } from "react-native";
+import { ActivityIndicator, Alert, Pressable, ScrollView, StatusBar, StyleSheet, Text, useWindowDimensions, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { showChoices } from "../../components/Choices";
 import { Player, RangePicker } from "../../components/history/HistoryControls";
 import { StopList, SummaryBlock, TripList } from "../../components/history/HistoryLists";
 import { Button, Card, Notice, Segmented } from "../../components/ui";
-import { downloadFile, getHistory, historyExportPath } from "../../lib/api";
+import { downloadFile, getHistory, historyExportPath, shareFile } from "../../lib/api";
 import { between, momentAt, pickRate, presetRange, type Range, reachesFuture, wholeDays } from "../../lib/history";
 import { useConfig } from "../../lib/session";
 import { FONT, useTheme } from "../../lib/theme";
@@ -213,7 +213,7 @@ function ExportButton(props: { vehicleId: string; range: { from: Date; to: Date 
     try {
       const zone = getCalendars()[0]?.timeZone ?? "UTC";
       const file = await downloadFile(historyExportPath(props.vehicleId, props.range.from, props.range.to, format, zone));
-      await Share.share({ url: file.uri });
+      await shareFile(file);
     } catch {
       Alert.alert(t("history.export.failed"));
     } finally {

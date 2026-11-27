@@ -15,6 +15,8 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/).
   formato de exportación, la foto o la evidencia) abre una hoja desde abajo, y la foto de
   perfil ofrece también la cámara. Los textos de passkeys nombran la huella y el gestor de
   contraseñas de Google en lugar de Face ID y el llavero (#154).
+- Exportar el historial y abrir las evidencias de un incidente comparten el archivo con la
+  hoja del sistema también en Android, con `expo-sharing` (ADR-0027, #156).
 
 ## [0.12.0] - 2026-11-27
 
