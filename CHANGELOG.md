@@ -6,6 +6,8 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Sin publicar]
 
+## [0.13.0] - 2026-11-27
+
 ### Agregado
 
 - La app para Android: la misma app que la de iPhone, con el paquete `dev.opengps.app`, el
