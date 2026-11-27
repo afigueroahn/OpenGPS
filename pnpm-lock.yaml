@@ -240,6 +240,9 @@ importers:
       expo-sharing:
         specifier: ~55.0.25
         version: 55.0.25(expo@55.0.32)(react-native@0.83.10(@babel/core@7.29.13(supports-color@8.1.1))(@types/react@19.2.18)(react@19.2.0)(supports-color@8.1.1))(react@19.2.0)(supports-color@8.1.1)
+      expo-splash-screen:
+        specifier: ~55.0.25
+        version: 55.0.25(expo@55.0.32)(supports-color@8.1.1)(typescript@7.0.2)
       expo-web-browser:
         specifier: ~55.0.20
         version: 55.0.20(expo@55.0.32)(react-native@0.83.10(@babel/core@7.29.13(supports-color@8.1.1))(@types/react@19.2.18)(react@19.2.0)(supports-color@8.1.1))
@@ -3245,6 +3248,11 @@ packages:
       expo: '*'
       react: '*'
       react-native: '*'
+
+  expo-splash-screen@55.0.25:
+    resolution: {integrity: sha512-Jl3VPbNqbgGjXlkH93hi4Y4p6GB5DasLNbpL2Gb4kl8grujKaIGi4rXL25qYbYxIzefSlt96NqG9czanxxooPg==}
+    peerDependencies:
+      expo: '*'
 
   expo-symbols@55.0.9:
     resolution: {integrity: sha512-F85C/8ExQjd2gYjasLVKMT8wPj+1+19TVTqg4jAeVjVZklqiQtLO72io9Ji1xAjYNgmDeUI0diVHlFMMTC4Ekg==}
@@ -8014,6 +8022,14 @@ snapshots:
       react-native: 0.83.10(@babel/core@7.29.13(supports-color@8.1.1))(@types/react@19.2.18)(react@19.2.0)(supports-color@8.1.1)
     transitivePeerDependencies:
       - supports-color
+
+  expo-splash-screen@55.0.25(expo@55.0.32)(supports-color@8.1.1)(typescript@7.0.2):
+    dependencies:
+      '@expo/prebuild-config': 55.0.22(expo@55.0.32)(supports-color@8.1.1)(typescript@7.0.2)
+      expo: 55.0.32(@babel/core@7.29.13(supports-color@8.1.1))(@expo/dom-webview@55.0.6)(@expo/metro-runtime@55.0.12)(expo-router@55.0.18)(react-dom@19.3.1(react@19.2.0))(react-native@0.83.10(@babel/core@7.29.13(supports-color@8.1.1))(@types/react@19.2.18)(react@19.2.0)(supports-color@8.1.1))(react@19.2.0)(supports-color@8.1.1)(typescript@7.0.2)
+    transitivePeerDependencies:
+      - supports-color
+      - typescript
 
   expo-symbols@55.0.9(expo-font@55.0.8)(expo@55.0.32)(react-native@0.83.10(@babel/core@7.29.13(supports-color@8.1.1))(@types/react@19.2.18)(react@19.2.0)(supports-color@8.1.1))(react@19.2.0):
     dependencies:
