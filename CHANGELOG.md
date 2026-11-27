@@ -6,6 +6,8 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Sin publicar]
 
+## [0.14.0] - 2026-11-27
+
 ### Agregado
 
 - Un correo avisa a la persona cuando su contraseña cambia, desde su perfil o con el enlace
