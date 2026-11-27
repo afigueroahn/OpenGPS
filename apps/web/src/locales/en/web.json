@@ -681,6 +681,10 @@
             "name": "Password change",
             "note": "Sent when someone asks for a new password, with the link to create it."
           },
+          "passwordChanged": {
+            "name": "Password changed",
+            "note": "Sent when someone changes their password or creates it with the link, in case it was not them."
+          },
           "existingAccount": {
             "name": "Existing account",
             "note": "Sent to whoever tries to sign up with an email that already has an account."
@@ -720,7 +724,8 @@
           "summary": "Summary of the period",
           "every": "How often it arrives",
           "who": "Who scheduled it",
-          "host": "Mail server"
+          "host": "Mail server",
+          "when": "When it changed, in UTC"
         }
       },
       "storage": {

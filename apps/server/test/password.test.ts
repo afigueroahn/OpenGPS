@@ -72,3 +72,62 @@ describe("changing the password", () => {
     expect((await meOf(eva.cookie)).status).toBe(200);
   });
 });
+
+describe("the email that says the password changed", () => {
+  /** The notices that reached someone. They go out without the change waiting for them: a moment is given. */
+  const notices = async (email: string, wait = 1000) => {
+    const of = () => h.mails.filter((m) => m.to === email && m.url?.endsWith("/forgot-password"));
+    for (let waited = 0; of().length === 0 && waited < wait; waited += 20) await new Promise((done) => setTimeout(done, 20));
+    return of();
+  };
+  const newPassword = (user: TestUser) => change(user.cookie, { currentPassword: user.password, newPassword: "otra-clave-nueva", revokeOtherSessions: false });
+
+  it("tells the person when it changed, in UTC, and how to choose another one", async () => {
+    const fede = await h.signUp("Fede Recibe");
+    expect((await newPassword(fede)).status).toBe(200);
+    const [mail, ...more] = await notices(fede.email);
+    expect(more).toHaveLength(0);
+    expect(mail?.subject).toBe(`Tu contraseña de ${h.config.appName} cambió`);
+    expect(mail?.body).toContain(`${new Date().getUTCFullYear()}`);
+    expect(mail?.body).toContain("UTC");
+    expect(mail?.body).toContain("«Olvidé mi contraseña»");
+    expect(mail?.url).toBe(`${h.config.publicUrl}/forgot-password`);
+  });
+
+  it("a wrong current password sends nothing", async () => {
+    const gabi = await h.signUp("Gabi Falla");
+    expect((await change(gabi.cookie, { currentPassword: "no-es-esta", newPassword: "otra-clave-nueva" })).status).toBe(400);
+    expect(await notices(gabi.email, 200)).toHaveLength(0);
+  });
+
+  it("choosing it again with the link of the email sends it too", async () => {
+    const hugo = await h.signUp("Hugo Restablece");
+    await h.request("POST", "/api/auth/request-password-reset", { body: { email: hugo.email, redirectTo: "/reset-password" } });
+    await h.settle();
+    const link = new URL(h.mails.findLast((m) => m.to === hugo.email)?.url as string);
+    const token = link.pathname.split("/").at(-1) as string;
+    expect((await h.request("POST", "/api/auth/reset-password", { body: { token, newPassword: "otra-clave-nueva" } })).status).toBe(200);
+    expect(await notices(hugo.email)).toHaveLength(1);
+  });
+
+  it("goes in the language the person chose", async () => {
+    const ines = await h.signUp("Ines Ingles");
+    expect((await h.request("PUT", "/api/me/settings", { cookie: ines.cookie, body: { language: "en" } })).status).toBeLessThan(300);
+    expect((await newPassword(ines)).status).toBe(200);
+    const [mail] = await notices(ines.email);
+    expect(mail?.subject).toBe(`Your ${h.config.appName} password changed`);
+  });
+
+  it("if the mail does not go out, the password changes anyway", async () => {
+    const juan = await h.signUp("Juan Sin Correo");
+    h.mailServer.down = true;
+    try {
+      expect((await newPassword(juan)).status).toBe(200);
+    } finally {
+      await new Promise((done) => setTimeout(done, 100));
+      h.mailServer.down = false;
+    }
+    expect((await signIn(juan, "otra-clave-nueva")).status).toBe(200);
+    expect(await notices(juan.email, 200)).toHaveLength(0);
+  });
+});

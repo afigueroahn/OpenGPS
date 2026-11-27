@@ -96,8 +96,11 @@ export async function createHarness() {
   );
   await db.core.query(`INSERT INTO gps.platform_owners (user_id) VALUES ($1) ON CONFLICT DO NOTHING`, [TEST_OWNER_ID]);
   const mails: { to: string; subject: string; url: string | undefined; body: string; attachments: { filename: string; content: Buffer; contentType: string }[] }[] = [];
+  /** A test turns `down` on to have the mail server not answer. */
+  const mailServer = { down: false };
   const mailer: Mailer = {
     async send(m) {
+      if (mailServer.down) throw new Error("the mail server does not answer");
       mails.push({ to: m.to, subject: m.subject, url: m.action?.url, body: m.body, attachments: m.attachments ?? [] });
     },
     async verify() {},
@@ -296,7 +299,7 @@ export async function createHarness() {
     await db.close();
   }
 
-  return { config, db, bus, auth, fastify, port, mails, traccar, geocoded, routed, github, events, notifier, outbox, system, emailNotification, antitheft, fuel, maintenance, integrations, reports, settings, backups, simulator, enableModules, settle, routes, request, signUp, makeOwner, ingestFrom, close, uniqueId: () => `9${Date.now() % 1e8}${rand(3)}`.slice(0, 15) };
+  return { config, db, bus, auth, fastify, port, mails, mailServer, traccar, geocoded, routed, github, events, notifier, outbox, system, emailNotification, antitheft, fuel, maintenance, integrations, reports, settings, backups, simulator, enableModules, settle, routes, request, signUp, makeOwner, ingestFrom, close, uniqueId: () => `9${Date.now() % 1e8}${rand(3)}`.slice(0, 15) };
 }
 
 export type Harness = Awaited<ReturnType<typeof createHarness>>;

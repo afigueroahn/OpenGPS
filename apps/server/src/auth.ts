@@ -91,6 +91,19 @@ export const passwordResetMail = (config: MailConfig, url: string, language: Lan
 /** The email with the link that confirms an address, in a language. */
 export const verificationMail = (config: MailConfig, url: string, language: Language) => writeMail(config.mailTemplates, "verifyEmail", language, { app: config.appName }, url);
 
+/**
+ * The email that tells someone their password changed, `at` a moment written in their language and in UTC, with the
+ * way to choose another one if it was not them.
+ */
+export const passwordChangedMail = (config: MailConfig, at: Date, language: Language) =>
+  writeMail(
+    config.mailTemplates,
+    "passwordChanged",
+    language,
+    { app: config.appName, when: `${new Intl.DateTimeFormat(language, { dateStyle: "long", timeStyle: "short", timeZone: "UTC" }).format(at)} UTC` },
+    `${config.publicUrl}/forgot-password`,
+  );
+
 /** The email to whoever tries to create an account with an email that already has one: how to come in. */
 export const existingAccountMail = (config: MailConfig, language: Language) =>
   writeMail(config.mailTemplates, "existingAccount", language, { app: config.appName }, `${config.publicUrl}/login`);
@@ -102,6 +115,17 @@ export function createAuth(config: Config, db: Db, mailer: Mailer, beforeUserDel
    */
   const mailLanguage = (request?: Request): Language =>
     knownLanguage(request?.headers.get("x-language")) ?? headerLanguage(request?.headers.get("accept-language")) ?? config.defaultLanguage;
+  /**
+   * Tells someone their password changed, in the language they chose, if they chose one. Without waiting for the
+   * send: the change neither waits for it nor fails with it.
+   */
+  const tellPasswordChanged = (user: { id: string; email: string }, request?: Request): void => {
+    void (async () => {
+      const r = await db.core.query<{ language: string | null }>(`SELECT language FROM gps.user_settings WHERE user_id = $1`, [user.id]);
+      const language = knownLanguage(r.rows[0]?.language) ?? mailLanguage(request);
+      await mailer.send({ to: user.email, ...passwordChangedMail(config, new Date(), language) });
+    })().catch((err) => console.error("[mail] could not send the password change notice:", (err as Error).message));
+  };
   /** Once there is an owner, there is no need to look again. */
   let ownerKnown = false;
   async function claimOwner(): Promise<void> {
@@ -207,6 +231,8 @@ export function createAuth(config: Config, db: Db, mailer: Mailer, beforeUserDel
         maxPasswordLength: PASSWORD_MAX,
         revokeSessionsOnPasswordReset: true,
         resetPasswordTokenExpiresIn: 60 * 60,
+        // With the link of the email, a password is chosen again or created: the person hears of it either way.
+        onPasswordReset: async ({ user }, request) => tellPasswordChanged(user, request),
         // Someone signing up with an email that already has an account is answered the same as anyone else, so nobody
       // can find out which emails are registered; the email tells its owner how to come in instead.
       onExistingUserSignUp: async ({ user }, request) => {
@@ -271,9 +297,15 @@ export function createAuth(config: Config, db: Db, mailer: Mailer, beforeUserDel
       ],
 
       hooks: {
-        // Asking again for the confirmation of an email that is already confirmed sends nothing by itself: the email
-        // tells its owner how to come in instead. The answer is the same either way.
         after: createAuthMiddleware(async (ctx) => {
+          // Whoever changed their password with the current one hears of it, if the change was made.
+          if (ctx.path === "/change-password") {
+            const changed = ctx.context.returned as { user?: { id: string; email: string } } | APIError | undefined;
+            if (changed && !(changed instanceof APIError) && changed.user) tellPasswordChanged(changed.user, ctx.request);
+            return;
+          }
+          // Asking again for the confirmation of an email that is already confirmed sends nothing by itself: the email
+          // tells its owner how to come in instead. The answer is the same either way.
           if (ctx.path !== "/send-verification-email" || ctx.context.session) return;
           const email = typeof ctx.body?.email === "string" ? ctx.body.email : "";
           const found = email ? await ctx.context.internalAdapter.findUserByEmail(email.toLowerCase()) : null;
