@@ -387,12 +387,13 @@ export type MailSettingsInput = z.input<typeof mailSettingsSchema>;
  * rewrite. The notices of alerts and events are written from what happened, by
  * whoever sets them up, and are not here.
  */
-export const MAIL_TEMPLATES = ["verifyEmail", "resetPassword", "existingAccount", "invitation", "panic", "panicUnattended", "scheduledReport", "mailTest"] as const;
+export const MAIL_TEMPLATES = ["verifyEmail", "resetPassword", "passwordChanged", "existingAccount", "invitation", "panic", "panicUnattended", "scheduledReport", "mailTest"] as const;
 export type MailTemplateId = (typeof MAIL_TEMPLATES)[number];
 /** What each one may say with `{{variable}}`: the platform fills it in when it sends. `app` is the platform's name. */
 export const MAIL_TEMPLATE_VARIABLES = {
   verifyEmail: ["app"],
   resetPassword: ["app"],
+  passwordChanged: ["app", "when"],
   existingAccount: ["app"],
   invitation: ["app", "inviter", "account", "role", "days"],
   panic: ["app", "vehicle"],

@@ -18,6 +18,12 @@ const en: SameShape<typeof es> = {
     body: "We received a request to change your password. The link expires in 1 hour. If it wasn't you, ignore this message.",
     action: "Create a new password",
   },
+  passwordChanged: {
+    subject: "Your {{app}} password changed",
+    heading: "Your password changed",
+    body: "The password of your {{app}} account was changed on {{when}}. If it was you, there is nothing to do. If it was not you, choose another one now with “Forgot my password”: doing so signs out every session of your account.",
+    action: "Choose another password",
+  },
   existingAccount: {
     subject: "You already have an account on {{app}}",
     heading: "You already have an account",

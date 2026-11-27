@@ -21,6 +21,12 @@ export default {
     body: "Recibimos una solicitud para cambiar tu contraseña. El enlace vence en 1 hora. Si no fuiste tú, ignora este mensaje.",
     action: "Crear una contraseña nueva",
   },
+  passwordChanged: {
+    subject: "Tu contraseña de {{app}} cambió",
+    heading: "Tu contraseña cambió",
+    body: "La contraseña de tu cuenta en {{app}} se cambió el {{when}}. Si fuiste tú, no tienes que hacer nada. Si no fuiste tú, elige otra ahora con «Olvidé mi contraseña»: al hacerlo se cierran todas las sesiones de tu cuenta.",
+    action: "Elegir otra contraseña",
+  },
   existingAccount: {
     subject: "Ya tienes una cuenta en {{app}}",
     heading: "Ya tienes una cuenta",

@@ -21,6 +21,7 @@ import { type ServerKey, tr } from "../i18n";
 const SOURCES: Record<MailTemplateId, { subject: ServerKey; heading: ServerKey; body: ServerKey; action?: ServerKey }> = {
   verifyEmail: { subject: "mail.verifyEmail.subject", heading: "mail.verifyEmail.heading", body: "mail.verifyEmail.body", action: "mail.verifyEmail.action" },
   resetPassword: { subject: "mail.resetPassword.subject", heading: "mail.resetPassword.heading", body: "mail.resetPassword.body", action: "mail.resetPassword.action" },
+  passwordChanged: { subject: "mail.passwordChanged.subject", heading: "mail.passwordChanged.heading", body: "mail.passwordChanged.body", action: "mail.passwordChanged.action" },
   existingAccount: { subject: "mail.existingAccount.subject", heading: "mail.existingAccount.heading", body: "mail.existingAccount.body", action: "mail.existingAccount.action" },
   invitation: {
     subject: "core.members.invitationMail.subject",

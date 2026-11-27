@@ -8,6 +8,9 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/).
 
 ### Agregado
 
+- Un correo avisa a la persona cuando su contraseña cambia, desde su perfil o con el enlace
+  de «Olvidé mi contraseña»: cuándo, en UTC, y cómo elegir otra si no fue ella. Sale en su
+  idioma y se puede reescribir en la consola como los demás correos (#164).
 - Cambiar la contraseña desde el perfil de la web, con la actual y la nueva, que cumple la
   política de la plataforma. «Cerrar la sesión en los demás dispositivos», marcada de entrada,
   cierra las otras sesiones y deja abierta la de esa pestaña. Quien entra con otro servicio o

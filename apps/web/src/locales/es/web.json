@@ -681,6 +681,10 @@
             "name": "Cambio de contraseña",
             "note": "Se envía cuando alguien pide una contraseña nueva, con el enlace para crearla."
           },
+          "passwordChanged": {
+            "name": "Contraseña cambiada",
+            "note": "Se envía cuando alguien cambia su contraseña o la crea con el enlace, por si no fue esa persona."
+          },
           "existingAccount": {
             "name": "Cuenta ya existente",
             "note": "Se envía a quien intenta registrarse con un correo que ya tiene una cuenta."
@@ -720,7 +724,8 @@
           "summary": "Resumen del periodo",
           "every": "Cada cuánto llega",
           "who": "Quién lo programó",
-          "host": "Servidor de correo"
+          "host": "Servidor de correo",
+          "when": "Cuándo cambió, en UTC"
         }
       },
       "storage": {
