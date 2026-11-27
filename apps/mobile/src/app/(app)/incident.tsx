@@ -7,11 +7,11 @@ import { useLocalSearchParams, useRouter } from "expo-router";
 import { Paperclip } from "lucide-react-native";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { ActivityIndicator, Pressable, Share, StyleSheet, Text, TextInput, View } from "react-native";
+import { ActivityIndicator, Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 import { showChoices } from "../../components/Choices";
 import { ModalScreen } from "../../components/ModalScreen";
 import { Button, Card, Notice, SectionTitle } from "../../components/ui";
-import { attendIncident, closeIncident, downloadFile, errorText, evidencePath, getIncident, noteIncident, uploadEvidence } from "../../lib/api";
+import { attendIncident, closeIncident, downloadFile, errorText, evidencePath, getIncident, noteIncident, shareFile, uploadEvidence } from "../../lib/api";
 import { formatDateTime, timeAgo } from "../../lib/format";
 import { entryColor, proposedResolution, statusColor } from "../../lib/incidents";
 import { PhotoError, pickEvidence } from "../../lib/photo";
@@ -212,7 +212,7 @@ function Entry(props: { entry: IncidentEntry; incidentId: string; last: boolean 
     setFailed(false);
     try {
       const file = await downloadFile(evidencePath(props.incidentId, fileId));
-      await Share.share({ url: file.uri });
+      await shareFile(file);
     } catch {
       setFailed(true);
     } finally {

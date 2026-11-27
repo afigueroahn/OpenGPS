@@ -35,6 +35,7 @@ import {
   type VehicleHistory,
 } from "@opengps/shared";
 import { Directory, File, Paths } from "expo-file-system";
+import { shareAsync } from "expo-sharing";
 import { mergeCookies } from "./cookies";
 import { writeQuery } from "./oauth";
 import i18n, { currentLanguage } from "./i18n";
@@ -257,6 +258,9 @@ export async function downloadFile(path: string): Promise<File> {
     throw new ApiRequestError(0, "network", generic());
   }
 }
+
+/** Opens the system's share sheet with a downloaded file. Android's needs to know what kind of file it is (ADR-0027). */
+export const shareFile = (file: File) => shareAsync(file.uri, { mimeType: file.type || "application/octet-stream" });
 
 // ─── Shared location ─────────────────────────────────────────────────────────
 

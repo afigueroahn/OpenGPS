@@ -6,7 +6,7 @@ Plataforma abierta y gratuita de rastreo GPS vehicular: web, app Android y app i
 
 1. **Traccar** recibe por internet las señales de los equipos GPS. Cada marca habla su propio protocolo.
 2. **La plataforma** (el backend) lee esas posiciones y las guarda. Calcula viajes y alertas, envía los avisos y atiende a la web y a las apps.
-3. **La web** es lo que se ve en el navegador, y **la app para iPhone**, lo que se ve en el teléfono. La app para Android es el paso siguiente.
+3. **La web** es lo que se ve en el navegador, y **las apps para iPhone y Android**, lo que se ve en el teléfono.
 
 Todo se guarda en PostgreSQL, con TimescaleDB para el historial de posiciones.
 
@@ -21,7 +21,7 @@ Todo se guarda en PostgreSQL, con TimescaleDB para el historial de posiciones.
 
 ## Estado
 
-Están construidos el núcleo (mapa en vivo, historial, alertas, avisos, reportes, cuentas y administración), los nueve módulos opcionales y la app para iPhone, que todavía no está en la App Store. La app para Android es el paso siguiente.
+Están construidos el núcleo (mapa en vivo, historial, alertas, avisos, reportes, cuentas y administración), los nueve módulos opcionales y las apps para iPhone y Android, que todavía no están en la App Store ni en Google Play.
 
 ## Estructura
 
@@ -29,7 +29,7 @@ Están construidos el núcleo (mapa en vivo, historial, alertas, avisos, reporte
 |---|---|
 | `apps/server/` | La plataforma (backend, Fastify). Ver la tabla de abajo |
 | `apps/web/` | La web (React + Vite). Contiene las pantallas (`src/app`), las páginas de entrada, registro y textos legales (`src/routes`), esos textos legales (`src/legal`), los textos en español e inglés (`src/locales`) y el ícono (`public`) |
-| `apps/mobile/` | La app para iPhone (Expo). Contiene las pantallas (`src/app`), sus partes (`src/components`), el mapa (`src/map`), la conexión con la plataforma (`src/lib`), los textos en español e inglés (`src/locales`) y las imágenes (`assets`) |
+| `apps/mobile/` | Las apps para iPhone y Android (Expo). Contiene las pantallas (`src/app`), sus partes (`src/components`), el mapa (`src/map`), la conexión con la plataforma (`src/lib`), los textos en español e inglés (`src/locales`) y las imágenes (`assets`) |
 | `packages/shared/` | Lo que comparten la plataforma, la web y la app: las reglas de cada dato y los textos comunes, para que todas validen igual |
 | `db/migrations/` | Los pasos que crean y actualizan la base, en orden: `core` para el núcleo y una carpeta por módulo (`a_antitheft` … `i_integrations`) |
 | `deploy/` | Las formas de instalarla, una carpeta por cada una (`docker-compose/`, `caddy/`, `cloudflare/`, `dokploy/`, `coolify/`), las recetas de las imágenes de la plataforma, de la base y del ayudante, y las variables. Ver [deploy/README.md](deploy/README.md) |
