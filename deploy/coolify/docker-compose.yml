@@ -31,7 +31,7 @@ x-logging: &logging
 
 services:
   postgres:
-    image: ghcr.io/afigueroahn/opengps-postgres:0.10.1
+    image: ghcr.io/afigueroahn/opengps-postgres:0.11.0
     restart: unless-stopped
     logging: *logging
     shm_size: 256m
@@ -117,7 +117,7 @@ services:
 
   opengps:
     # The backend with the web app inside, on the same port.
-    image: ghcr.io/afigueroahn/opengps:0.10.1
+    image: ghcr.io/afigueroahn/opengps:0.11.0
     restart: unless-stopped
     logging: *logging
     depends_on:
