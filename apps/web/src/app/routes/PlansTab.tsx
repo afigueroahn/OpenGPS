@@ -12,7 +12,7 @@ import { formatKm } from "../../lib/format";
 import { deleteRoutePlan, getPois, getRouteLine, getRoutePlans, saveRoutePlan } from "../../lib/routes";
 import { today } from "../fleet/format";
 import { Card } from "../reports/kit";
-import { errorText } from "../widgets";
+import { ConfirmBar, errorText } from "../widgets";
 import { RouteMap } from "./RouteMap";
 import { type StopDraft, StopsEditor, newStop } from "./StopsEditor";
 
@@ -87,6 +87,7 @@ function PlanDialog({ plan, pois, vehicles, canManage, onClose }: { plan: RouteP
   const [mode, setMode] = useState<Mode>("none");
   const [fit, setFit] = useState(0);
   const [problem, setProblem] = useState<string | null>(null);
+  const [confirming, setConfirming] = useState(false);
   // Take the path from a real trip.
   const [fromTrip, setFromTrip] = useState(false);
   const [source, setSource] = useState({ vehicleId: vehicles[0]?.id ?? "", date: today(), from: "06:00", to: "18:00" });
@@ -213,10 +214,14 @@ function PlanDialog({ plan, pois, vehicles, canManage, onClose }: { plan: RouteP
           <Field label={t("routes.plans.notes")} value={notes} onChange={(e) => setNotes(e.target.value)} maxLength={500} />
         </fieldset>
         {(problem || save.isError || remove.isError) && <Notice tone="error">{problem ?? errorText(save.error ?? remove.error)}</Notice>}
-        {canManage ? (
+        {canManage && confirming ? (
+          <ConfirmBar pending={remove.isPending} onCancel={() => setConfirming(false)} onConfirm={() => remove.mutate()}>
+            {t("routes.plans.confirmDelete")}
+          </ConfirmBar>
+        ) : canManage ? (
           <div className="flex items-center justify-between gap-2">
             {plan ? (
-              <Button type="button" variant="ghost" size="sm" loading={remove.isPending} onClick={() => remove.mutate()}>
+              <Button type="button" variant="ghost" size="sm" onClick={() => setConfirming(true)}>
                 <Trash size={14} aria-hidden="true" /> {t("common.delete")}
               </Button>
             ) : (

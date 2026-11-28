@@ -9,7 +9,7 @@ import { Button, Field, Modal, Notice, Spinner } from "../../components/ui";
 import { formatDateTime } from "../../lib/format";
 import { createWebhook, deleteWebhook, getWebhookDeliveries, getWebhooks, rotateWebhookSecret, testWebhook, updateWebhook } from "../../lib/integrations";
 import { Card, eventLabel } from "../reports/kit";
-import { errorText } from "../widgets";
+import { ConfirmBar, errorText } from "../widgets";
 import { Code, EventPicker, SecretBox, label, small } from "./kit";
 
 const STATUS_STYLE: Record<WebhookDeliveryStatus, string> = { ok: "bg-moving/10 text-signal-ink", pending: "bg-idle/15 text-[#8a5a00]", failed: "bg-danger/10 text-danger" };
@@ -274,17 +274,9 @@ function WebhookDialog({ hook, onClose, onSaved, onSecret }: { hook: Webhook | n
 
         {(problem || save.isError || remove.isError || test.isError || rotate.isError) && <Notice tone="error">{problem ?? errorText(save.error ?? remove.error ?? test.error ?? rotate.error)}</Notice>}
         {confirming ? (
-          <div className="flex flex-wrap items-center justify-between gap-2 rounded-[12px] border border-danger/25 bg-danger/5 px-3.5 py-2.5">
-            <span className="text-sm text-danger">{t("integrations.webhooks.dialog.confirmDelete")}</span>
-            <span className="flex gap-2">
-              <Button type="button" variant="secondary" size="sm" onClick={() => setConfirming(false)}>
-                {t("common.cancel")}
-              </Button>
-              <Button type="button" variant="danger" size="sm" loading={remove.isPending} onClick={() => remove.mutate()}>
-                {t("common.delete")}
-              </Button>
-            </span>
-          </div>
+          <ConfirmBar pending={remove.isPending} onCancel={() => setConfirming(false)} onConfirm={() => remove.mutate()}>
+            {t("integrations.webhooks.dialog.confirmDelete")}
+          </ConfirmBar>
         ) : (
           <div className="flex items-center justify-between gap-2">
             {hook ? (

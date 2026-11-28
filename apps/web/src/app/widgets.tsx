@@ -230,6 +230,28 @@ export function ConfirmDialog(props: {
   );
 }
 
+/**
+ * Asks before deleting from inside a dialog, in the place of what is deleted (its footer, a
+ * row of a list), without opening a second dialog over the first. The cursor goes to Cancel,
+ * the answer that changes nothing.
+ */
+export function ConfirmBar(props: { children: ReactNode; confirm?: string; pending: boolean; onCancel: () => void; onConfirm: () => void }) {
+  const { t } = useTranslation();
+  return (
+    <div className="flex w-full flex-wrap items-center justify-between gap-2 rounded-[12px] border border-danger/25 bg-danger/5 px-3.5 py-2.5">
+      <span className="text-sm text-danger">{props.children}</span>
+      <span className="flex gap-2">
+        <Button type="button" variant="secondary" size="sm" onClick={props.onCancel} autoFocus>
+          {t("common.cancel")}
+        </Button>
+        <Button type="button" variant="danger" size="sm" loading={props.pending} onClick={props.onConfirm}>
+          {props.confirm ?? t("common.delete")}
+        </Button>
+      </span>
+    </div>
+  );
+}
+
 export function FullScreenSpinner() {
   return (
     <div className="flex h-full items-center justify-center bg-panel text-white/60">

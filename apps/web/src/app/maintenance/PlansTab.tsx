@@ -11,7 +11,7 @@ import i18n, { sayShared } from "../../lib/i18n";
 import { deleteMaintPlan, getMaintPlans, saveMaintPlan } from "../../lib/maintenance";
 import { whole } from "../fleet/format";
 import { Card } from "../reports/kit";
-import { errorText } from "../widgets";
+import { ConfirmBar, errorText } from "../widgets";
 
 /** "cada 5.000 km, 250 h de motor o 180 días" */
 export function triggersText(p: MaintTriggers): string {
@@ -185,17 +185,9 @@ function PlanDialog({ plan, vehicles, canManage, onClose }: { plan: MaintPlan | 
         {(problem || save.isError || remove.isError) && <Notice tone="error">{problem ?? errorText(save.error ?? remove.error)}</Notice>}
         {canManage &&
           (confirming ? (
-            <div className="flex flex-wrap items-center justify-between gap-2 rounded-[12px] border border-danger/25 bg-danger/5 px-3.5 py-2.5">
-              <span className="text-sm text-danger">{t("maintenance.plans.confirmDelete")}</span>
-              <span className="flex gap-2">
-                <Button type="button" variant="secondary" size="sm" onClick={() => setConfirming(false)}>
-                  {t("common.cancel")}
-                </Button>
-                <Button type="button" variant="danger" size="sm" loading={remove.isPending} onClick={() => remove.mutate()}>
-                  {t("common.delete")}
-                </Button>
-              </span>
-            </div>
+            <ConfirmBar pending={remove.isPending} onCancel={() => setConfirming(false)} onConfirm={() => remove.mutate()}>
+              {t("maintenance.plans.confirmDelete")}
+            </ConfirmBar>
           ) : (
             <div className="flex items-center justify-between gap-2">
               {plan ? (

@@ -8,7 +8,7 @@ import { useTranslation } from "react-i18next";
 import { Button, Field, Modal, Notice, Spinner } from "../../components/ui";
 import { deletePoi, getPois, savePoi } from "../../lib/routes";
 import { Card, selectClass } from "../reports/kit";
-import { errorText } from "../widgets";
+import { ConfirmBar, errorText } from "../widgets";
 import { RouteMap } from "./RouteMap";
 
 const select = "h-11 w-full rounded-[10px] border border-line bg-surface px-3 text-[15px] text-ink focus:border-ink focus:outline-none focus:ring-3 focus:ring-ink/10";
@@ -107,6 +107,7 @@ function PoiDialog({ poi, vehicles, canManage, onClose }: { poi: Poi | null; veh
   const [phone, setPhone] = useState(poi?.phone ?? "");
   const [notes, setNotes] = useState(poi?.notes ?? "");
   const [problem, setProblem] = useState<string | null>(null);
+  const [confirming, setConfirming] = useState(false);
   const [fit, setFit] = useState(0);
   const done = (next?: Poi[]) => {
     if (next) queryClient.setQueryData(["routes", "pois"], next);
@@ -201,10 +202,14 @@ function PoiDialog({ poi, vehicles, canManage, onClose }: { poi: Poi | null; veh
           <Field label={t("routes.pois.notes")} value={notes} onChange={(e) => setNotes(e.target.value)} maxLength={300} />
         </fieldset>
         {(problem || save.isError || remove.isError) && <Notice tone="error">{problem ?? errorText(save.error ?? remove.error)}</Notice>}
-        {canManage ? (
+        {canManage && confirming ? (
+          <ConfirmBar pending={remove.isPending} onCancel={() => setConfirming(false)} onConfirm={() => remove.mutate()}>
+            {t("routes.pois.confirmDelete")}
+          </ConfirmBar>
+        ) : canManage ? (
           <div className="flex items-center justify-between gap-2 pt-1">
             {poi ? (
-              <Button type="button" variant="ghost" size="sm" loading={remove.isPending} onClick={() => remove.mutate()}>
+              <Button type="button" variant="ghost" size="sm" onClick={() => setConfirming(true)}>
                 <Trash size={14} aria-hidden="true" /> {t("common.delete")}
               </Button>
             ) : (

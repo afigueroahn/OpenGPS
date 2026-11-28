@@ -214,6 +214,8 @@
     "unitPlaceholder": "unidad, litro, juego",
     "unitCost": "Costo de referencia, en {{currency}}",
     "stock": "Existencias (opcional)",
-    "stockNote": "Si anotas las existencias, bajan solas al terminar una orden que use este repuesto. Vacío: no se llevan."
+    "stockNote": "Si anotas las existencias, bajan solas al terminar una orden que use este repuesto. Vacío: no se llevan.",
+    "confirmDeleteWorkshop": "Se borra del catálogo. Las órdenes donde aparece se quedan, pero sin él.",
+    "confirmDeletePart": "Se borra del catálogo. Las órdenes que lo usaron lo siguen mostrando por su nombre."
   }
 }

@@ -107,7 +107,8 @@
     "day": "Day",
     "take": "Take",
     "stopsLabel": "Stops, in order <muted>· “min” is the minutes after departure when arrival is expected</muted>",
-    "notes": "Notes (optional)"
+    "notes": "Notes (optional)",
+    "confirmDelete": "The plan is deleted. The dispatches made from it are kept."
   },
   "pois": {
     "title": "Points of interest",
@@ -135,7 +136,8 @@
     "pickVehicle": "Choose vehicle…",
     "address": "Address (optional)",
     "phone": "Phone (optional)",
-    "notes": "Notes (optional)"
+    "notes": "Notes (optional)",
+    "confirmDelete": "The point is deleted. The plans and dispatches that already have it as a stop don't change."
   },
   "stops": {
     "empty": "No stops yet. Choose a place from the list or mark the stops on the map.",

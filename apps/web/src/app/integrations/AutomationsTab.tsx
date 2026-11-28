@@ -24,7 +24,7 @@ import { browserZone } from "../../lib/api";
 import { formatDateTime } from "../../lib/format";
 import { deleteAutomation, getAutomationRuns, getAutomations, getWebhooks, saveAutomation } from "../../lib/integrations";
 import { Card, eventLabel } from "../reports/kit";
-import { errorText } from "../widgets";
+import { ConfirmBar, errorText } from "../widgets";
 import { EventPicker, label, select } from "./kit";
 
 type Scope = "all" | "group" | "vehicles";
@@ -124,6 +124,7 @@ function AutomationDialog({ auto, vehicles, groups, modules, onClose }: { auto: 
   const [webhookId, setWebhookId] = useState(auto?.action.type === "webhook" ? auto.action.webhookId : "");
   const [title, setTitle] = useState(auto?.action.type === "order" ? (auto.action.title ?? "") : "");
   const [problem, setProblem] = useState<string | null>(null);
+  const [confirming, setConfirming] = useState(false);
   const done = (next?: Automation[]) => {
     if (next) queryClient.setQueryData(["integrations", "automations"], next);
     else void queryClient.invalidateQueries({ queryKey: ["integrations", "automations"] });
@@ -300,23 +301,29 @@ function AutomationDialog({ auto, vehicles, groups, modules, onClose }: { auto: 
         )}
 
         {(problem || save.isError || remove.isError) && <Notice tone="error">{problem ?? errorText(save.error ?? remove.error)}</Notice>}
-        <div className="flex items-center justify-between gap-2">
-          {auto ? (
-            <Button type="button" variant="ghost" size="sm" loading={remove.isPending} onClick={() => remove.mutate()}>
-              <Trash size={14} aria-hidden="true" /> {t("common.delete")}
-            </Button>
-          ) : (
-            <span />
-          )}
-          <span className="flex gap-2">
-            <Button type="button" variant="secondary" onClick={onClose}>
-              {t("common.cancel")}
-            </Button>
-            <Button type="submit" loading={save.isPending}>
-              {t("common.save")}
-            </Button>
-          </span>
-        </div>
+        {confirming ? (
+          <ConfirmBar pending={remove.isPending} onCancel={() => setConfirming(false)} onConfirm={() => remove.mutate()}>
+            {t("integrations.automations.dialog.confirmDelete")}
+          </ConfirmBar>
+        ) : (
+          <div className="flex items-center justify-between gap-2">
+            {auto ? (
+              <Button type="button" variant="ghost" size="sm" onClick={() => setConfirming(true)}>
+                <Trash size={14} aria-hidden="true" /> {t("common.delete")}
+              </Button>
+            ) : (
+              <span />
+            )}
+            <span className="flex gap-2">
+              <Button type="button" variant="secondary" onClick={onClose}>
+                {t("common.cancel")}
+              </Button>
+              <Button type="submit" loading={save.isPending}>
+                {t("common.save")}
+              </Button>
+            </span>
+          </div>
+        )}
       </form>
     </Modal>
   );

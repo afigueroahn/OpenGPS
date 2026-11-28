@@ -13,7 +13,7 @@ import { apiBase, createSensor, deleteSensor, getSensorSeries, getSensors, rotat
 import { useNow } from "../../lib/session";
 import { amountOf } from "../fleet/format";
 import { Card, Segmented } from "../reports/kit";
-import { errorText } from "../widgets";
+import { ConfirmBar, errorText } from "../widgets";
 import { Code, SecretBox, label, select } from "./kit";
 
 const shown = (value: number, unit: string | null) => `${new Intl.NumberFormat(currentLanguage(), { maximumFractionDigits: 2 }).format(value)}${unit ? ` ${unit}` : ""}`;
@@ -111,6 +111,7 @@ function SensorDialog({ sensor, vehicles, canManage, onClose, onSaved, onSecret 
   const [min, setMin] = useState(text(sensor?.minValue ?? null));
   const [max, setMax] = useState(text(sensor?.maxValue ?? null));
   const [problem, setProblem] = useState<string | null>(null);
+  const [confirming, setConfirming] = useState(false);
   const save = useMutation({
     mutationFn: async (body: SensorInput) => (sensor ? { sensors: await updateSensor(sensor.id, body), secret: null } : createSensor(body)),
     onSuccess: (r) => {
@@ -206,10 +207,14 @@ function SensorDialog({ sensor, vehicles, canManage, onClose, onSaved, onSecret 
           </div>
         )}
         {(problem || save.isError || remove.isError || rotate.isError) && <Notice tone="error">{problem ?? errorText(save.error ?? remove.error ?? rotate.error)}</Notice>}
-        {canManage ? (
+        {canManage && confirming ? (
+          <ConfirmBar pending={remove.isPending} onCancel={() => setConfirming(false)} onConfirm={() => remove.mutate()}>
+            {t("integrations.sensors.dialog.confirmDelete")}
+          </ConfirmBar>
+        ) : canManage ? (
           <div className="flex items-center justify-between gap-2">
             {sensor ? (
-              <Button type="button" variant="ghost" size="sm" loading={remove.isPending} onClick={() => remove.mutate()} title={t("integrations.sensors.dialog.deleteTitle")}>
+              <Button type="button" variant="ghost" size="sm" onClick={() => setConfirming(true)}>
                 <Trash size={14} aria-hidden="true" /> {t("common.delete")}
               </Button>
             ) : (

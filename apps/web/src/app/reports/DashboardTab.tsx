@@ -29,7 +29,7 @@ import { deleteDashboard, getDashboardData, getDashboards, saveDashboard } from 
 import { formatDuration, formatKm } from "../../lib/format";
 import i18n, { currentLanguage } from "../../lib/i18n";
 import { useNow } from "../../lib/session";
-import { errorText } from "../widgets";
+import { ConfirmBar, errorText } from "../widgets";
 import { BarChart, HBars, IDLE, INK, MOVING, axisCount, axisKm, axisTime } from "./charts";
 import { Card, type Period, type Scope, ScopeSelect, Segmented, Tile, eventLabel, labelClass, periodLabel, periodOf } from "./kit";
 
@@ -306,6 +306,7 @@ function BoardDialog(props: { board: Dashboard; isNew: boolean; available: Dashb
   // First those the dashboard already shows, in its order; then the rest.
   const [order, setOrder] = useState<DashboardWidget[]>(() => [...board.widgets.filter((w) => props.available.includes(w)), ...props.available.filter((w) => !board.widgets.includes(w))]);
   const [on, setOn] = useState<Set<DashboardWidget>>(() => new Set(board.widgets));
+  const [confirming, setConfirming] = useState(false);
   useEffect(() => setName(board.name), [board.name]);
 
   const save = useMutation({
@@ -373,23 +374,29 @@ function BoardDialog(props: { board: Dashboard; isNew: boolean; available: Dashb
           </ul>
         </fieldset>
         {error && <Notice tone="error">{errorText(error)}</Notice>}
-        <div className="flex flex-wrap items-center justify-between gap-2 pt-1">
-          {!props.isNew && board.id ? (
-            <Button type="button" variant="danger" loading={remove.isPending} onClick={() => remove.mutate()}>
-              <Trash size={15} /> {t("reports.dashboard.dialog.delete")}
-            </Button>
-          ) : (
-            <span />
-          )}
-          <div className="flex gap-2">
-            <Button type="button" variant="secondary" onClick={props.onClose}>
-              {t("common.cancel")}
-            </Button>
-            <Button type="submit" loading={save.isPending} disabled={on.size === 0}>
-              {t("common.save")}
-            </Button>
+        {confirming ? (
+          <ConfirmBar pending={remove.isPending} onCancel={() => setConfirming(false)} onConfirm={() => remove.mutate()}>
+            {t("reports.dashboard.dialog.confirmDelete", { name: board.name })}
+          </ConfirmBar>
+        ) : (
+          <div className="flex flex-wrap items-center justify-between gap-2 pt-1">
+            {!props.isNew && board.id ? (
+              <Button type="button" variant="danger" onClick={() => setConfirming(true)}>
+                <Trash size={15} /> {t("reports.dashboard.dialog.delete")}
+              </Button>
+            ) : (
+              <span />
+            )}
+            <div className="flex gap-2">
+              <Button type="button" variant="secondary" onClick={props.onClose}>
+                {t("common.cancel")}
+              </Button>
+              <Button type="submit" loading={save.isPending} disabled={on.size === 0}>
+                {t("common.save")}
+              </Button>
+            </div>
           </div>
-        </div>
+        )}
       </form>
     </Modal>
   );

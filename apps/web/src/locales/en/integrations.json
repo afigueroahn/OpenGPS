@@ -166,7 +166,8 @@
       "needDay": "Mark at least one day.",
       "cooldownRange": "The wait goes from 0 to 1,440 minutes.",
       "needAddresses": "Enter one to five destinations, separated by commas.",
-      "needWebhook": "First create a webhook in its tab."
+      "needWebhook": "First create a webhook in its tab.",
+      "confirmDelete": "The automation is deleted with its log. It stops acting from now on."
     }
   },
   "sensors": {
@@ -192,7 +193,7 @@
       "keyPrefix": "Its key starts with <k>{{prefix}}</k>",
       "rotateTitle": "The previous key stops working",
       "rotate": "New key",
-      "deleteTitle": "Deleted with all its readings",
+      "confirmDelete": "The sensor is deleted with all its readings. This can't be undone.",
       "needName": "Give the sensor a name.",
       "notNumbers": "The minimum and maximum must be numbers.",
       "minBelowMax": "The minimum must be less than the maximum."

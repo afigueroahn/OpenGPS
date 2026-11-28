@@ -166,7 +166,8 @@
       "needDay": "Marca al menos un día.",
       "cooldownRange": "La espera va de 0 a 1.440 minutos.",
       "needAddresses": "Escribe de uno a cinco destinos, separados por comas.",
-      "needWebhook": "Primero crea un webhook en su pestaña."
+      "needWebhook": "Primero crea un webhook en su pestaña.",
+      "confirmDelete": "Se borra la automatización con su bitácora. Deja de actuar desde ahora."
     }
   },
   "sensors": {
@@ -192,7 +193,7 @@
       "keyPrefix": "Su clave empieza por <k>{{prefix}}</k>",
       "rotateTitle": "La clave anterior deja de valer",
       "rotate": "Clave nueva",
-      "deleteTitle": "Se borra con todas sus lecturas",
+      "confirmDelete": "Se borra el sensor con todas sus lecturas. No se puede deshacer.",
       "needName": "Ponle un nombre al sensor.",
       "notNumbers": "El mínimo y el máximo son números.",
       "minBelowMax": "El mínimo debe ser menor que el máximo."
