@@ -316,8 +316,14 @@ function GeneralForm({ current }: { current: GeneralSettings }) {
       </Card>
 
       <Card title={t("admin.settings.general.legal")} note={t("admin.settings.general.legalNote")}>
+        <Row title={t("admin.settings.general.legalEntity")} note={t("admin.settings.general.legalEntityNote")} wide>
+          <input className={field} aria-label={t("admin.settings.general.legalEntity")} maxLength={120} placeholder={t("admin.settings.general.legalContactNone")} value={form.legalEntity} onChange={(e) => set("legalEntity", e.target.value)} />
+        </Row>
+        <Row title={t("admin.settings.general.legalCountry")} note={t("admin.settings.general.legalCountryNote")} wide>
+          <input className={field} aria-label={t("admin.settings.general.legalCountry")} maxLength={80} placeholder={t("admin.settings.general.legalContactNone")} value={form.legalCountry} onChange={(e) => set("legalCountry", e.target.value)} />
+        </Row>
         <Row title={t("admin.settings.general.legalContact")} note={t("admin.settings.general.legalContactNote")} wide>
-          <input className={field} type="email" placeholder={t("admin.settings.general.legalContactNone")} value={form.legalContactEmail} onChange={(e) => set("legalContactEmail", e.target.value)} />
+          <input className={field} type="email" aria-label={t("admin.settings.general.legalContact")} placeholder={t("admin.settings.general.legalContactNone")} value={form.legalContactEmail} onChange={(e) => set("legalContactEmail", e.target.value)} />
         </Row>
       </Card>
 
