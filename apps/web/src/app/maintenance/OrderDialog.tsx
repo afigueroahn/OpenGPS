@@ -9,7 +9,7 @@ import { Button, Field, Modal, Notice } from "../../components/ui";
 import { decimalMark } from "../../lib/format";
 import { deleteMaintFile, deleteMaintOrder, getMaintParts, getMaintSettings, getMaintWorkshops, getMaintenance, maintFileUrl, saveMaintOrder, uploadMaintFile } from "../../lib/maintenance";
 import { amountOf, currencyName, money, today } from "../fleet/format";
-import { errorText } from "../widgets";
+import { ConfirmBar, errorText } from "../widgets";
 
 /** Order proposed when opening it from a pending service. */
 export interface OrderDraft {
@@ -358,17 +358,9 @@ export function OrderDialog(props: { order: MaintOrder | null; draft?: OrderDraf
 
         {editable ? (
           confirming ? (
-            <div className="flex flex-wrap items-center justify-between gap-2 rounded-[12px] border border-danger/25 bg-danger/5 px-3.5 py-2.5">
-              <span className="text-sm text-danger">{t("maintenance.order.confirmDelete")}</span>
-              <span className="flex gap-2">
-                <Button type="button" variant="secondary" size="sm" onClick={() => setConfirming(false)}>
-                  {t("common.cancel")}
-                </Button>
-                <Button type="button" variant="danger" size="sm" loading={remove.isPending} onClick={() => remove.mutate()}>
-                  {t("common.delete")}
-                </Button>
-              </span>
-            </div>
+            <ConfirmBar pending={remove.isPending} onCancel={() => setConfirming(false)} onConfirm={() => remove.mutate()}>
+              {t("maintenance.order.confirmDelete")}
+            </ConfirmBar>
           ) : (
             <div className="flex items-center justify-between gap-2">
               {order ? (

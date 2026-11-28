@@ -214,6 +214,8 @@
     "unitPlaceholder": "unit, liter, set",
     "unitCost": "Reference cost, in {{currency}}",
     "stock": "Stock (optional)",
-    "stockNote": "If you record the stock, it goes down by itself when a work order that uses this part is completed. Empty: not tracked."
+    "stockNote": "If you record the stock, it goes down by itself when a work order that uses this part is completed. Empty: not tracked.",
+    "confirmDeleteWorkshop": "It is deleted from the catalog. The work orders it appears in are kept, but without it.",
+    "confirmDeletePart": "It is deleted from the catalog. The work orders that used it still show it by name."
   }
 }

@@ -10,7 +10,7 @@ import { currentLanguage } from "../../lib/i18n";
 import { deleteMaintPart, deleteMaintWorkshop, getMaintParts, getMaintSettings, getMaintWorkshops, saveMaintPart, saveMaintWorkshop } from "../../lib/maintenance";
 import { amountOf, money } from "../fleet/format";
 import { Card } from "../reports/kit";
-import { errorText } from "../widgets";
+import { ConfirmBar, errorText } from "../widgets";
 
 const select = "h-11 w-full rounded-[10px] border border-line bg-surface px-3 text-[15px] text-ink focus:border-ink focus:outline-none focus:ring-3 focus:ring-ink/10";
 const label = "mb-1.5 block text-[13px] font-medium text-ink-3";
@@ -102,8 +102,17 @@ export function CatalogsTab({ canManage }: { canManage: boolean }) {
   );
 }
 
-function Actions(props: { existing: boolean; canManage: boolean; saving: boolean; removing: boolean; onRemove: () => void; onClose: () => void }) {
+/** The dialog's footer; deleting asks first, saying what goes away (`confirm`). */
+function Actions(props: { existing: boolean; canManage: boolean; saving: boolean; removing: boolean; confirm: string; onRemove: () => void; onClose: () => void }) {
   const { t } = useTranslation();
+  const [confirming, setConfirming] = useState(false);
+  if (props.canManage && confirming) {
+    return (
+      <ConfirmBar pending={props.removing} onCancel={() => setConfirming(false)} onConfirm={props.onRemove}>
+        {props.confirm}
+      </ConfirmBar>
+    );
+  }
   if (!props.canManage) {
     return (
       <div className="flex justify-end">
@@ -116,7 +125,7 @@ function Actions(props: { existing: boolean; canManage: boolean; saving: boolean
   return (
     <div className="flex items-center justify-between gap-2 pt-1">
       {props.existing ? (
-        <Button type="button" variant="ghost" size="sm" loading={props.removing} onClick={props.onRemove}>
+        <Button type="button" variant="ghost" size="sm" onClick={() => setConfirming(true)}>
           <Trash size={14} aria-hidden="true" /> {t("common.delete")}
         </Button>
       ) : (
@@ -178,7 +187,7 @@ function WorkshopDialog({ workshop, canManage, onClose }: { workshop: MaintWorks
           <Field label={t("common.notes")} value={form.notes} onChange={set("notes")} maxLength={500} />
         </fieldset>
         {(save.isError || remove.isError) && <Notice tone="error">{errorText(save.error ?? remove.error)}</Notice>}
-        <Actions existing={workshop !== null} canManage={canManage} saving={save.isPending} removing={remove.isPending} onRemove={() => remove.mutate()} onClose={onClose} />
+        <Actions existing={workshop !== null} canManage={canManage} saving={save.isPending} removing={remove.isPending} confirm={t("maintenance.catalogs.confirmDeleteWorkshop")} onRemove={() => remove.mutate()} onClose={onClose} />
       </form>
     </Modal>
   );
@@ -222,7 +231,7 @@ function PartDialog({ part, canManage, currency, onClose }: { part: MaintPart | 
           <Field label={t("common.notes")} value={form.notes} onChange={set("notes")} maxLength={500} />
         </fieldset>
         {(problem || save.isError || remove.isError) && <Notice tone="error">{problem ?? errorText(save.error ?? remove.error)}</Notice>}
-        <Actions existing={part !== null} canManage={canManage} saving={save.isPending} removing={remove.isPending} onRemove={() => remove.mutate()} onClose={onClose} />
+        <Actions existing={part !== null} canManage={canManage} saving={save.isPending} removing={remove.isPending} confirm={t("maintenance.catalogs.confirmDeletePart")} onRemove={() => remove.mutate()} onClose={onClose} />
       </form>
     </Modal>
   );

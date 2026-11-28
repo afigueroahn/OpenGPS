@@ -74,7 +74,8 @@
       "widgets": "Indicadores, en el orden en que se ven",
       "moveUp": "Subir {{name}}",
       "moveDown": "Bajar {{name}}",
-      "delete": "Eliminar tablero"
+      "delete": "Eliminar tablero",
+      "confirmDelete": "Se borra el tablero «{{name}}». Los datos no cambian: solo se quita esta vista."
     }
   },
   "view": {

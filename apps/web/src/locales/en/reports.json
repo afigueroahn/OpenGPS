@@ -74,7 +74,8 @@
       "widgets": "Indicators, in the order they appear",
       "moveUp": "Move {{name}} up",
       "moveDown": "Move {{name}} down",
-      "delete": "Delete dashboard"
+      "delete": "Delete dashboard",
+      "confirmDelete": "The “{{name}}” dashboard is deleted. The data doesn't change: only this view goes away."
     }
   },
   "view": {

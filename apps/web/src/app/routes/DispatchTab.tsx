@@ -11,7 +11,7 @@ import { Button, CopyText, Field, Modal, Notice, Spinner } from "../../component
 import { formatDateTime, formatKm } from "../../lib/format";
 import { createDriverLink, createRouteTrip, createTrackLink, deleteRouteTrip, driverPageUrl, getNearest, getPois, getRoutePlans, getRouteTrips, proofUrl, setRouteTripStatus, trackPageUrl, updateRouteStop } from "../../lib/routes";
 import { Card, Tile } from "../reports/kit";
-import { errorText } from "../widgets";
+import { ConfirmBar, errorText } from "../widgets";
 import { RouteMap, STOP_COLOR } from "./RouteMap";
 import { type StopDraft, StopsEditor, newStop } from "./StopsEditor";
 
@@ -337,17 +337,9 @@ function TripDetail({ trip, vehicles, canManage, onClose }: { trip: RouteTrip; v
 
         {canManage &&
           (confirming ? (
-            <div className="flex flex-wrap items-center justify-between gap-2 rounded-[12px] border border-danger/25 bg-danger/5 px-3.5 py-2.5">
-              <span className="text-sm text-danger">{t("routes.dispatch.confirmDelete")}</span>
-              <span className="flex gap-2">
-                <Button variant="secondary" size="sm" onClick={() => setConfirming(false)}>
-                  {t("common.cancel")}
-                </Button>
-                <Button variant="danger" size="sm" loading={remove.isPending} onClick={() => remove.mutate()}>
-                  {t("common.delete")}
-                </Button>
-              </span>
-            </div>
+            <ConfirmBar pending={remove.isPending} onCancel={() => setConfirming(false)} onConfirm={() => remove.mutate()}>
+              {t("routes.dispatch.confirmDelete")}
+            </ConfirmBar>
           ) : (
             <div className="flex flex-wrap items-center justify-between gap-2">
               <Button variant="ghost" size="sm" onClick={() => setConfirming(true)}>

@@ -6,6 +6,13 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Sin publicar]
 
+### Corregido
+
+- En la web, «Eliminar» borraba al primer clic en los diálogos de automatizaciones, sensores,
+  talleres, repuestos, planes de ruta, puntos de interés y tableros. Ahora pregunta antes, en
+  la misma franja roja que ya usaban los webhooks, las órdenes y los despachos, y dice qué se
+  pierde (#183).
+
 ## [0.15.0] - 2026-11-27
 
 ### Agregado

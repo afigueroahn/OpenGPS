@@ -107,7 +107,8 @@
     "day": "Día",
     "take": "Tomar",
     "stopsLabel": "Paradas, en orden <muted>· «min» son los minutos desde la salida a los que se espera llegar</muted>",
-    "notes": "Notas (opcional)"
+    "notes": "Notas (opcional)",
+    "confirmDelete": "Se borra el plan. Los despachos hechos con él se quedan."
   },
   "pois": {
     "title": "Puntos de interés",
@@ -135,7 +136,8 @@
     "pickVehicle": "Elegir vehículo…",
     "address": "Dirección (opcional)",
     "phone": "Teléfono (opcional)",
-    "notes": "Notas (opcional)"
+    "notes": "Notas (opcional)",
+    "confirmDelete": "Se borra el punto. Los planes y despachos que ya lo tienen como parada no cambian."
   },
   "stops": {
     "empty": "Sin paradas todavía. Elige un lugar de la lista o marca las paradas en el mapa.",
