@@ -57,6 +57,8 @@ export function OrderDialog(props: { order: MaintOrder | null; draft?: OrderDraf
   const [lines, setLines] = useState<Line[]>(() => (order?.parts ?? []).map((p) => ({ key: next.current++, partId: p.partId, name: p.name, quantity: text(p.quantity), unitCost: text(p.unitCost) })));
   const [problem, setProblem] = useState<string | null>(null);
   const [confirming, setConfirming] = useState(false);
+  /** The attached file being asked about before deleting it. */
+  const [askingFile, setAskingFile] = useState<string | null>(null);
   const input = useRef<HTMLInputElement>(null);
 
   const coin = currency || settings.data?.currency || "HNL";
@@ -314,19 +316,27 @@ export function OrderDialog(props: { order: MaintOrder | null; draft?: OrderDraf
               <p className="text-[13px] text-muted">{t("maintenance.order.noFiles")}</p>
             ) : (
               <ul className="divide-y divide-line">
-                {order.files.map((f) => (
-                  <li key={f.id} className="flex items-center justify-between gap-3 py-2">
-                    <a href={maintFileUrl(f.id)} target="_blank" rel="noreferrer" className="flex min-w-0 items-center gap-2 text-[14px] text-ink hover:underline">
-                      <FileText size={16} className="shrink-0 text-muted" aria-hidden="true" />
-                      <span className="truncate">{f.name}</span>
-                    </a>
-                    {editable && (
-                      <button type="button" onClick={() => dropFile.mutate(f.id)} aria-label={t("maintenance.order.deleteFile", { name: f.name })} title={t("common.delete")} className="shrink-0 rounded-lg p-1.5 text-muted hover:bg-canvas hover:text-danger">
-                        <Trash size={15} />
-                      </button>
-                    )}
-                  </li>
-                ))}
+                {order.files.map((f) =>
+                  askingFile === f.id ? (
+                    <li key={f.id} className="py-2">
+                      <ConfirmBar pending={dropFile.isPending} onCancel={() => setAskingFile(null)} onConfirm={() => dropFile.mutate(f.id)}>
+                        {t("maintenance.order.confirmDeleteFile", { name: f.name })}
+                      </ConfirmBar>
+                    </li>
+                  ) : (
+                    <li key={f.id} className="flex items-center justify-between gap-3 py-2">
+                      <a href={maintFileUrl(f.id)} target="_blank" rel="noreferrer" className="flex min-w-0 items-center gap-2 text-[14px] text-ink hover:underline">
+                        <FileText size={16} className="shrink-0 text-muted" aria-hidden="true" />
+                        <span className="truncate">{f.name}</span>
+                      </a>
+                      {editable && (
+                        <button type="button" onClick={() => setAskingFile(f.id)} aria-label={t("maintenance.order.deleteFile", { name: f.name })} title={t("common.delete")} className="shrink-0 rounded-lg p-1.5 text-muted hover:bg-canvas hover:text-danger">
+                          <Trash size={15} />
+                        </button>
+                      )}
+                    </li>
+                  ),
+                )}
               </ul>
             )}
             {editable && (

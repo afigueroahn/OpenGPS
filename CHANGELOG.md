@@ -12,6 +12,11 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/).
   talleres, repuestos, planes de ruta, puntos de interés y tableros. Ahora pregunta antes, en
   la misma franja roja que ya usaban los webhooks, las órdenes y los despachos, y dice qué se
   pierde (#183).
+- En la web, varias listas borraban al primer clic: quitar a una persona, retirar una
+  invitación, borrar un rol o un grupo, revocar un enlace compartido, quitar una asignación o
+  un documento de la ficha de flota, borrar un archivo de una orden o un vencimiento, y quitar
+  la foto o el teléfono del perfil. Ahora preguntan antes y dicen qué se pierde, igual que
+  «Salir de esta cuenta», que dejaba sin acceso sin avisar (#184).
 
 ## [0.15.0] - 2026-11-27
 

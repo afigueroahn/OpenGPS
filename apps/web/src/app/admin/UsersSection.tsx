@@ -12,7 +12,7 @@ import { Button, Notice, Spinner } from "../../components/ui";
 import { cancelInvitation, createRole, deleteRole, getMembers, inviteMember, removeMember, updateMember, updateRole } from "../../lib/api";
 import { minutesUntil } from "../../lib/format";
 import { VehiclePicker } from "../reports/kit";
-import { errorText } from "../widgets";
+import { ConfirmDialog, errorText } from "../widgets";
 
 const selectClass =
   "h-9 rounded-[10px] border border-line bg-surface px-2.5 text-sm text-ink focus:border-ink focus:outline-none focus:ring-3 focus:ring-ink/10 disabled:bg-canvas disabled:text-muted";
@@ -23,6 +23,8 @@ export function UsersSection({ groups, vehicles, part }: { groups: VehicleGroup[
   const queryClient = useQueryClient();
   const data = useQuery({ queryKey: ["members"], queryFn: getMembers });
   const [error, setError] = useState<string | null>(null);
+  /** What is asked before doing it: removing a person or withdrawing an invitation. */
+  const [asking, setAsking] = useState<{ title: string; body: string; confirm: string; action: () => Promise<unknown> } | null>(null);
 
   const refresh = () => queryClient.invalidateQueries({ queryKey: ["members"] });
   const run = useMutation({
@@ -48,7 +50,23 @@ export function UsersSection({ groups, vehicles, part }: { groups: VehicleGroup[
         <div className="space-y-6">
           <ul className="divide-y divide-line rounded-[12px] border border-line bg-surface">
             {data.data.members.map((m) => (
-              <MemberRow key={m.userId} member={m} roles={roles} groups={groups} vehicles={vehicles} busy={run.isPending} onRun={(action) => run.mutate(action)} />
+              <MemberRow
+                key={m.userId}
+                member={m}
+                roles={roles}
+                groups={groups}
+                vehicles={vehicles}
+                busy={run.isPending}
+                onRun={(action) => run.mutate(action)}
+                onRemove={() =>
+                  setAsking({
+                    title: t("admin.users.removeTitle", { name: m.name }),
+                    body: t("admin.users.removeBody", { email: m.email }),
+                    confirm: t("common.remove"),
+                    action: () => removeMember(m.userId),
+                  })
+                }
+              />
             ))}
           </ul>
 
@@ -65,7 +83,18 @@ export function UsersSection({ groups, vehicles, part }: { groups: VehicleGroup[
                         {t("admin.users.invitations.line", { role: i.roleName, scope: scopeLabel(t, i, groups), count: Math.max(1, Math.ceil(minutesUntil(i.expiresAt) / 1440)) })}
                       </span>
                     </span>
-                    <Button variant="secondary" size="sm" onClick={() => run.mutate(() => cancelInvitation(i.id))}>
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      onClick={() =>
+                        setAsking({
+                          title: t("admin.users.invitations.cancelTitle"),
+                          body: t("admin.users.invitations.cancelBody", { email: i.email }),
+                          confirm: t("admin.users.invitations.cancel"),
+                          action: () => cancelInvitation(i.id),
+                        })
+                      }
+                    >
                       {t("admin.users.invitations.cancel")}
                     </Button>
                   </li>
@@ -79,6 +108,9 @@ export function UsersSection({ groups, vehicles, part }: { groups: VehicleGroup[
           <InviteForm roles={roles} groups={groups} vehicles={vehicles} onInvited={refresh} />
         </div>
       )}
+      <ConfirmDialog open={asking !== null} title={asking?.title ?? ""} confirm={asking?.confirm ?? ""} onClose={() => setAsking(null)} action={() => asking?.action() ?? Promise.resolve()} onDone={() => void refresh()}>
+        {asking?.body}
+      </ConfirmDialog>
     </div>
   );
 }
@@ -104,6 +136,7 @@ function MemberRow(props: {
   vehicles: Vehicle[];
   busy: boolean;
   onRun: (action: () => Promise<unknown>) => void;
+  onRemove: () => void;
 }) {
   const { t } = useTranslation();
   const { member: m, roles, groups } = props;
@@ -150,7 +183,7 @@ function MemberRow(props: {
             >
               {m.disabled ? <UserCheck size={16} /> : <Ban size={16} />}
             </IconButton>
-            <IconButton label={t("admin.users.remove", { name: m.name })} onClick={() => props.onRun(() => removeMember(m.userId))}>
+            <IconButton label={t("admin.users.remove", { name: m.name })} onClick={props.onRemove}>
               <Trash2 size={16} />
             </IconButton>
           </>
@@ -310,6 +343,7 @@ function CustomRoles({ roles, onChanged }: { roles: RoleInfo[]; onChanged: () =>
   /** The custom role being changed; null while the form creates a new one. */
   const [editing, setEditing] = useState<RoleInfo | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [removing, setRemoving] = useState<RoleInfo | null>(null);
   const done = async () => {
     setError(null);
     await onChanged();
@@ -333,7 +367,6 @@ function CustomRoles({ roles, onChanged }: { roles: RoleInfo[]; onChanged: () =>
     },
     onError: (err) => setError(errorText(err)),
   });
-  const remove = useMutation({ mutationFn: (id: string) => deleteRole(id), onSuccess: done, onError: (err) => setError(errorText(err)) });
 
   return (
     <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_380px]">
@@ -358,10 +391,7 @@ function CustomRoles({ roles, onChanged }: { roles: RoleInfo[]; onChanged: () =>
                   </IconButton>
                   <IconButton
                     label={t("admin.roles.delete", { name: r.name })}
-                    onClick={() => {
-                      if (editing?.id === r.id) clear();
-                      remove.mutate(r.id);
-                    }}
+                    onClick={() => setRemoving(r)}
                   >
                     <Trash2 size={16} />
                   </IconButton>
@@ -419,6 +449,21 @@ function CustomRoles({ roles, onChanged }: { roles: RoleInfo[]; onChanged: () =>
           )}
         </div>
       </form>
+      <ConfirmDialog
+        open={removing !== null}
+        title={t("admin.roles.removeTitle")}
+        confirm={t("common.delete")}
+        onClose={() => setRemoving(null)}
+        action={async () => {
+          if (!removing) return;
+          await deleteRole(removing.id);
+          // The form was changing the role that no longer exists.
+          if (editing?.id === removing.id) clear();
+        }}
+        onDone={() => void done()}
+      >
+        {removing && t("admin.roles.removeBody", { name: removing.name })}
+      </ConfirmDialog>
     </div>
   );
 }

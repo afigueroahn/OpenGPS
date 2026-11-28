@@ -11,7 +11,7 @@ import i18n from "../../lib/i18n";
 import { deleteMaintExpiry, getMaintSettings, getMaintenance, saveMaintExpiry, saveMaintSettings, setMaintBaseline } from "../../lib/maintenance";
 import { amountOf, currencyName, dayLabel, today, whole } from "../fleet/format";
 import { Card, Tile } from "../reports/kit";
-import { errorText } from "../widgets";
+import { ConfirmDialog, errorText } from "../widgets";
 import type { OrderDraft } from "./OrderDialog";
 
 const select = "h-11 w-full rounded-[10px] border border-line bg-surface px-3 text-[15px] text-ink focus:border-ink focus:outline-none focus:ring-3 focus:ring-ink/10";
@@ -32,9 +32,8 @@ export function PendingTab(props: { vehicles: { id: string; name: string }[]; ca
   const [baseline, setBaseline] = useState<MaintSchedule | null>(null);
   const [expiry, setExpiry] = useState<MaintExpiry | "new" | null>(null);
   const [settings, setSettings] = useState(false);
-  const [failed, setFailed] = useState<string | null>(null);
+  const [removing, setRemoving] = useState<MaintExpiry | null>(null);
   const put = (next: MaintOverview) => queryClient.setQueryData(["maintenance", "overview"], next);
-  const removeExpiry = useMutation({ mutationFn: (id: string) => deleteMaintExpiry(id), onSuccess: put, onError: (err) => setFailed(errorText(err)) });
 
   if (overview.isLoading) {
     return (
@@ -57,7 +56,6 @@ export function PendingTab(props: { vehicles: { id: string; name: string }[]; ca
         <Tile raised label={t("maintenance.pending.tiles.open")} value={String(openOrders)} foot={t("maintenance.pending.tiles.openFoot")} />
         <Tile raised label={t("maintenance.pending.tiles.documents")} value={String(expiring)} foot={t("maintenance.pending.tiles.documentsFoot")} />
       </div>
-      {failed && <Notice tone="error">{failed}</Notice>}
 
       <Card
         title={t("maintenance.pending.schedules.title")}
@@ -162,7 +160,7 @@ export function PendingTab(props: { vehicles: { id: string; name: string }[]; ca
                         <button type="button" onClick={() => setExpiry(e)} aria-label={t("maintenance.pending.expiries.edit", { vehicle: e.vehicleName })} title={t("common.edit")} className="rounded-lg p-2 text-muted hover:bg-canvas hover:text-ink">
                           <Pencil size={15} />
                         </button>
-                        <button type="button" onClick={() => removeExpiry.mutate(e.id)} aria-label={t("maintenance.pending.expiries.remove", { vehicle: e.vehicleName })} title={t("common.remove")} className="rounded-lg p-2 text-muted hover:bg-canvas hover:text-danger">
+                        <button type="button" onClick={() => setRemoving(e)} aria-label={t("maintenance.pending.expiries.remove", { vehicle: e.vehicleName })} title={t("common.remove")} className="rounded-lg p-2 text-muted hover:bg-canvas hover:text-danger">
                           <Trash size={15} />
                         </button>
                       </>
@@ -178,6 +176,15 @@ export function PendingTab(props: { vehicles: { id: string; name: string }[]; ca
       {baseline && <BaselineDialog schedule={baseline} onClose={() => setBaseline(null)} onSaved={put} />}
       {expiry && <ExpiryDialog expiry={expiry === "new" ? null : expiry} vehicles={props.vehicles} onClose={() => setExpiry(null)} onSaved={put} />}
       {settings && <SettingsDialog onClose={() => setSettings(false)} />}
+      <ConfirmDialog
+        open={removing !== null}
+        title={t("maintenance.pending.expiries.removeTitle")}
+        confirm={t("common.delete")}
+        onClose={() => setRemoving(null)}
+        action={() => (removing ? deleteMaintExpiry(removing.id).then(put) : Promise.resolve())}
+      >
+        {removing && t("maintenance.pending.expiries.removeBody", { what: [t(`shared.maintExpiry.${removing.kind}`), removing.name].filter(Boolean).join(" · "), vehicle: removing.vehicleName })}
+      </ConfirmDialog>
     </div>
   );
 }

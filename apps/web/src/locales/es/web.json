@@ -132,7 +132,9 @@
         "change": "Cambiar foto",
         "remove": "Quitar foto",
         "failed": "No pudimos guardar la foto. Inténtalo de nuevo.",
-        "unreadable": "No pudimos abrir esa imagen. Prueba con una foto JPG, PNG o WebP."
+        "unreadable": "No pudimos abrir esa imagen. Prueba con una foto JPG, PNG o WebP.",
+        "removeTitle": "Quitar la foto",
+        "removeBody": "Se borra tu foto. En su lugar se ven tus iniciales."
       },
       "name": {
         "person": "Tu nombre",
@@ -165,7 +167,9 @@
         "save": "Guardar",
         "cancel": "Cancelar",
         "phone": "Teléfono",
-        "phoneNote": "Con su código de país, por ejemplo +50499887766."
+        "phoneNote": "Con su código de país, por ejemplo +50499887766.",
+        "removeTitle": "Borrar el teléfono",
+        "removeBody": "Dejas de recibir en el {{phone}} los avisos por SMS que te incluyan."
       },
       "password": {
         "title": "Contraseña",
@@ -180,7 +184,9 @@
         "noneLead": "Entras con otro servicio o con una passkey, así que no tienes contraseña. Si quieres una, te enviamos a tu correo un enlace para crearla.",
         "send": "Enviar enlace",
         "sent": "Te enviamos el enlace a {{email}}. Ábrelo para crear tu contraseña."
-      }
+      },
+      "leaveTitle": "¿Salir de {{name}}?",
+      "leaveBody": "Dejas de ver los vehículos de esta cuenta. Para volver, alguien de la cuenta tiene que invitarte de nuevo. Tu propia cuenta queda intacta."
     },
     "roles": {
       "note": "Todos los roles ven los vehículos de su alcance. Un rol propio suma solo los permisos que marques.",
@@ -196,7 +202,9 @@
       "edit": "Editar el rol {{name}}",
       "editTitle": "Editar el rol {{name}}",
       "save": "Guardar cambios",
-      "cancel": "Cancelar"
+      "cancel": "Cancelar",
+      "removeTitle": "Borrar el rol",
+      "removeBody": "Se borra «{{name}}». Quienes lo tienen, y las invitaciones pendientes con él, pasan a Lector: solo ven el mapa y los vehículos."
     },
     "users": {
       "scope": {
@@ -218,7 +226,9 @@
         "title": "Invitaciones pendientes",
         "line_one": "{{role}} · {{scope}} · vence en {{count}} día",
         "line_other": "{{role}} · {{scope}} · vence en {{count}} días",
-        "cancel": "Retirar"
+        "cancel": "Retirar",
+        "cancelTitle": "Retirar la invitación",
+        "cancelBody": "El enlace que se envió a {{email}} deja de servir. Puedes volver a invitarlo cuando quieras."
       },
       "you": "(tú)",
       "blocked": "Bloqueado",
@@ -233,7 +243,9 @@
         "role": "Rol",
         "send": "Enviar invitación",
         "sent": "Invitación enviada a {{email}}. Vence en 7 días."
-      }
+      },
+      "removeTitle": "¿Quitar a {{name}}?",
+      "removeBody": "{{email}} deja de entrar a esta cuenta. Su usuario sigue existiendo y puedes volver a invitarlo. Si solo debe dejar de entrar por un tiempo, es mejor bloquearlo."
     },
     "notify": {
       "channel": {
@@ -962,7 +974,11 @@
       "delete": "Borrar {{name}}",
       "new": "Grupo nuevo",
       "placeholder": "Reparto norte",
-      "note": "Al borrar un grupo, sus vehículos no se borran: quedan sin grupo."
+      "note": "Al borrar un grupo, sus vehículos no se borran: quedan sin grupo.",
+      "removeTitle": "Borrar el grupo",
+      "removeBody_zero": "Se borra «{{name}}». Las automatizaciones que eran solo para este grupo se borran con él.",
+      "removeBody_one": "Se borra «{{name}}». Su vehículo se queda sin grupo, y las automatizaciones que eran solo para este grupo se borran con él.",
+      "removeBody_other": "Se borra «{{name}}». Sus {{count}} vehículos se quedan sin grupo, y las automatizaciones que eran solo para este grupo se borran con él."
     },
     "modules": {
       "loadGroupsFailed": "No pudimos cargar tus grupos. Revisa tu conexión y vuelve a intentarlo.",

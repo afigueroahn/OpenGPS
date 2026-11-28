@@ -11,7 +11,7 @@ import { Button, Field, Modal, Notice, Spinner } from "../../components/ui";
 import { addFleetAssignment, deleteFleetDocument, fleetDocumentUrl, getFleetAssignments, getFleetVehicle, removeFleetAssignment, saveFleetProfile, setFleetState, setFleetStatus, uploadFleetDocument } from "../../lib/api";
 import { decimalMark, formatDateTime } from "../../lib/format";
 import { sayShared } from "../../lib/i18n";
-import { errorText } from "../widgets";
+import { ConfirmBar, errorText } from "../widgets";
 import { FLEET_KIND_VALUES, amountOf, currencyName, dayLabel, daysUntil, kindLabel, money, today, whole } from "./format";
 
 const lightSelect = "h-11 w-full rounded-[10px] border border-line bg-surface px-3 text-[15px] text-ink focus:border-ink focus:outline-none focus:ring-3 focus:ring-ink/10";
@@ -277,6 +277,7 @@ function AssignedTab({ v, canManage }: { v: FleetDetail; canManage: boolean }) {
   const [person, setPerson] = useState("");
   const [from, setFrom] = useState(today());
   const [to, setTo] = useState("");
+  const [asking, setAsking] = useState<string | null>(null);
   const done = (next: Awaited<ReturnType<typeof getFleetAssignments>>) => {
     queryClient.setQueryData(key, next);
     setPerson("");
@@ -323,22 +324,30 @@ function AssignedTab({ v, canManage }: { v: FleetDetail; canManage: boolean }) {
         <p className="rounded-[12px] bg-canvas px-4 py-3 text-[13.5px] text-ink-3">{t("fleet.assigned.empty")}</p>
       ) : (
         <ul className="divide-y divide-line text-[14px]">
-          {list.data.items.map((a) => (
-            <li key={a.id} className="flex items-center justify-between gap-3 py-2.5">
-              <span className="min-w-0">
-                <span className="font-medium text-ink">{a.person}</span>
-                <span className="num block text-[12.5px] text-muted">
-                  {when(a.from)} – {a.to ? when(a.to) : t("fleet.assigned.today")}
-                  {a.note && <> · {a.note}</>}
+          {list.data.items.map((a) =>
+            asking === a.id ? (
+              <li key={a.id} className="py-2.5">
+                <ConfirmBar confirm={t("common.remove")} pending={remove.isPending} onCancel={() => setAsking(null)} onConfirm={() => remove.mutate(a.id)}>
+                  {t("fleet.assigned.confirmRemove", { name: a.person })}
+                </ConfirmBar>
+              </li>
+            ) : (
+              <li key={a.id} className="flex items-center justify-between gap-3 py-2.5">
+                <span className="min-w-0">
+                  <span className="font-medium text-ink">{a.person}</span>
+                  <span className="num block text-[12.5px] text-muted">
+                    {when(a.from)} – {a.to ? when(a.to) : t("fleet.assigned.today")}
+                    {a.note && <> · {a.note}</>}
+                  </span>
                 </span>
-              </span>
-              {!withDrivers && canManage && (
-                <button type="button" onClick={() => remove.mutate(a.id)} aria-label={t("fleet.assigned.remove", { name: a.person })} title={t("common.remove")} className="rounded-lg p-2 text-muted hover:bg-canvas hover:text-danger">
-                  <Trash size={15} />
-                </button>
-              )}
-            </li>
-          ))}
+                {!withDrivers && canManage && (
+                  <button type="button" onClick={() => setAsking(a.id)} aria-label={t("fleet.assigned.remove", { name: a.person })} title={t("common.remove")} className="rounded-lg p-2 text-muted hover:bg-canvas hover:text-danger">
+                    <Trash size={15} />
+                  </button>
+                )}
+              </li>
+            ),
+          )}
         </ul>
       )}
     </div>
@@ -352,6 +361,7 @@ function DocumentsTab({ v, canManage, onSaved }: { v: FleetDetail; canManage: bo
   const input = useRef<HTMLInputElement>(null);
   const [kind, setKind] = useState<FleetDocumentKind>("insurance");
   const [expiresOn, setExpiresOn] = useState("");
+  const [asking, setAsking] = useState<string | null>(null);
   const upload = useMutation({
     mutationFn: (file: File) => uploadFleetDocument(v.vehicleId, file, { kind, ...(kind !== "photo" && expiresOn ? { expiresOn } : {}) }),
     onSuccess: (next) => {
@@ -405,6 +415,15 @@ function DocumentsTab({ v, canManage, onSaved }: { v: FleetDetail; canManage: bo
         <ul className="divide-y divide-line">
           {v.docs.map((d) => {
             const left = d.expiresOn ? daysUntil(d.expiresOn) : null;
+            if (asking === d.id) {
+              return (
+                <li key={d.id} className="py-2.5">
+                  <ConfirmBar pending={remove.isPending} onCancel={() => setAsking(null)} onConfirm={() => remove.mutate(d.id)}>
+                    {t("fleet.documents.confirmRemove", { name: d.name })}
+                  </ConfirmBar>
+                </li>
+              );
+            }
             return (
               <li key={d.id} className="flex items-center justify-between gap-3 py-2.5">
                 <a href={fleetDocumentUrl(d.id)} target="_blank" rel="noreferrer" className="flex min-w-0 items-start gap-2.5 text-[14px] hover:underline">
@@ -425,7 +444,7 @@ function DocumentsTab({ v, canManage, onSaved }: { v: FleetDetail; canManage: bo
                   </span>
                 </a>
                 {canManage && (
-                  <button type="button" onClick={() => remove.mutate(d.id)} aria-label={t("fleet.documents.remove", { name: d.name })} title={t("common.delete")} className="shrink-0 rounded-lg p-2 text-muted hover:bg-canvas hover:text-danger">
+                  <button type="button" onClick={() => setAsking(d.id)} aria-label={t("fleet.documents.remove", { name: d.name })} title={t("common.delete")} className="shrink-0 rounded-lg p-2 text-muted hover:bg-canvas hover:text-danger">
                     <Trash size={15} />
                   </button>
                 )}

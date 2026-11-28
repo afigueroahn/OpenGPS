@@ -7,7 +7,7 @@ import { type FormEvent, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Button, Notice } from "../../components/ui";
 import { createGroup, deleteGroup, renameGroup } from "../../lib/api";
-import { errorText } from "../widgets";
+import { ConfirmDialog, errorText } from "../widgets";
 
 export function GroupsSection({ groups }: { groups: VehicleGroup[] }) {
   const { t } = useTranslation();
@@ -15,6 +15,7 @@ export function GroupsSection({ groups }: { groups: VehicleGroup[] }) {
   const [name, setName] = useState("");
   const [editing, setEditing] = useState<{ id: string; name: string } | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [removing, setRemoving] = useState<VehicleGroup | null>(null);
 
   const refresh = async () => {
     await queryClient.invalidateQueries({ queryKey: ["groups"] });
@@ -40,7 +41,6 @@ export function GroupsSection({ groups }: { groups: VehicleGroup[] }) {
     },
     onError: fail,
   });
-  const remove = useMutation({ mutationFn: (id: string) => deleteGroup(id), onSuccess: refresh, onError: fail });
 
   const submit = (e: FormEvent) => {
     e.preventDefault();
@@ -84,7 +84,7 @@ export function GroupsSection({ groups }: { groups: VehicleGroup[] }) {
                     <IconButton label={t("admin.vehicleGroups.rename", { name: g.name })} onClick={() => setEditing({ id: g.id, name: g.name })}>
                       <Pencil size={15} />
                     </IconButton>
-                    <IconButton label={t("admin.vehicleGroups.delete", { name: g.name })} onClick={() => remove.mutate(g.id)}>
+                    <IconButton label={t("admin.vehicleGroups.delete", { name: g.name })} onClick={() => setRemoving(g)}>
                       <Trash2 size={15} />
                     </IconButton>
                   </>
@@ -115,6 +115,15 @@ export function GroupsSection({ groups }: { groups: VehicleGroup[] }) {
 
         {error && <Notice tone="error">{error}</Notice>}
         <p className="text-[13px] text-muted">{t("admin.vehicleGroups.note")}</p>
+        <ConfirmDialog
+          open={removing !== null}
+          title={t("admin.vehicleGroups.removeTitle")}
+          confirm={t("common.delete")}
+          onClose={() => setRemoving(null)}
+          action={() => (removing ? deleteGroup(removing.id) : Promise.resolve())}
+        >
+          {removing && t("admin.vehicleGroups.removeBody", { name: removing.name, count: removing.vehicleCount })}
+        </ConfirmDialog>
     </div>
   );
 }

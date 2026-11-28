@@ -9,7 +9,7 @@ import { Button, CopyText, Field, Modal, Notice, Spinner } from "../components/u
 import { createShare, getShares, revokeShare, shareUrl } from "../lib/api";
 import i18n from "../lib/i18n";
 import { formatDateTime, formatDuration } from "../lib/format";
-import { errorText } from "./widgets";
+import { ConfirmBar, errorText } from "./widgets";
 
 /** "8 hours", "3 days": whole days are said in days. */
 const durationLabel = (hours: number) => (hours % 24 === 0 ? i18n.t("map.share.days", { count: hours / 24 }) : i18n.t("map.share.hours", { count: hours }));
@@ -21,9 +21,12 @@ export function ShareDialog({ open, onClose, vehicle }: { open: boolean; onClose
   const [note, setNote] = useState("");
   /** Address of the newly created link: it can only be copied now. */
   const [fresh, setFresh] = useState<{ id: string; url: string } | null>(null);
+  /** The link being asked about before revoking it. */
+  const [asking, setAsking] = useState<string | null>(null);
   useEffect(() => {
     if (open) {
       setFresh(null);
+      setAsking(null);
       setNote("");
       setHours(8);
     }
@@ -43,6 +46,7 @@ export function ShareDialog({ open, onClose, vehicle }: { open: boolean; onClose
     onSuccess: (_, id) => {
       // If the newly created link is revoked, its address is no longer valid: it stops being shown.
       setFresh((f) => (f?.id === id ? null : f));
+      setAsking(null);
       return queryClient.invalidateQueries({ queryKey: ["shares", vehicle.id] });
     },
   });
@@ -112,17 +116,25 @@ export function ShareDialog({ open, onClose, vehicle }: { open: boolean; onClose
           {links.isError && <Notice tone="error">{errorText(links.error)}</Notice>}
           {links.isSuccess && links.data.length === 0 && <p className="text-sm text-muted">{t("map.share.none")}</p>}
           <ul className="divide-y divide-line">
-            {links.data?.map((link) => (
-              <li key={link.id} className="flex items-center gap-3 py-2.5">
-                <div className="min-w-0 flex-1">
-                  <p className="truncate text-sm font-medium">{link.note || t("map.share.noNote")}</p>
-                  <p className="text-[13px] text-muted">{detailOf(link)}</p>
-                </div>
-                <Button variant="danger" size="sm" loading={revoke.isPending && revoke.variables === link.id} onClick={() => revoke.mutate(link.id)}>
-                  {t("map.share.revoke")}
-                </Button>
-              </li>
-            ))}
+            {links.data?.map((link) =>
+              asking === link.id ? (
+                <li key={link.id} className="py-2.5">
+                  <ConfirmBar confirm={t("map.share.revoke")} pending={revoke.isPending} onCancel={() => setAsking(null)} onConfirm={() => revoke.mutate(link.id)}>
+                    {t("map.share.confirmRevoke", { vehicle: vehicle.name })}
+                  </ConfirmBar>
+                </li>
+              ) : (
+                <li key={link.id} className="flex items-center gap-3 py-2.5">
+                  <div className="min-w-0 flex-1">
+                    <p className="truncate text-sm font-medium">{link.note || t("map.share.noNote")}</p>
+                    <p className="text-[13px] text-muted">{detailOf(link)}</p>
+                  </div>
+                  <Button variant="danger" size="sm" onClick={() => setAsking(link.id)}>
+                    {t("map.share.revoke")}
+                  </Button>
+                </li>
+              ),
+            )}
           </ul>
           {revoke.isError && <Notice tone="error">{errorText(revoke.error)}</Notice>}
         </section>

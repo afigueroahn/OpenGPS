@@ -90,7 +90,8 @@
     "assign": "Assign",
     "empty": "It hasn't been assigned to anyone yet.",
     "today": "today",
-    "remove": "Remove the assignment of {{name}}"
+    "remove": "Remove the assignment of {{name}}",
+    "confirmRemove": "{{name}} is removed from this vehicle's history."
   },
   "documents": {
     "kind": "What it is",
@@ -102,7 +103,8 @@
     "expired": "expired on {{date}}",
     "today": "expires today",
     "expires": "expires on {{date}}",
-    "remove": "Delete {{name}}"
+    "remove": "Delete {{name}}",
+    "confirmRemove": "“{{name}}” is deleted. If it had an expiration, it stops warning. This can't be undone."
   },
   "life": {
     "numbers": "They're numbers, without letters.",
