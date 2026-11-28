@@ -26,6 +26,9 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/).
 
 ### Corregido
 
+- La consola deja escribir el titular de la plataforma y su país en Ajustes → General →
+  «Datos legales». Los términos de uso y la política de privacidad ya los usaban, pero no había
+  campos para escribirlos (#179).
 - En la app, cuando no logra conectar con la plataforma, el botón «Cambiar de plataforma» se
   veía vacío en modo claro: su texto era del mismo azul que el fondo (#173).
 
