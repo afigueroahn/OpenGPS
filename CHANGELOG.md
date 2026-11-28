@@ -6,6 +6,8 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Sin publicar]
 
+## [0.15.1] - 2026-11-28
+
 ### Corregido
 
 - En la web, «Eliminar» borraba al primer clic en los diálogos de automatizaciones, sensores,
