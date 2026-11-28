@@ -132,7 +132,9 @@
         "change": "Change photo",
         "remove": "Remove photo",
         "failed": "We couldn't save the photo. Try again.",
-        "unreadable": "We couldn't open that image. Try a JPG, PNG or WebP photo."
+        "unreadable": "We couldn't open that image. Try a JPG, PNG or WebP photo.",
+        "removeTitle": "Remove the photo",
+        "removeBody": "Your photo is deleted. Your initials are shown instead."
       },
       "name": {
         "person": "Your name",
@@ -165,7 +167,9 @@
         "save": "Save",
         "cancel": "Cancel",
         "phone": "Phone",
-        "phoneNote": "With its country code, for example +50499887766."
+        "phoneNote": "With its country code, for example +50499887766.",
+        "removeTitle": "Delete the phone",
+        "removeBody": "You stop receiving at {{phone}} the SMS notifications that include you."
       },
       "password": {
         "title": "Password",
@@ -180,7 +184,9 @@
         "noneLead": "You sign in with another service or a passkey, so you have no password. If you want one, we'll email you a link to create it.",
         "send": "Send link",
         "sent": "We sent the link to {{email}}. Open it to create your password."
-      }
+      },
+      "leaveTitle": "Leave {{name}}?",
+      "leaveBody": "You stop seeing this account's vehicles. To come back, someone in the account has to invite you again. Your own account stays intact."
     },
     "roles": {
       "note": "Every role sees the vehicles in its scope. A custom role adds only the permissions you tick.",
@@ -196,7 +202,9 @@
       "edit": "Edit the role {{name}}",
       "editTitle": "Edit the role {{name}}",
       "save": "Save changes",
-      "cancel": "Cancel"
+      "cancel": "Cancel",
+      "removeTitle": "Delete the role",
+      "removeBody": "“{{name}}” is deleted. Whoever has it, and the pending invitations with it, become Viewer: they only see the map and the vehicles."
     },
     "users": {
       "scope": {
@@ -218,7 +226,9 @@
         "title": "Pending invitations",
         "line_one": "{{role}} · {{scope}} · expires in {{count}} day",
         "line_other": "{{role}} · {{scope}} · expires in {{count}} days",
-        "cancel": "Withdraw"
+        "cancel": "Withdraw",
+        "cancelTitle": "Withdraw the invitation",
+        "cancelBody": "The link sent to {{email}} stops working. You can invite them again whenever you want."
       },
       "you": "(you)",
       "blocked": "Blocked",
@@ -233,7 +243,9 @@
         "role": "Role",
         "send": "Send invitation",
         "sent": "Invitation sent to {{email}}. It expires in 7 days."
-      }
+      },
+      "removeTitle": "Remove {{name}}?",
+      "removeBody": "{{email}} can no longer enter this account. Their user still exists and you can invite them again. If they only need to stay out for a while, it's better to block them."
     },
     "notify": {
       "channel": {
@@ -962,7 +974,11 @@
       "delete": "Delete {{name}}",
       "new": "New group",
       "placeholder": "North deliveries",
-      "note": "Deleting a group does not delete its vehicles: they are left without a group."
+      "note": "Deleting a group does not delete its vehicles: they are left without a group.",
+      "removeTitle": "Delete the group",
+      "removeBody_zero": "“{{name}}” is deleted. The automations that were only for this group are deleted with it.",
+      "removeBody_one": "“{{name}}” is deleted. Its vehicle is left without a group, and the automations that were only for this group are deleted with it.",
+      "removeBody_other": "“{{name}}” is deleted. Its {{count}} vehicles are left without a group, and the automations that were only for this group are deleted with it."
     },
     "modules": {
       "loadGroupsFailed": "We couldn't load your groups. Check your connection and try again.",

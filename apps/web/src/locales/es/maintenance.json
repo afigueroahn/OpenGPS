@@ -40,7 +40,9 @@
       "expires_other": "vence el {{date}} · faltan {{count}} días",
       "fromFleet": "documento de la flota",
       "edit": "Editar el vencimiento de {{vehicle}}",
-      "remove": "Quitar el vencimiento de {{vehicle}}"
+      "remove": "Quitar el vencimiento de {{vehicle}}",
+      "removeTitle": "Borrar el vencimiento",
+      "removeBody": "Se borra el vencimiento «{{what}}» de {{vehicle}} y deja de avisar."
     },
     "baseline": {
       "needDate": "Escribe la fecha.",
@@ -142,7 +144,8 @@
     "attach": "Adjuntar",
     "attachLater": "Al guardarla podrás adjuntarle la factura o fotos del trabajo.",
     "restartsSchedule": "Al guardarla terminada, la cuenta de ese servicio programado vuelve a empezar desde esta fecha y este odómetro.",
-    "confirmDelete": "Se borra la orden con sus adjuntos. No se puede deshacer."
+    "confirmDelete": "Se borra la orden con sus adjuntos. No se puede deshacer.",
+    "confirmDeleteFile": "Se borra «{{name}}» de la orden. No se puede deshacer."
   },
   "plans": {
     "every": "Cada {{list}}",

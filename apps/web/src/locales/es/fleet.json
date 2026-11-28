@@ -90,7 +90,8 @@
     "assign": "Asignar",
     "empty": "Todavía no se le ha asignado a nadie.",
     "today": "hoy",
-    "remove": "Quitar la asignación de {{name}}"
+    "remove": "Quitar la asignación de {{name}}",
+    "confirmRemove": "Se quita a {{name}} del historial de este vehículo."
   },
   "documents": {
     "kind": "Qué es",
@@ -102,7 +103,8 @@
     "expired": "venció el {{date}}",
     "today": "vence hoy",
     "expires": "vence el {{date}}",
-    "remove": "Borrar {{name}}"
+    "remove": "Borrar {{name}}",
+    "confirmRemove": "Se borra «{{name}}». Si tenía vencimiento, deja de avisar. No se puede deshacer."
   },
   "life": {
     "numbers": "Son números, sin letras.",

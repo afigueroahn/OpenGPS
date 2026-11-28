@@ -177,7 +177,8 @@
     "expiresIn": "Expires in {{duration}}",
     "notOpened": "not opened",
     "opened_one": "opened {{count}} time",
-    "opened_other": "opened {{count}} times"
+    "opened_other": "opened {{count}} times",
+    "confirmRevoke": "Whoever has this link stops seeing {{vehicle}}. This can't be undone."
   },
   "privacy": {
     "consent": {

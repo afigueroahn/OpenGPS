@@ -177,7 +177,8 @@
     "expiresIn": "Vence en {{duration}}",
     "notOpened": "sin abrir",
     "opened_one": "abierto {{count}} vez",
-    "opened_other": "abierto {{count}} veces"
+    "opened_other": "abierto {{count}} veces",
+    "confirmRevoke": "Quien tenga este enlace deja de ver {{vehicle}}. No se puede deshacer."
   },
   "privacy": {
     "consent": {

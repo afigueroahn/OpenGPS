@@ -40,7 +40,9 @@
       "expires_other": "expires on {{date}} · {{count}} days left",
       "fromFleet": "fleet document",
       "edit": "Edit the expiration for {{vehicle}}",
-      "remove": "Remove the expiration for {{vehicle}}"
+      "remove": "Remove the expiration for {{vehicle}}",
+      "removeTitle": "Delete the expiration",
+      "removeBody": "The “{{what}}” expiration of {{vehicle}} is deleted and stops warning."
     },
     "baseline": {
       "needDate": "Enter the date.",
@@ -142,7 +144,8 @@
     "attach": "Attach",
     "attachLater": "Once it's saved, you can attach the invoice or photos of the work.",
     "restartsSchedule": "When it's saved as completed, the count for that scheduled service starts over from this date and this odometer.",
-    "confirmDelete": "The work order and its attachments will be deleted. This can't be undone."
+    "confirmDelete": "The work order and its attachments will be deleted. This can't be undone.",
+    "confirmDeleteFile": "“{{name}}” is deleted from the work order. This can't be undone."
   },
   "plans": {
     "every": "Every {{list}}",

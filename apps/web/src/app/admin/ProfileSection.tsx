@@ -88,6 +88,7 @@ function PhoneBlock({ me }: { me: Me }) {
   const saved = me.settings.phone;
   const [editing, setEditing] = useState(false);
   const [phone, setPhone] = useState(saved ?? "");
+  const [removing, setRemoving] = useState(false);
   const save = useMutation({
     mutationFn: (next: string | null) => saveSettings({ phone: next }),
     onSuccess: async () => {
@@ -131,7 +132,7 @@ function PhoneBlock({ me }: { me: Me }) {
           <Button variant="secondary" size="sm" onClick={start}>
             <Pencil size={14} aria-hidden="true" /> {t("admin.profile.contact.edit")}
           </Button>
-          <Button variant="ghost" size="sm" loading={save.isPending} onClick={() => save.mutate(null)}>
+          <Button variant="ghost" size="sm" onClick={() => setRemoving(true)}>
             <Trash2 size={14} aria-hidden="true" /> {t("admin.profile.contact.remove")}
           </Button>
         </div>
@@ -144,6 +145,16 @@ function PhoneBlock({ me }: { me: Me }) {
         </div>
       )}
       {save.isError && <p className="mt-2 text-[13px] text-danger">{errorText(save.error)}</p>}
+      <ConfirmDialog
+        open={removing}
+        title={t("admin.profile.contact.removeTitle")}
+        confirm={t("admin.profile.contact.remove")}
+        onClose={() => setRemoving(false)}
+        action={() => saveSettings({ phone: null })}
+        onDone={() => void queryClient.invalidateQueries({ queryKey: ["me"] })}
+      >
+        {t("admin.profile.contact.removeBody", { phone: saved })}
+      </ConfirmDialog>
     </Block>
   );
 }
@@ -163,12 +174,9 @@ function PhotoAndName({ me, children }: { me: Me; children: ReactNode }) {
     },
     onSuccess: done,
   });
-  const remove = useMutation({ mutationFn: deletePhoto, onSuccess: done });
-  const busy = upload.isPending || remove.isPending;
-  const failed = upload.error ?? remove.error;
+  const [removing, setRemoving] = useState(false);
   const pick = () => {
     upload.reset();
-    remove.reset();
     input.current?.click();
   };
   return (
@@ -179,12 +187,12 @@ function PhotoAndName({ me, children }: { me: Me; children: ReactNode }) {
           <button
             type="button"
             onClick={pick}
-            disabled={busy}
+            disabled={upload.isPending}
             aria-label={t("admin.profile.photo.change")}
             title={t("admin.profile.photo.change")}
             className="absolute -bottom-1 -right-1 flex h-7 w-7 items-center justify-center rounded-full border-2 border-surface bg-primary text-on-primary hover:bg-primary/85 disabled:opacity-70"
           >
-            {busy ? <Spinner size={13} /> : <Camera size={13} aria-hidden="true" />}
+            {upload.isPending ? <Spinner size={13} /> : <Camera size={13} aria-hidden="true" />}
           </button>
           <input
             ref={input}
@@ -201,17 +209,20 @@ function PhotoAndName({ me, children }: { me: Me; children: ReactNode }) {
         <div className="min-w-0 flex-1 pt-1">
           {children}
           {me.user.photoUrl && (
-            <button type="button" onClick={() => remove.mutate()} disabled={busy} className="mt-1 inline-flex items-center gap-1.5 text-[13px] font-medium text-muted hover:text-ink hover:underline disabled:opacity-60">
+            <button type="button" onClick={() => setRemoving(true)} disabled={upload.isPending} className="mt-1 inline-flex items-center gap-1.5 text-[13px] font-medium text-muted hover:text-ink hover:underline disabled:opacity-60">
               <Trash2 size={13} aria-hidden="true" /> {t("admin.profile.photo.remove")}
             </button>
           )}
         </div>
       </div>
-      {failed && (
+      {upload.isError && (
         <p role="alert" className="mt-2 max-w-[40ch] text-[13px] text-danger">
-          {errorText(failed)}
+          {errorText(upload.error)}
         </p>
       )}
+      <ConfirmDialog open={removing} title={t("admin.profile.photo.removeTitle")} confirm={t("admin.profile.photo.remove")} onClose={() => setRemoving(false)} action={deletePhoto} onDone={() => void done()}>
+        {t("admin.profile.photo.removeBody")}
+      </ConfirmDialog>
     </div>
   );
 }
@@ -380,15 +391,11 @@ export function ProfileSection({ me }: { me: Me }) {
   const queryClient = useQueryClient();
   const passkeys = useConfig().data?.passkeys ?? false;
   const [deleting, setDeleting] = useState(false);
+  const [leaving, setLeaving] = useState(false);
   const signOut = async () => {
     await auth.signOut().catch(() => {});
     queryClient.clear();
     window.location.assign("/login");
-  };
-  // Whoever was invited can leave the foreign account; their own stays intact.
-  const leave = async () => {
-    await leaveAccount().catch(() => {});
-    window.location.assign("/");
   };
   const link = "inline-flex items-center gap-2 text-[14.5px] font-medium text-ink hover:underline";
 
@@ -459,7 +466,7 @@ export function ProfileSection({ me }: { me: Me }) {
             <LogOut size={16} aria-hidden="true" /> {t("admin.user.signOut")}
           </Button>
           {me.account.role !== "owner" && (
-            <Button variant="ghost" onClick={() => void leave()} title={t("admin.profile.leaveLead")}>
+            <Button variant="ghost" onClick={() => setLeaving(true)} title={t("admin.profile.leaveLead")}>
               <DoorOpen size={16} aria-hidden="true" /> {t("admin.profile.leave")}
             </Button>
           )}
@@ -467,6 +474,17 @@ export function ProfileSection({ me }: { me: Me }) {
       </Block>
 
       <DeleteAccountDialog open={deleting} onClose={() => setDeleting(false)} me={me} />
+      {/* Whoever was invited can leave the foreign account; their own stays intact. */}
+      <ConfirmDialog
+        open={leaving}
+        title={t("admin.profile.leaveTitle", { name: me.account.name })}
+        confirm={t("admin.profile.leave")}
+        onClose={() => setLeaving(false)}
+        action={leaveAccount}
+        onDone={() => window.location.assign("/")}
+      >
+        {t("admin.profile.leaveBody")}
+      </ConfirmDialog>
     </div>
   );
 }
