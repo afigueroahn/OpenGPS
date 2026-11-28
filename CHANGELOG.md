@@ -8,6 +8,10 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/).
 
 ### Agregado
 
+- Las apps se compilan y se firman para Google Play y la App Store en la Mac del proyecto:
+  `store:android` genera el `.aab` con la clave de subida, que queda fuera del repo, y
+  `store:ios` archiva la app de iPhone con el equipo de pago. La app sale como 1.0.0 y declara
+  que solo usa el cifrado del sistema (ADR-0030, #175).
 - Las fichas de las apps en Google Play y la App Store, en español e inglés, en
   `apps/mobile/store/`: textos, capturas de iPhone y Android, el ícono y el gráfico destacado
   de Google Play, las notas para la revisión y las respuestas sobre los datos de la app
