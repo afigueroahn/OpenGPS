@@ -6,6 +6,8 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Sin publicar]
 
+## [0.15.0] - 2026-11-27
+
 ### Agregado
 
 - Las apps se compilan y se firman para Google Play y la App Store en la Mac del proyecto:
