@@ -6,6 +6,13 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Sin publicar]
 
+### Agregado
+
+- Las fichas de las apps en Google Play y la App Store, en español e inglés, en
+  `apps/mobile/store/`: textos, capturas de iPhone y Android, el ícono y el gráfico destacado
+  de Google Play, las notas para la revisión y las respuestas sobre los datos de la app
+  (ADR-0030, #176).
+
 ### Cambiado
 
 - La app para iPhone y Android abre con su propia pantalla de arranque: el logo de OpenGPS
