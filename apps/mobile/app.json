@@ -9,6 +9,7 @@
     "icon": "./assets/icon.png",
     "ios": {
       "bundleIdentifier": "dev.opengps.app",
+      "appleTeamId": "NVUP83R732",
       "buildNumber": "1",
       "supportsTablet": false,
       "config": {
